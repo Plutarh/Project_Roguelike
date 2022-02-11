@@ -224,7 +224,7 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1.08, z: 0}
 --- !u!114 &7230643067007699186
 MonoBehaviour:
@@ -255,12 +255,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: {fileID: 7230643067007699186}
   _animator: {fileID: 7282051720630695434}
+  _torsMask: {fileID: 31900000, guid: 118ef9eb938ca0440a365d6640410526, type: 2}
   _characterController: {fileID: 7230643067007699187}
-  _moveSpeed: 10
+  _moveSpeed: 4
   _sprintSpeed: 0
-  _speedChangeRate: 5
+  _speedChangeRate: 15
   _motion: 0
   _jumpHeight: 0
+  _jumpTimeout: 0.5
+  _verticalVelocity: 0
   _gravity: -9
   _currentMoveSpeed: 0
   _moveInput: {x: 0, y: 0, z: 0}

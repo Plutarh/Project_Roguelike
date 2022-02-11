@@ -5,34 +5,37 @@ using UnityEngine;
 public class BaseCharacter : Pawn
 {   
     [Header("Components")]
-    [SerializeField] private Animator _animator;
-    [SerializeField] private CharacterController _characterController;
+    [SerializeField] protected Animator _animator;
+    [SerializeField] protected CharacterController _characterController;
 
     [Header("Movement")]
-    [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _sprintSpeed;
-    [SerializeField] private float _speedChangeRate;
+    [SerializeField] protected float _moveSpeed;
+    [SerializeField] protected float _sprintSpeed;
+    [SerializeField] protected float _speedChangeRate;
 
-    [SerializeField] private float _motion;
-
-    [Space]
-    [SerializeField] private float _jumpHeight;
-    [SerializeField] private float _jumpTimeout = 0.5f;
-    [SerializeField] private float _verticalVelocity;
-    [SerializeField] private float _gravity = -9.81f;
+    [SerializeField] protected float _motion;
+    protected float _helpMotion;
 
     [Space]
-    [SerializeField] private float _currentMoveSpeed;
+    [SerializeField] protected float _jumpHeight;
+    [SerializeField] protected float _jumpTimeout = 0.5f;
+    [SerializeField] protected float _verticalVelocity;
+    [SerializeField] protected float _gravity = -9.81f;
+
+    [Space]
+    [SerializeField] protected float _currentMoveSpeed;
     
     [Space]
-    [SerializeField] private Vector3 _moveInput;
+    [SerializeField] protected Vector3 _moveInput;
 
     [Space]
-    [SerializeField] private LayerMask _groundLayers;
-    [SerializeField] private bool _isGrounded;
-    [SerializeField] private Transform _groundChecker;
+    [SerializeField] protected LayerMask _groundLayers;
+    [SerializeField] protected bool _isGrounded;
+    [SerializeField] protected Transform _groundChecker;
 
-    private float _jumpTimeoutDelta;
+    protected float _jumpTimeoutDelta;
+
+   
 
     public override void Awake()
     {
@@ -48,11 +51,21 @@ public class BaseCharacter : Pawn
     public override void Update()
     {
         GroundCheck();
-        Movement();
         Rotation();
         JumpTimer();
         Gravity();
+        Movement();
         UpdateAnimator();
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            _animator.SetLayerWeight(1,0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            _animator.SetLayerWeight(1, 1);
+        }
     }
 
     public void SetMoveInput(Vector3 _input)
@@ -64,6 +77,8 @@ public class BaseCharacter : Pawn
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+
+       
     }
 
     // Кастуем сферу под ногами, для нахождения земли
@@ -80,27 +95,9 @@ public class BaseCharacter : Pawn
         _isGrounded = Physics.CheckSphere(spherePosition,0.3f,_groundLayers,QueryTriggerInteraction.Ignore);
     }
 
-    void Movement()
+    
+    public virtual void Movement()
     {
-        // TODO возможно добавить спринт
-        float targetMoveSpeed = _moveSpeed;
-
-        if(_moveInput == Vector3.zero) targetMoveSpeed = 0;
-
-        // Берем текущую скорость движения, без учета гравитации
-        float currentHorizontalSpeed = new Vector3(_characterController.velocity.x,0f,_characterController.velocity.z).magnitude;
-
-        _currentMoveSpeed = Mathf.Lerp(currentHorizontalSpeed,targetMoveSpeed,Time.deltaTime * _speedChangeRate);
-
-        _motion = Mathf.Lerp(0, 1, _currentMoveSpeed / _moveSpeed);
-        
-
-        Vector3 targetMovement = _moveInput.normalized * _currentMoveSpeed * Time.deltaTime;
-      
-        // К нашему движению добавляем вертикальное ускорение, вертикальное ускорение меняется в зависимости от прыжков,падений и тд
-        targetMovement += new Vector3(0,_verticalVelocity,0) * Time.deltaTime;
-
-        _characterController.Move(targetMovement);
        
     }
 
