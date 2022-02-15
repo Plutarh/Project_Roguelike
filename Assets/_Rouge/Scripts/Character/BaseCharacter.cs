@@ -10,11 +10,11 @@ public class BaseCharacter : Pawn
 
     [Header("Movement")]
     [SerializeField] protected float _moveSpeed;
+    [SerializeField] protected float _backwardMoveSpeed;
     [SerializeField] protected float _sprintSpeed;
     [SerializeField] protected float _speedChangeRate;
 
-    [SerializeField] protected float _motion;
-    protected float _helpMotion;
+    [SerializeField] protected float _animationMotion;
 
     [Space]
     [SerializeField] protected float _jumpHeight;
@@ -56,16 +56,7 @@ public class BaseCharacter : Pawn
         Gravity();
         Movement();
         UpdateAnimator();
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            _animator.SetLayerWeight(1,0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            _animator.SetLayerWeight(1, 1);
-        }
+     
     }
 
     public void SetMoveInput(Vector3 _input)
@@ -73,12 +64,10 @@ public class BaseCharacter : Pawn
         _moveInput = _input;
     }
 
-    void InitComponents()
+    public virtual void InitComponents()
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
-
-       
     }
 
     // Кастуем сферу под ногами, для нахождения земли
@@ -136,9 +125,9 @@ public class BaseCharacter : Pawn
         
     }
 
-    void UpdateAnimator()
+    public virtual void UpdateAnimator()
     {
-        _animator.SetFloat("Motion",_motion);
+        //_animator.SetFloat("Motion",_animationMotion);
     }
     
     private void OnDrawGizmos() 

@@ -1,11 +1,14 @@
 fileFormatVersion: 2
-guid: e7a4c693ae338b2458cff44f7370d1ca
+guid: 5adb60ab6b8e9de45ad635b7838793a4
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Sprint
+    second: Standing Walk Left (1)
+  - first:
+      74: -3625045331020977239
+    second: Walk Left
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -21,7 +24,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Inbetween bone
       rotation in copied configuration does not match rotation in animation file:\n\t'Ball_L'
-      : rotation error = 0.473548 deg\n"
+      : rotation error = 4.401384 deg\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'mixamo.com' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
@@ -41,11 +44,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Sprint
+      name: Walk Left
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 69
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

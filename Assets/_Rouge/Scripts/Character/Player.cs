@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(InputService))]
 public class Player : BaseCharacter
 {
-    [SerializeField] private Vector3 _input;
+    [SerializeField] private Vector2 _input;
 
     
     
+    private InputService _inputService;
+
+    public override void Awake()
+    {
+        base.Awake();
+      
+    }
+
     public override void Start()
     {
         
@@ -21,10 +30,15 @@ public class Player : BaseCharacter
         base.Update();
     }
 
+    public override void InitComponents()
+    {
+        base.InitComponents();
+        _inputService = GetComponent<InputService>();
+    }
+
     void ReadInput()
     {
-        _input.z = Input.GetAxis("Vertical");
-        _input.x = Input.GetAxis("Horizontal");
+        _input = _inputService.move;
     }
 
     public override void Rotation()
@@ -35,18 +49,32 @@ public class Player : BaseCharacter
     public override void Movement()
     {
         base.Movement();
-        // TODO возможно добавить спринт
-        float targetMoveSpeed = _moveSpeed;
-        float animationTargetMoveSpeed = _moveSpeed;
 
-        if (_moveInput == Vector3.zero) targetMoveSpeed = 0;
+        // Сначала проверяем бежит ли игрок вперед или назад
+        bool forwardMovement = _input.y > 0 ? true : false;
 
+        float targetMoveSpeed = 0;
+
+        if(forwardMovement)
+        {
+            // TODO добавить спринт скорость в зависимости от инпут кнопки спринта
+            targetMoveSpeed = _moveSpeed;
+        }
+        else
+        {
+            targetMoveSpeed = _backwardMoveSpeed;
+        }
+      
+        if (_input == Vector2.zero) targetMoveSpeed = 0;
+       
+       
         // Берем текущую скорость движения, без учета гравитации
         float currentHorizontalSpeed = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z).magnitude;
 
         float speedOffset = 0.1f;
-        float inputMagnitude = _moveInput.magnitude;
-        float inputZ = _moveInput.z;
+
+        // Для стиков на геймпаде
+        float inputMagnitude = _input.magnitude;
 
         if (currentHorizontalSpeed < targetMoveSpeed - speedOffset || currentHorizontalSpeed > targetMoveSpeed + speedOffset)
         {
@@ -60,16 +88,39 @@ public class Player : BaseCharacter
             _currentMoveSpeed = targetMoveSpeed;
         }
 
-        _helpMotion = Mathf.Lerp(_helpMotion, targetMoveSpeed, _speedChangeRate * Time.deltaTime);
-        if (_helpMotion < 0) _helpMotion = 0;
-
-        _motion = Mathf.Lerp(-1f, 1f, _helpMotion / animationTargetMoveSpeed);
-
-        Vector3 targetMovement = _moveInput.normalized * _currentMoveSpeed * Time.deltaTime;
+      
+        Vector3 targetMovement = new Vector3(_input.x,0,_input.y).normalized * _currentMoveSpeed * Time.deltaTime;
 
         // К нашему движению добавляем вертикальное ускорение, вертикальное ускорение меняется в зависимости от прыжков,падений и тд
         targetMovement += new Vector3(0, _verticalVelocity, 0) * Time.deltaTime;
 
         _characterController.Move(targetMovement);
+
+      
+        // Обновляем переменную для бленд движения аниматора 
+        if(targetMoveSpeed > 0)
+        {
+            if(_input.y != 0)
+            {
+                if (forwardMovement)
+                    _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
+                else
+                    _animationMotion = Mathf.Lerp(_animationMotion, -1, currentHorizontalSpeed / _backwardMoveSpeed);
+
+            }
+            else _animationMotion = 0;
+        }
+        else
+        {
+            // Если таргет скорость равна нулю, то просто плавно сбавляем бленд
+            _animationMotion = Mathf.Lerp(_animationMotion,0,Time.deltaTime * _speedChangeRate);
+        }
     }
+
+    public override void UpdateAnimator()
+    {
+        _animator.SetFloat("Motion_Y",_animationMotion);
+        _animator.SetFloat("Motion_X",_input.x);
+    }
+
 }
