@@ -2,54 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-// #endif
 
-public class InputService : MonoBehaviour
+public class InputService : MonoBehaviour , IInputService 
 {
-[Header("Character Input Values")]
-    public Vector2 move;
-    public Vector2 look;
-    public bool jump;
-    public bool sprint;
+    [Header("Character Input Values")]
+    [SerializeField] private Vector2 move;
+    [SerializeField] private Vector2 look;
+    [SerializeField] private bool jump;
+    [SerializeField] private bool sprint;
 
     [Header("Movement Settings")]
-    public bool analogMovement;
+    [SerializeField] private bool analogMovement;
 
-#if !UNITY_IOS || !UNITY_ANDROID
+
     [Header("Mouse Cursor Settings")]
-    public bool cursorLocked = true;
-    public bool cursorInputForLook = true;
-#endif
+    [SerializeField] private bool cursorLocked = true;
+    [SerializeField] private bool cursorInputForLook = true;
 
-// #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
-		{
-			MoveInput(value.Get<Vector2>());
-		}
+    [SerializeReference] private PlayerInput _playerInput;
 
-		public void OnLook(InputValue value)
-		{
-			if(cursorInputForLook)
-			{
-				LookInput(value.Get<Vector2>());
-			}
-		}
 
-		public void OnJump(InputValue value)
-		{
-			JumpInput(value.isPressed);
-		}
+    public void OnMove(InputValue value) 
+    {
+        MoveInput(value.Get<Vector2>());
+    }
 
-		public void OnSprint(InputValue value)
-		{
-			SprintInput(value.isPressed);
-		}
-// #else
-//     // old input sys if we do decide to have it (most likely wont)...
-// #endif
+    public void OnLook(InputValue value)
+    {
+        if(cursorInputForLook)
+        {
+            LookInput(value.Get<Vector2>());
+        }
+    }
 
+    public void OnJump(InputValue value)
+    {
+        JumpInput(value.isPressed);
+    }
+
+    public void OnSprint(InputValue value)
+    {
+        SprintInput(value.isPressed);
+    }
 
     public void MoveInput(Vector2 newMoveDirection)
     {
@@ -71,19 +66,29 @@ public class InputService : MonoBehaviour
         sprint = newSprintState;
     }
 
-#if !UNITY_IOS || !UNITY_ANDROID
-
     private void OnApplicationFocus(bool hasFocus)
     {
         SetCursorState(cursorLocked);
     }
 
-    private void SetCursorState(bool newState)
+    public void SetCursorState(bool newState)
     {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
-#endif
+    public Vector2 GetMoveInput()
+    {
+        return move;
+    }
 
+    public Vector2 GetLookInput()
+    {
+        return look;
+    }
+
+    public bool IsCurrentDeviceMouse()
+    {
+       return _playerInput.currentControlScheme == "KeyboardMouse";
+    }
 }
 

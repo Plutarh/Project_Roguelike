@@ -123,5 +123,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea20811c5609d834ca2b603b62836bf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  virtualCamera: {fileID: 0}
+  _topClamp: 40
+  _bottomClamp: -40
+  _cameraAngleOverride: 0
+  _lockCameraPosition: 0
+  _virtualCamera: {fileID: 0}
   _followTarget: {fileID: 0}
+  multiplyer: 20

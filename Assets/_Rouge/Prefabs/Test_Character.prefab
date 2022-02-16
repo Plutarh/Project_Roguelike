@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5662749262131177186
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8354847417727851175}
+  m_Layer: 0
+  m_Name: Camera_Roo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8354847417727851175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662749262131177186}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7227427893830984450}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7230551914181024216
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +196,6 @@ GameObject:
   - component: {fileID: 7230643067007699187}
   - component: {fileID: 7230643067007699186}
   - component: {fileID: 7230643067007699185}
-  - component: {fileID: 3185287358287875260}
   m_Layer: 0
   m_Name: Test_Character
   m_TagString: Untagged
@@ -185,6 +214,7 @@ Transform:
   m_LocalPosition: {x: 2.4753716, y: 0.00000023841858, z: -1.9052227}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 8354847417727851175}
   - {fileID: 7228921812563662338}
   - {fileID: 7227248324858605442}
   m_Father: {fileID: 0}
@@ -273,37 +303,10 @@ MonoBehaviour:
     m_Bits: 64
   _isGrounded: 0
   _groundChecker: {fileID: 0}
-  _input: {x: 0, y: 0}
---- !u!114 &3185287358287875260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7230643067007699184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: e039f8ab9a3778b4b80a5acefc160fb5, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  _targetRotation: 0
+  _rotationSmoothTime: 0.12
+  playerCamera: {fileID: 0}
+  cameraRoot: {fileID: 8354847417727851175}
 --- !u!1 &7230695701393823346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,7 +1141,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7227427893830984450}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &7328906891567129256
 SkinnedMeshRenderer:
@@ -1271,7 +1274,7 @@ Transform:
   m_Children:
   - {fileID: 7227291797717873066}
   m_Father: {fileID: 7227427893830984450}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7231470647673991096
 GameObject:

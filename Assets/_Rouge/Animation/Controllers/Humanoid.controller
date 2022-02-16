@@ -37,7 +37,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -203655887218126122, guid: c722b254c875ea54e9044e844d821bd0, type: 3}
     m_Threshold: -1
-    m_Position: {x: 0, y: 0}
+    m_Position: {x: 0, y: -1}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
@@ -53,7 +53,7 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -203655887218126122, guid: 9fc3083b17b5ff547b6072403913fe12, type: 3}
     m_Threshold: 0.7
-    m_Position: {x: 0, y: 0}
+    m_Position: {x: 0, y: 0.6}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
@@ -61,13 +61,13 @@ BlendTree:
   - serializedVersion: 2
     m_Motion: {fileID: -9121621101649706817, guid: 5da65f6472e21ff47beccec787122fa7, type: 3}
     m_Threshold: 1
-    m_Position: {x: 0, y: 0}
+    m_Position: {x: 0, y: 1}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: Motion
-  m_BlendParameterY: Blend
+  m_BlendParameter: Motion_Y
+  m_BlendParameterY: Motion_Y
   m_MinThreshold: -1
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 0
@@ -110,7 +110,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Motion
+  - m_Name: Motion_Y
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Motion_X
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -141,6 +147,21 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!206 &1369307754566311454
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlendTree
+  m_Childs: []
+  m_BlendParameter: Motion
+  m_BlendParameterY: Blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!1102 &3119348384242496619
 AnimatorState:
   serializedVersion: 6

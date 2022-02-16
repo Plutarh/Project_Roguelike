@@ -3,26 +3,28 @@ using Zenject;
 
 public class ThirdPersonPlayerInstaller : MonoInstaller
 {
+    [Header("Prefabs")]
     [SerializeField] private Player playerUnit;
     [SerializeField] private PlayerCamera playerCameraPrefab;
     [SerializeField] private Transform playerUnitSpawnPoint;
+    [SerializeField] private InputService inputServicePrefab;
 
-
-    private Player _playerInstance;
-    private PlayerCamera _playerCameraInstance;
-
-    
+    [Space]
+    [Header("Instances")]
+    [SerializeField] private Player _playerInstance;
+    [SerializeField] private PlayerCamera _playerCameraInstance;
 
     public override void InstallBindings()
     {
+        BindInputService();
         BindPlayerInstance();
         BindPlayerCameraInstance();
     }
 
     void BindPlayerInstance()
     {
-        var playerInstance =
-          Container.InstantiatePrefabForComponent<Player>(playerUnit, playerUnitSpawnPoint.position, Quaternion.identity, null);
+        var playerInstance = Container
+            .InstantiatePrefabForComponent<Player>(playerUnit, playerUnitSpawnPoint.position, Quaternion.identity, null);
 
         Container
             .Bind<Player>()
@@ -39,6 +41,15 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
         _playerInstance = playerInstance;
     }
 
+    void BindInputService()
+    {
+        Container
+            .Bind<IInputService>()
+            .To<InputService>()
+            .FromComponentInNewPrefab(inputServicePrefab)
+            .AsSingle();
+    }
+
     void BindPlayerCameraInstance()
     {
         var cameraInstance =
@@ -49,10 +60,7 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
             .FromInstance(cameraInstance)
             .AsSingle();
 
-
-        //Container.QueueForInject(cameraInstance);
-
-
+        Container.QueueForInject(cameraInstance);
 
         _playerCameraInstance = cameraInstance;
     }
