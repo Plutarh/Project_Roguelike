@@ -18,5 +18,7 @@ public interface IInputService
     Vector2 GetMoveInput();
     Vector2 GetLookInput();
     bool IsCurrentDeviceMouse();
+    bool GetJump();
+    void ResetJump();
 }
 

@@ -47,7 +47,7 @@ public class PlayerCamera : MonoBehaviour
     {
         GetComponents();
 
-        _followTarget = _player.cameraRoot.transform;
+        _followTarget = _player.GetCameraRoot;
         _virtualCamera.Follow = _followTarget;
         
         _thirdPersonFollow.ShoulderOffset = new Vector3(-0.5f,0,0);
@@ -78,7 +78,7 @@ public class PlayerCamera : MonoBehaviour
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _bottomClamp, _topClamp);
 
 
-        _player.cameraRoot.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + _cameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+        _player.GetCameraRoot.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + _cameraAngleOverride, _cinemachineTargetYaw, 0.0f);
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

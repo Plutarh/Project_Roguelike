@@ -7,10 +7,10 @@ using UnityEngine.InputSystem;
 public class InputService : MonoBehaviour , IInputService 
 {
     [Header("Character Input Values")]
-    [SerializeField] private Vector2 move;
-    [SerializeField] private Vector2 look;
-    [SerializeField] private bool jump;
-    [SerializeField] private bool sprint;
+    [SerializeField] private Vector2 _move;
+    [SerializeField] private Vector2 _look;
+    [SerializeField] private bool _jump;
+    [SerializeField] private bool _sprint;
 
     [Header("Movement Settings")]
     [SerializeField] private bool analogMovement;
@@ -48,22 +48,22 @@ public class InputService : MonoBehaviour , IInputService
 
     public void MoveInput(Vector2 newMoveDirection)
     {
-        move = newMoveDirection;
+        _move = newMoveDirection;
     }
 
     public void LookInput(Vector2 newLookDirection)
     {
-        look = newLookDirection;
+        _look = newLookDirection;
     }
 
     public void JumpInput(bool newJumpState)
     {
-        jump = newJumpState;
+        _jump = newJumpState;
     }
 
     public void SprintInput(bool newSprintState)
     {
-        sprint = newSprintState;
+        _sprint = newSprintState;
     }
 
     private void OnApplicationFocus(bool hasFocus)
@@ -78,12 +78,22 @@ public class InputService : MonoBehaviour , IInputService
 
     public Vector2 GetMoveInput()
     {
-        return move;
+        return _move;
     }
 
     public Vector2 GetLookInput()
     {
-        return look;
+        return _look;
+    }
+
+    public bool GetJump()
+    {
+        return _jump;
+    }
+
+    public void ResetJump()
+    {
+        _jump = false;
     }
 
     public bool IsCurrentDeviceMouse()

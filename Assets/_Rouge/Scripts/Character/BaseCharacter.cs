@@ -71,7 +71,7 @@ public class BaseCharacter : Pawn
     }
 
     // Кастуем сферу под ногами, для нахождения земли
-    void GroundCheck()
+    public virtual void GroundCheck()
     {
         Vector3 spherePosition = Vector3.zero;
 
@@ -82,6 +82,8 @@ public class BaseCharacter : Pawn
             spherePosition = new Vector3(transform.position.x, transform.position.y - 0.15f, transform.position.z);
 
         _isGrounded = Physics.CheckSphere(spherePosition,0.3f,_groundLayers,QueryTriggerInteraction.Ignore);
+
+        
     }
 
     
@@ -93,14 +95,21 @@ public class BaseCharacter : Pawn
     void Gravity()
     {
         // не уходим в бесконечность
-        if(_isGrounded && _verticalVelocity < 0)
-            _verticalVelocity = -2f;
+        if(_isGrounded )
+        {
+            _animator.SetBool("FreeFall", false);
+            if(_verticalVelocity < 0)
+                _verticalVelocity = -2f;
+        }
         else
-            _verticalVelocity += _gravity * Time.deltaTime;
-        
+        {
+            _animator.SetBool("FreeFall",true);
+        }
+
+        _verticalVelocity += _gravity * Time.deltaTime;
     }
 
-    public void TryToJump()
+    public virtual void TryToJump()
     {
         if (_jumpTimeoutDelta > 0 || !_isGrounded) return;
         Jump();

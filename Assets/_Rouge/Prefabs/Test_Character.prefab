@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8354847417727851175}
   m_Layer: 0
-  m_Name: Camera_Roo
+  m_Name: Camera_Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -292,7 +292,7 @@ MonoBehaviour:
   _sprintSpeed: 0
   _speedChangeRate: 15
   _animationMotion: 0
-  _jumpHeight: 0
+  _jumpHeight: 1.2
   _jumpTimeout: 0.5
   _verticalVelocity: 0
   _gravity: -9
@@ -300,13 +300,15 @@ MonoBehaviour:
   _moveInput: {x: 0, y: 0, z: 0}
   _groundLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 65
   _isGrounded: 0
   _groundChecker: {fileID: 0}
   _targetRotation: 0
   _rotationSmoothTime: 0.12
-  playerCamera: {fileID: 0}
-  cameraRoot: {fileID: 8354847417727851175}
+  _rotationVelocity: 0
+  _targetDirection: {x: 0, y: 0, z: 0}
+  _mainCamera: {fileID: 0}
+  _cameraRoot: {fileID: 8354847417727851175}
 --- !u!1 &7230695701393823346
 GameObject:
   m_ObjectHideFlags: 0
