@@ -53,7 +53,7 @@ public class PlayerCamera : MonoBehaviour
         _thirdPersonFollow.ShoulderOffset = new Vector3(-0.5f,0,0);
         _thirdPersonFollow.CameraDistance = 3;
 
-        _player.playerCamera = this;
+        //_player.playerCamera = this;
     }
 
     void GetComponents()

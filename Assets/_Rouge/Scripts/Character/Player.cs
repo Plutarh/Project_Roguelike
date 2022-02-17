@@ -17,7 +17,7 @@ public class Player : BaseCharacter
 
     [SerializeReference] private Vector3 _targetDirection;
 
-    public PlayerCamera playerCamera;
+    [SerializeField] private  Camera _mainCamera;
     public Transform cameraRoot;
 
     [Inject]
@@ -29,7 +29,7 @@ public class Player : BaseCharacter
     public override void Awake()
     {
         base.Awake();
-      
+        _mainCamera = Camera.main;
     }
 
     public override void Start()
@@ -50,20 +50,23 @@ public class Player : BaseCharacter
         _inputService = GetComponent<InputService>();
     }
 
-  
+    public float debugRotation;
     public override void Rotation()
     {
         base.Rotation();
      
-        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, _inputService.GetMoveInput().y).normalized;
+        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, Mathf.Abs(_inputService.GetMoveInput().y)).normalized;
        
         if (_inputService.GetMoveInput() != Vector2.zero)
         {
-            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + playerCamera.transform.eulerAngles.y;
+            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, _rotationSmoothTime);
 
             // rotate to face input direction relative to camera position
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+
+            debugRotation = rotation;
+           
         }
 
 
@@ -112,9 +115,13 @@ public class Player : BaseCharacter
             _currentMoveSpeed = targetMoveSpeed;
         }
 
-      
+        // Игрок будет двигаться по форварду камеры
+        Vector3 targetDir = new Vector3(_inputService.GetMoveInput().x,0,_inputService.GetMoveInput().y);
+        targetDir = _mainCamera.transform.TransformDirection(targetDir);
+        targetDir = Vector3.ProjectOnPlane(targetDir,Vector3.up);
+        
         //Vector3 targetMovement = new Vector3(_inputService.GetMoveInput().x,0,_inputService.GetMoveInput().y).normalized * _currentMoveSpeed * Time.deltaTime;
-        Vector3 targetMovement = _targetDirection.normalized * _currentMoveSpeed * Time.deltaTime;
+        Vector3 targetMovement = targetDir.normalized * _currentMoveSpeed * Time.deltaTime;
 
         // К нашему движению добавляем вертикальное ускорение, вертикальное ускорение меняется в зависимости от прыжков,падений и тд
         targetMovement += new Vector3(0, _verticalVelocity, 0) * Time.deltaTime;
