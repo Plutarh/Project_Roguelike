@@ -14,11 +14,14 @@ public class BaseCharacter : Pawn
     [SerializeField] protected float _sprintSpeed;
     [SerializeField] protected float _speedChangeRate;
 
+    [SerializeField] protected float _fallTimeoutDelta;
+    [SerializeField] protected float _fallTimeout = 0.2f;
+
     [SerializeField] protected float _animationMotion;
 
     [Space]
     [SerializeField] protected float _jumpHeight;
-    [SerializeField] protected float _jumpTimeout = 0.5f;
+    [SerializeField] protected float _jumpTimeout = 0.1f;
     [SerializeField] protected float _verticalVelocity;
     [SerializeField] protected float _gravity = -9.81f;
 
@@ -52,11 +55,9 @@ public class BaseCharacter : Pawn
     {
         GroundCheck();
         Rotation();
-        JumpTimer();
         Gravity();
         Movement();
         UpdateAnimator();
-     
     }
 
     public void SetMoveInput(Vector3 _input)
@@ -92,40 +93,19 @@ public class BaseCharacter : Pawn
        
     }
 
-    void Gravity()
+    public virtual void Gravity()
     {
-        // не уходим в бесконечность
-        if(_isGrounded )
-        {
-            _animator.SetBool("FreeFall", false);
-            if(_verticalVelocity < 0)
-                _verticalVelocity = -2f;
-        }
-        else
-        {
-            _animator.SetBool("FreeFall",true);
-        }
-
-        _verticalVelocity += _gravity * Time.deltaTime;
+       
     }
 
     public virtual void TryToJump()
     {
-        if (_jumpTimeoutDelta > 0 || !_isGrounded) return;
-        Jump();
+        
     }
 
-    public void Jump()
+    public virtual void Jump()
     {
-        _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
-
-        //_animator.SetTrigger("Jump");
-    }
-
-    void JumpTimer()
-    {
-        if(_jumpTimeoutDelta < 0) return;
-        _jumpTimeoutDelta -= Time.deltaTime;
+       
     }
 
     // Виртуальный метод, потому что повороты игрока зависят от камеры и инпута, ИИ юзают навмеш агента

@@ -155,34 +155,68 @@ public class Player : BaseCharacter
     }
 
     public override void TryToJump()
-    {   
-        if(_inputService.GetJump())
+    {
+        if(_inputService.GetJump() == false) return;
+        if (_jumpTimeoutDelta > 0 || !_isGrounded) return;
+
+        Jump();
+    }
+
+    public override void Jump()
+    {
+        base.Jump();
+
+        _animator.SetBool("Jump", true);
+        _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
+    }
+
+    public override void Gravity()
+    {
+        base.Gravity();
+
+       
+        if (_isGrounded)
         {
-            base.TryToJump();
+            _animator.SetBool("FreeFall", false);
+            _animator.SetBool("Jump", false);
+
+            _fallTimeoutDelta = _fallTimeout;
+
+            // не уходим в бесконечность
+            if (_verticalVelocity < 0)
+                _verticalVelocity = -2f;
+
+            // Откатываем кд прыжка
+            if (_jumpTimeoutDelta >= 0.0f)
+                _jumpTimeoutDelta -= Time.deltaTime;
         }
+        else
+        {
+            _jumpTimeoutDelta = _jumpTimeout;
+
+            if(_fallTimeoutDelta > 0)
+                _fallTimeoutDelta -= Time.deltaTime;
+            else
+                _animator.SetBool("FreeFall", true);
+
+            _inputService.ResetJump();
+        }
+
+        _verticalVelocity += _gravity * Time.deltaTime;
     }
 
     public override void GroundCheck()
     {
-        bool air = _isGrounded;
         base.GroundCheck();
 
-        if(air == false && _isGrounded == true)
-        {
-            _animator.SetTrigger("Land");
-        }
-
-        if(_isGrounded == false && _inputService.GetJump())
-        {
-            _inputService.ResetJump();
-        }
+        _animator.SetBool("Land",_isGrounded);
     }
 
     public override void UpdateAnimator()
     {
         _animator.SetFloat("Motion_Y",_animationMotion);
         _animator.SetFloat("Motion_X",_inputService.GetMoveInput().x);
-        _animator.SetBool("Jump",_inputService.GetJump());
+       
     }
 
 }
