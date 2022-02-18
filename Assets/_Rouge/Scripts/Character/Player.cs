@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using Zenject;
 
 public class Player : BaseCharacter
@@ -24,6 +25,8 @@ public class Player : BaseCharacter
     [SerializeField] private  Camera _mainCamera;
     [SerializeField] private Transform _cameraRoot;
 
+   
+
     [Inject]
     public void Construct(IInputService inputService)
     {
@@ -34,6 +37,8 @@ public class Player : BaseCharacter
     {
         base.Awake();
         _mainCamera = Camera.main;
+
+       
     }
 
     public override void Start()

@@ -64,4 +64,12 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
 
         _playerCameraInstance = cameraInstance;
     }
+
+    private void OnDrawGizmos() {
+        if(playerUnitSpawnPoint != null && playerUnit != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawMesh(playerUnit.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh,-1,playerUnitSpawnPoint.transform.position,playerUnitSpawnPoint.transform.rotation);
+        }
+    }
 }

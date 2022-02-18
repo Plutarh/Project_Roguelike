@@ -129,4 +129,7 @@ MonoBehaviour:
   _lockCameraPosition: 0
   _virtualCamera: {fileID: 0}
   _followTarget: {fileID: 0}
+  cameraCollidersLayer:
+    serializedVersion: 2
+    m_Bits: 448
   multiplyer: 20

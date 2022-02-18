@@ -12,8 +12,10 @@ public class PlayerCamera : MonoBehaviour
 
     [SerializeField] private bool _lockCameraPosition = false;
 
-    [SerializeReference] private CinemachineVirtualCamera _virtualCamera;
-    [SerializeReference] private Transform _followTarget;
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    [SerializeField] private Transform _followTarget;
+
+    [SerializeField] private LayerMask cameraCollidersLayer;
 
     private IInputService _inputService;
     private Cinemachine3rdPersonFollow _thirdPersonFollow;
@@ -54,6 +56,8 @@ public class PlayerCamera : MonoBehaviour
         _thirdPersonFollow.CameraDistance = 3;
 
         //_player.playerCamera = this;
+
+        _thirdPersonFollow.CameraCollisionFilter = cameraCollidersLayer;
     }
 
     void GetComponents()
