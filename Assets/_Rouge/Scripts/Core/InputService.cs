@@ -1,16 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class InputService : MonoBehaviour , IInputService 
+public class InputService : MonoBehaviour , IInputService
 {
     [Header("Character Input Values")]
     [SerializeField] private Vector2 _move;
     [SerializeField] private Vector2 _look;
     [SerializeField] private bool _jump;
     [SerializeField] private bool _sprint;
+    [SerializeField] private bool _fire;
 
     [Header("Movement Settings")]
     [SerializeField] private bool analogMovement;
@@ -22,6 +24,7 @@ public class InputService : MonoBehaviour , IInputService
 
     [SerializeReference] private PlayerInput _playerInput;
 
+  
 
     public void OnMove(InputValue value) 
     {
@@ -100,5 +103,24 @@ public class InputService : MonoBehaviour , IInputService
     {
        return _playerInput.currentControlScheme == "KeyboardMouse";
     }
+
+    public void OnFire(InputValue value)
+    {
+        _fire = value.isPressed;
+       
+        InputEvents.OnFireClicked?.Invoke();
+    }
+
+    public bool GetFire()
+    {
+        return _fire;
+    }
+
+    public void ResetFire()
+    {
+        _fire = false;
+    }
+
+  
 }
 

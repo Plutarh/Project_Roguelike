@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,12 +26,17 @@ public class Player : BaseCharacter
     [SerializeField] private  Camera _mainCamera;
     [SerializeField] private Transform _cameraRoot;
 
-   
+    
+    private float _comboAttackDelta;
+    private float _comboAttackTimeout = 0.3f;
+
+    [SerializeField] private int _fireClickCount;
 
     [Inject]
     public void Construct(IInputService inputService)
     {
         _inputService = inputService;
+        
     }
 
     public override void Awake()
@@ -38,19 +44,22 @@ public class Player : BaseCharacter
         base.Awake();
         _mainCamera = Camera.main;
 
-       
+        InputEvents.OnFireClicked += IncreaseFireClickCount;
     }
 
     public override void Start()
     {
-        
+       
     }
-   
+    
     public override void Update()
     {
         TryToJump();
         SetMoveInput(_inputService.GetMoveInput());
+        TryToAttack();
         base.Update();
+
+        FireClickTimer();
     }
 
     public override void FixedUpdate()
@@ -58,6 +67,50 @@ public class Player : BaseCharacter
         base.FixedUpdate();
 
         
+    }
+
+    float lastFireClickedTime = 0;
+    void IncreaseFireClickCount()
+    {
+        lastFireClickedTime = Time.time;
+        _fireClickCount++;
+
+        _fireClickCount = Mathf.Clamp(_fireClickCount,0,3);
+
+        if(_fireClickCount > 1) _animator.SetBool("Combo Attack", true);
+    }
+
+    void FireClickTimer()
+    {
+        if(Time.time - lastFireClickedTime > _comboAttackTimeout)
+        {
+            _fireClickCount = 0;
+            _animator.SetBool("Combo Attack", false);
+          
+        }
+    }
+
+    void TryToAttack()
+    {
+        if(_inputService.GetFire() == false) return;
+        Attack();
+    }
+
+
+    void Attack()
+    {
+        _inputService.ResetFire();
+        _animator.SetLayerWeight(1,1);
+        _animator.SetTrigger("Attack");
+        StartCoroutine(IEResetAttack());
+        
+    }
+
+    IEnumerator IEResetAttack()
+    {
+        yield return new WaitForEndOfFrame();
+      
+        _animator.ResetTrigger("Attack");
     }
 
     public override void InitComponents()
@@ -225,4 +278,9 @@ public class Player : BaseCharacter
        
     }
 
+
+    private void OnDestroy() 
+    {
+        InputEvents.OnFireClicked -= IncreaseFireClickCount;
+    }
 }

@@ -1,6 +1,7 @@
 // #if ENABLE_INPUT_SYSTEM
 // #endif
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,10 +16,19 @@ public interface IInputService
     void JumpInput(bool newJumpState);
     void SprintInput(bool newSprintState);
     void SetCursorState(bool newState);
+    void OnFire(InputValue value);
+
     Vector2 GetMoveInput();
     Vector2 GetLookInput();
+
     bool IsCurrentDeviceMouse();
+
     bool GetJump();
     void ResetJump();
+
+    bool GetFire();
+    void ResetFire();
+
+   
 }
 
