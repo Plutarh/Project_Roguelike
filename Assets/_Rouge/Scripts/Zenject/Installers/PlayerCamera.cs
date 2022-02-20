@@ -28,6 +28,7 @@ public class PlayerCamera : MonoBehaviour
 
     Player _player;
 
+  
     private void Awake() 
     {
         Init();
@@ -42,7 +43,9 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate() 
     {
+       
         CameraRotation();
+        Debug.DrawRay(Camera.main.transform.position,Camera.main.transform.forward * 5,Color.red);
     }
 
     void Init()

@@ -70,7 +70,7 @@ public class Player : BaseCharacter
     {
         base.Rotation();
      
-        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, Mathf.Abs(_inputService.GetMoveInput().y)).normalized;
+        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f,_inputService.GetMoveInput().y).normalized;
        
         if (_inputService.GetMoveInput() != Vector2.zero)
         {
@@ -144,10 +144,11 @@ public class Player : BaseCharacter
         {
             if(_inputService.GetMoveInput().magnitude != 0)
             {
-                if (forwardMovement)
-                    _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
-                else
-                    _animationMotion = Mathf.Lerp(_animationMotion, -1, currentHorizontalSpeed / _backwardMoveSpeed);
+                _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
+                // if (forwardMovement)
+                //     _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
+                // else
+                //     _animationMotion = Mathf.Lerp(_animationMotion, -1, currentHorizontalSpeed / _backwardMoveSpeed);
 
             }
             else _animationMotion = 0;
