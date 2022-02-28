@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3b91c45994b9242b3dc8cd8930cb49, type: 3}
+  m_Name: Character Animations
+  m_EditorClassIdentifier: 
+  _animatorController: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
+  animationDatas:
+  - animationClipDatas:
+    - _animationName: Melee Attack 1
+      animationClip: {fileID: -203655887218126122, guid: 323bf93c0e6738240883d4a7586b18db, type: 3}
+      _stopMovement: 0
+      _allowRootRotation: 0
+    - _animationName: Melee Attack 2
+      animationClip: {fileID: 296130795608717920, guid: 323bf93c0e6738240883d4a7586b18db, type: 3}
+      _stopMovement: 0
+      _allowRootRotation: 0
+    - _animationName: Melee Attack 3
+      animationClip: {fileID: -203655887218126122, guid: 80d3837d3c8f7e843a81c74547b201b7, type: 3}
+      _stopMovement: 1
+      _allowRootRotation: 1

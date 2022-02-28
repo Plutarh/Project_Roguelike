@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Zenject;
@@ -28,9 +29,15 @@ public class Player : BaseCharacter
 
     
     private float _comboAttackDelta;
-    private float _comboAttackTimeout = 0.3f;
+    private float _comboAttackTimeout = 0.8f;
 
     [SerializeField] private int _fireClickCount;
+
+    public AvatarMask attackMask;
+
+
+    public CharacterAnimationData characterAnimationData;
+  
 
     [Inject]
     public void Construct(IInputService inputService)
@@ -49,27 +56,31 @@ public class Player : BaseCharacter
 
     public override void Start()
     {
-       
+      
+        foreach (AvatarMaskBodyPart bodyPart in Enum.GetValues(typeof(AvatarMaskBodyPart)))
+        {
+            
+        }
     }
     
     public override void Update()
     {
         TryToJump();
         SetMoveInput(_inputService.GetMoveInput());
-        TryToAttack();
+        TryToPrimaryAttack();
         base.Update();
 
         FireClickTimer();
+
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-
-        
     }
 
     float lastFireClickedTime = 0;
+
     void IncreaseFireClickCount()
     {
         lastFireClickedTime = Time.time;
@@ -77,7 +88,12 @@ public class Player : BaseCharacter
 
         _fireClickCount = Mathf.Clamp(_fireClickCount,0,3);
 
-        if(_fireClickCount > 1) _animator.SetBool("Combo Attack", true);
+        TryToPrimaryAttack();
+    }
+
+    float GetAttackLayerAnimationTime()
+    {
+        return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
     }
 
     void FireClickTimer()
@@ -85,24 +101,29 @@ public class Player : BaseCharacter
         if(Time.time - lastFireClickedTime > _comboAttackTimeout)
         {
             _fireClickCount = 0;
-            _animator.SetBool("Combo Attack", false);
-          
+            
+            _animator.SetBool("Primary Attack 2", false);
+            _animator.SetBool("Primary Attack 3", false);
         }
     }
 
-    void TryToAttack()
+    void TryToPrimaryAttack()
     {
         if(_inputService.GetFire() == false) return;
-        Attack();
+        PrimaryAttack();
     }
 
+    public List<AnimationClipData> combatAnimationsQueue = new List<AnimationClipData>();
 
-    void Attack()
+    void PrimaryAttack()
     {
         _inputService.ResetFire();
-        _animator.SetLayerWeight(1,1);
-        _animator.SetTrigger("Attack");
-        StartCoroutine(IEResetAttack());
+
+        combatAnimationsQueue.Add(characterAnimationData.GetCombatAnimations.FirstOrDefault(ca => combatAnimationsQueue.Where(caq => combatAnimationsQueue.Contains(ca) == false) ))
+        //_animator.SetLayerWeight(1,1);
+        //_animator.SetTrigger("Melee Attack 1");
+        //attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root,false);
+        //StartCoroutine(IEResetAttack());
         
     }
 
@@ -110,7 +131,7 @@ public class Player : BaseCharacter
     {
         yield return new WaitForEndOfFrame();
       
-        _animator.ResetTrigger("Attack");
+        _animator.ResetTrigger("Primary Attack 1");
     }
 
     public override void InitComponents()
@@ -284,3 +305,4 @@ public class Player : BaseCharacter
         InputEvents.OnFireClicked -= IncreaseFireClickCount;
     }
 }
+
