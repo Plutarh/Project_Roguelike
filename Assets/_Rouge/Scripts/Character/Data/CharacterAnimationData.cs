@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-
 using UnityEditor;
 
 [CreateAssetMenu(fileName = "Character Animations", menuName = "Character Animation", order = 51)]
@@ -18,9 +16,8 @@ public class CharacterAnimationData : ScriptableObject
     }
 
     [SerializeField] private RuntimeAnimatorController _animatorController;
-
     [SerializeField] private List<CombatAnimationData> _animationDatas = new List<CombatAnimationData>();
-    
+
 
     public void Refresh()
     {
@@ -39,7 +36,12 @@ public class AnimationClipData
 {
     public string GetAnimationName
     {
-        get => _animationName;
+        get
+        {
+            if (string.IsNullOrEmpty(_animationClipName))
+                Refresh();
+            return _animationClipName;
+        }
     }
 
     public bool IsStopMovement
@@ -52,24 +54,21 @@ public class AnimationClipData
         get => _allowRootRotation;
     }
 
-    [SerializeField] private string _animationName;
+    [SerializeField] private string _animationClipName;
     [SerializeField] private AnimationClip animationClip;
     [SerializeField] private bool _stopMovement;
     [SerializeField] private bool _allowRootRotation;
 
     public void Refresh()
     {
-        _animationName = animationClip.name;
+        _animationClipName = animationClip.name;
     }
 }
 
-
-
-
 [CustomEditor(typeof(CharacterAnimationData))]
-public class CharacterAnimationDataEditor : Editor 
+public class CharacterAnimationDataEditor : Editor
 {
-    public override void OnInspectorGUI() 
+    public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
@@ -77,8 +76,6 @@ public class CharacterAnimationDataEditor : Editor
         {
             (target as CharacterAnimationData).Refresh();
         }
-             //add everthing the button would do.
-         
     }
 }
 

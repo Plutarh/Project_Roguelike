@@ -18,32 +18,26 @@ public class Player : BaseCharacter
     [SerializeField] private float _targetRotation;
 
     [Range(0.0f, 0.3f)]
-    [SerializeReference] float _rotationSmoothTime = 0.12f;
-
-    [SerializeReference] private float _rotationVelocity;
-
-    [SerializeReference] private Vector3 _targetDirection;
-
-    [SerializeField] private  Camera _mainCamera;
+    [SerializeField] private float _rotationSmoothTime = 0.12f;
+    [SerializeField] private float _rotationVelocity;
+    [SerializeField] private Vector3 _targetDirection;
+    [SerializeField] private Camera _mainCamera;
     [SerializeField] private Transform _cameraRoot;
 
-    
+
     private float _comboAttackDelta;
     private float _comboAttackTimeout = 0.8f;
 
     [SerializeField] private int _fireClickCount;
 
     public AvatarMask attackMask;
-
-
     public CharacterAnimationData characterAnimationData;
-  
+
 
     [Inject]
     public void Construct(IInputService inputService)
     {
         _inputService = inputService;
-        
     }
 
     public override void Awake()
@@ -56,13 +50,13 @@ public class Player : BaseCharacter
 
     public override void Start()
     {
-      
+
         foreach (AvatarMaskBodyPart bodyPart in Enum.GetValues(typeof(AvatarMaskBodyPart)))
         {
-            
+
         }
     }
-    
+
     public override void Update()
     {
         TryToJump();
@@ -86,7 +80,7 @@ public class Player : BaseCharacter
         lastFireClickedTime = Time.time;
         _fireClickCount++;
 
-        _fireClickCount = Mathf.Clamp(_fireClickCount,0,3);
+        _fireClickCount = Mathf.Clamp(_fireClickCount, 0, 3);
 
         TryToPrimaryAttack();
     }
@@ -98,10 +92,10 @@ public class Player : BaseCharacter
 
     void FireClickTimer()
     {
-        if(Time.time - lastFireClickedTime > _comboAttackTimeout)
+        if (Time.time - lastFireClickedTime > _comboAttackTimeout)
         {
             _fireClickCount = 0;
-            
+
             _animator.SetBool("Primary Attack 2", false);
             _animator.SetBool("Primary Attack 3", false);
         }
@@ -109,7 +103,7 @@ public class Player : BaseCharacter
 
     void TryToPrimaryAttack()
     {
-        if(_inputService.GetFire() == false) return;
+        if (_inputService.GetFire() == false) return;
         PrimaryAttack();
     }
 
@@ -119,18 +113,18 @@ public class Player : BaseCharacter
     {
         _inputService.ResetFire();
 
-        combatAnimationsQueue.Add(characterAnimationData.GetCombatAnimations.FirstOrDefault(ca => combatAnimationsQueue.Where(caq => combatAnimationsQueue.Contains(ca) == false) ))
+
         //_animator.SetLayerWeight(1,1);
         //_animator.SetTrigger("Melee Attack 1");
         //attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root,false);
         //StartCoroutine(IEResetAttack());
-        
+
     }
 
     IEnumerator IEResetAttack()
     {
         yield return new WaitForEndOfFrame();
-      
+
         _animator.ResetTrigger("Primary Attack 1");
     }
 
@@ -143,9 +137,9 @@ public class Player : BaseCharacter
     public override void Rotation()
     {
         base.Rotation();
-     
-        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f,_inputService.GetMoveInput().y).normalized;
-       
+
+        Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, _inputService.GetMoveInput().y).normalized;
+
         if (_inputService.GetMoveInput() != Vector2.zero)
         {
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
@@ -168,7 +162,7 @@ public class Player : BaseCharacter
 
         float targetMoveSpeed = 0;
 
-        if(forwardMovement)
+        if (forwardMovement)
         {
             // TODO добавить спринт скорость в зависимости от инпут кнопки спринта
             targetMoveSpeed = _moveSpeed;
@@ -177,10 +171,10 @@ public class Player : BaseCharacter
         {
             targetMoveSpeed = _backwardMoveSpeed;
         }
-      
+
         if (_inputService.GetMoveInput() == Vector2.zero) targetMoveSpeed = 0;
-       
-       
+
+
         // Берем текущую скорость движения, без учета гравитации
         float currentHorizontalSpeed = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z).magnitude;
 
@@ -202,21 +196,21 @@ public class Player : BaseCharacter
         }
 
         // Игрок будет двигаться по форварду камеры
-        Vector3 targetDir = new Vector3(_inputService.GetMoveInput().x,0,_inputService.GetMoveInput().y);
+        Vector3 targetDir = new Vector3(_inputService.GetMoveInput().x, 0, _inputService.GetMoveInput().y);
         targetDir = _mainCamera.transform.TransformDirection(targetDir);
-        targetDir = Vector3.ProjectOnPlane(targetDir,Vector3.up);
-        
+        targetDir = Vector3.ProjectOnPlane(targetDir, Vector3.up);
+
         Vector3 targetMovement = targetDir.normalized * _currentMoveSpeed * Time.deltaTime;
 
         // К нашему движению добавляем вертикальное ускорение, вертикальное ускорение меняется в зависимости от прыжков,падений и тд
         targetMovement += new Vector3(0, _verticalVelocity, 0) * Time.deltaTime;
 
         _characterController.Move(targetMovement);
-      
+
         // Обновляем переменную для бленд движения аниматора 
-        if(targetMoveSpeed > 0)
+        if (targetMoveSpeed > 0)
         {
-            if(_inputService.GetMoveInput().magnitude != 0)
+            if (_inputService.GetMoveInput().magnitude != 0)
             {
                 _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
                 // if (forwardMovement)
@@ -230,13 +224,13 @@ public class Player : BaseCharacter
         else
         {
             // Если таргет скорость равна нулю, то просто плавно сбавляем бленд
-            _animationMotion = Mathf.Lerp(_animationMotion,0,Time.deltaTime * _speedChangeRate);
+            _animationMotion = Mathf.Lerp(_animationMotion, 0, Time.deltaTime * _speedChangeRate);
         }
     }
 
     public override void TryToJump()
     {
-        if(_inputService.GetJump() == false) return;
+        if (_inputService.GetJump() == false) return;
         if (_jumpTimeoutDelta > 0 || !_isGrounded) return;
 
         Jump();
@@ -254,7 +248,7 @@ public class Player : BaseCharacter
     {
         base.Gravity();
 
-       
+
         if (_isGrounded)
         {
             _animator.SetBool("FreeFall", false);
@@ -274,7 +268,7 @@ public class Player : BaseCharacter
         {
             _jumpTimeoutDelta = _jumpTimeout;
 
-            if(_fallTimeoutDelta > 0)
+            if (_fallTimeoutDelta > 0)
                 _fallTimeoutDelta -= Time.deltaTime;
             else
                 _animator.SetBool("FreeFall", true);
@@ -289,18 +283,18 @@ public class Player : BaseCharacter
     {
         base.GroundCheck();
 
-        _animator.SetBool("Land",_isGrounded);
+        _animator.SetBool("Land", _isGrounded);
     }
 
     public override void UpdateAnimator()
     {
-        _animator.SetFloat("Motion_Y",_animationMotion);
-        _animator.SetFloat("Motion_X",_inputService.GetMoveInput().x);
-       
+        _animator.SetFloat("Motion_Y", _animationMotion);
+        _animator.SetFloat("Motion_X", _inputService.GetMoveInput().x);
+
     }
 
 
-    private void OnDestroy() 
+    private void OnDestroy()
     {
         InputEvents.OnFireClicked -= IncreaseFireClickCount;
     }
