@@ -55,7 +55,7 @@ public class Player : BaseCharacter
         InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
 
         ResetPrimaryAttack();
-        _animator.SetLayerWeight(1, 0);
+        _animator.SetLayerWeight(1, 1);
     }
 
     public override void Start()
@@ -123,7 +123,7 @@ public class Player : BaseCharacter
         {
             if (currentPrimaryAttackIndex >= 0)
             {
-                _animator.SetLayerWeight(1, 0);
+                //_animator.SetLayerWeight(1, 0);
             }
 
             ResetPrimaryAttack();
@@ -169,11 +169,11 @@ public class Player : BaseCharacter
 
         if (nextAnimationClip.IsAllowRootRotation)
         {
-            _animator.SetLayerWeight(1, 0);
+            //_animator.SetLayerWeight(1, 0);
         }
         else
         {
-            _animator.SetLayerWeight(1, 1);
+            //_animator.SetLayerWeight(1, 1);
         }
 
 
