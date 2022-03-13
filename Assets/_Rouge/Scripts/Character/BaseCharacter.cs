@@ -38,10 +38,11 @@ public class BaseCharacter : Pawn
 
     [Space]
     [SerializeField] protected bool _blockMovement;
+    [SerializeField] protected bool _battleState;
 
     protected float _jumpTimeoutDelta;
 
-
+    protected float _battleStateTimeout = 3;
 
     public override void Awake()
     {

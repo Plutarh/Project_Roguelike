@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Zenject;
@@ -54,6 +55,7 @@ public class Player : BaseCharacter
         InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
 
         ResetPrimaryAttack();
+        _animator.SetLayerWeight(1, 0);
     }
 
     public override void Start()
@@ -67,17 +69,24 @@ public class Player : BaseCharacter
 
     public override void Update()
     {
+        base.Update();
+
+        PrimaryAttackResetTimer();
         TryToJump();
         SetMoveInput(_inputService.GetMoveInput());
         TryToPrimaryAttack();
-        base.Update();
 
-        FireClickTimer();
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+    }
+
+    public override void InitComponents()
+    {
+        base.InitComponents();
+        _inputService = GetComponent<InputService>();
     }
 
     void OnAttackButtonClicked(EAttackType type)
@@ -97,28 +106,26 @@ public class Player : BaseCharacter
 
     void IncreasePrimaryAttackClickCount()
     {
-
-
         TryToPrimaryAttack();
     }
 
     float GetAttackLayerAnimationTime()
     {
-        // if (_animator.GetCurrentAnimatorStateInfo(1).IsName(_currentCombatName))
-        // {
-        //     Debug.LogError($"return correct normolized time by {_currentCombatName}");
-        // }
-        // else
-        // {
-        //     Debug.LogError($"return error time");
-        // }
-        return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
+        if (_animator.GetCurrentAnimatorStateInfo(1).IsName(_currentCombatName))
+            return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
+        else
+            return 0;
     }
 
-    void FireClickTimer()
+    void PrimaryAttackResetTimer()
     {
         if (Time.time - _lastPrimaryAttackTime > _comboAttackTimeout)
         {
+            if (currentPrimaryAttackIndex >= 0)
+            {
+                _animator.SetLayerWeight(1, 0);
+            }
+
             ResetPrimaryAttack();
         }
     }
@@ -129,8 +136,6 @@ public class Player : BaseCharacter
         PrimaryAttack();
     }
 
-
-
     void PrimaryAttack()
     {
         _inputService.ResetFire();
@@ -138,26 +143,17 @@ public class Player : BaseCharacter
         if (currentPrimaryAttackIndex < 0)
         {
             currentPrimaryAttackIndex = 0;
-            _lastPrimaryAttackTime = Time.time;
         }
         else
         {
-            currentPrimaryAttackIndex++;
-            _lastPrimaryAttackTime = Time.time;
-            // if (GetAttackLayerAnimationTime() > 0.8f)
-            // {
-
-            // }
-            // else
-            // {
-            //     return;
-            // }
+            if (GetAttackLayerAnimationTime() > 0.65f)
+                currentPrimaryAttackIndex++;
+            else
+                return;
         }
-        // if (currentPrimaryAttackIndex > characterAnimationData.GetCombatAnimationsByType(EAttackType.Primary).animationClipDatas.Count - 1)
-        // {
-        //     ResetPrimaryAttack();
-        // }
-        _animator.SetLayerWeight(1, 1);
+
+
+        _lastPrimaryAttackTime = Time.time;
 
         AnimationClipData nextAnimationClip = new AnimationClipData();
 
@@ -165,36 +161,50 @@ public class Player : BaseCharacter
 
         _comboAttackTimeout = nextAnimationClip.GetTimerToNextCombo;
 
-        //BlockMovement(nextAnimationClip.IsStopMovement);
-        //attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, nextAnimationClip.IsAllowRootRotation);
+        // BlockMovement(nextAnimationClip.IsStopMovement);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, nextAnimationClip.IsAllowRootRotation);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftLeg, nextAnimationClip.IsAllowRootRotation);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg, nextAnimationClip.IsAllowRootRotation);
 
 
-        Debug.LogError($"Try play {nextAnimationClip.GetAnimationName}");
+        if (nextAnimationClip.IsAllowRootRotation)
+        {
+            _animator.SetLayerWeight(1, 0);
+        }
+        else
+        {
+            _animator.SetLayerWeight(1, 1);
+        }
 
-        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime);
+
+
+        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime, nextAnimationClip.IsAllowRootRotation ? 0 : 1);
         _currentCombatName = nextAnimationClip.GetAnimationName;
 
-        //
+
     }
 
     void ResetPrimaryAttack()
     {
         currentPrimaryAttackIndex = -1;
-        _animator.SetLayerWeight(1, 0);
+
+        // BlockMovement(false);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, false);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftLeg, false);
+        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg, false);
     }
 
-    IEnumerator IEResetAttack()
+    void ChangeAttackLayerWeightSmooth(float targetWeight)
     {
-        yield return new WaitForEndOfFrame();
+        float currentWeight = _animator.GetLayerWeight(1);
 
-
+        DOTween.To(() => currentWeight, x => currentWeight = x, targetWeight, 1).OnUpdate(() =>
+        {
+            _animator.SetLayerWeight(1, currentWeight);
+        });
     }
 
-    public override void InitComponents()
-    {
-        base.InitComponents();
-        _inputService = GetComponent<InputService>();
-    }
+
 
     public override void Rotation()
     {

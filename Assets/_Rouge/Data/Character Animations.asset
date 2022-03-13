@@ -30,9 +30,9 @@ MonoBehaviour:
       _crossFade: 0.15
     - _animationClipName: Melee Attack 3
       animationClip: {fileID: -203655887218126122, guid: 80d3837d3c8f7e843a81c74547b201b7, type: 3}
-      _stopMovement: 0
-      _allowRootRotation: 0
-      _timerToNextCombo: 0.5
+      _stopMovement: 1
+      _allowRootRotation: 1
+      _timerToNextCombo: 3
       _crossFade: 0.2
   - attackType: 1
     animationClipDatas: []

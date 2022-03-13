@@ -77,7 +77,7 @@ ModelImporter:
       takeName: mixamo.com
       internalID: 0
       firstFrame: 74
-      lastFrame: 164
+      lastFrame: 134
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -98,8 +98,8 @@ ModelImporter:
       curves: []
       events: []
       transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
+      maskType: 1
+      maskSource: {fileID: 31900000, guid: 30853d614057f444ea024d182dcf91d3, type: 2}
       additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
