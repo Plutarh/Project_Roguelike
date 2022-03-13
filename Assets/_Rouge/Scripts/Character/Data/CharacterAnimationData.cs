@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "Character Animations", menuName = "Character Animation", order = 51)]
 public class CharacterAnimationData : ScriptableObject
@@ -15,6 +16,8 @@ public class CharacterAnimationData : ScriptableObject
         get => _animationDatas;
     }
 
+
+
     [SerializeField] private RuntimeAnimatorController _animatorController;
     [SerializeField] private List<CombatAnimationData> _animationDatas = new List<CombatAnimationData>();
 
@@ -23,11 +26,47 @@ public class CharacterAnimationData : ScriptableObject
     {
         _animationDatas.ForEach(ad => ad.animationClipDatas.ForEach(acd => acd.Refresh()));
     }
+
+    public CombatAnimationData GetCombatAnimationsByType(EAttackType type)
+    {
+        return _animationDatas.FirstOrDefault(ad => ad.attackType == type);
+    }
+
+    public AnimationClipData GetAnimationClip(EAttackType type, ref int clipIndex)
+    {
+        var foundedCombatData = _animationDatas.FirstOrDefault(ad => ad.attackType == type);
+
+        AnimationClipData foundedClip = new AnimationClipData();
+
+        if (foundedCombatData == null)
+        {
+            Debug.LogError($"Cannot find combo data by type {type}");
+        }
+        else
+        {
+            if (clipIndex > foundedCombatData.animationClipDatas.Count - 1)
+            {
+                clipIndex = 0;
+            }
+            foundedClip = foundedCombatData.animationClipDatas[clipIndex];
+            // }
+            // Debug.LogError($"Index out of range by combo clip. Current index {clipIndex} but total clips count is {foundedCombatData.animationClipDatas.Count}");
+            //     foundedClip = foundedCombatData.animationClipDatas[0];
+            // }
+            // else
+            // {
+            //     foundedClip = foundedCombatData.animationClipDatas[clipIndex];
+            // }
+        }
+
+        return foundedClip;
+    }
 }
 
 [System.Serializable]
 public class CombatAnimationData
 {
+    public EAttackType attackType;
     public List<AnimationClipData> animationClipDatas = new List<AnimationClipData>();
 }
 
@@ -44,6 +83,11 @@ public class AnimationClipData
         }
     }
 
+    public float GetTimerToNextCombo
+    {
+        get => _timerToNextCombo;
+    }
+
     public bool IsStopMovement
     {
         get => _stopMovement;
@@ -54,10 +98,17 @@ public class AnimationClipData
         get => _allowRootRotation;
     }
 
+    public float GetCrossFadeTime
+    {
+        get => _crossFade;
+    }
+
     [SerializeField] private string _animationClipName;
     [SerializeField] private AnimationClip animationClip;
     [SerializeField] private bool _stopMovement;
     [SerializeField] private bool _allowRootRotation;
+    [SerializeField] private float _timerToNextCombo = 0.5f;
+    [SerializeField] private float _crossFade = 0.1f;
 
     public void Refresh()
     {
@@ -77,5 +128,14 @@ public class CharacterAnimationDataEditor : Editor
             (target as CharacterAnimationData).Refresh();
         }
     }
+}
+
+[System.Serializable]
+public enum EAttackType
+{
+    Primary,
+    Secondary,
+    Utility,
+    Ultimate
 }
 

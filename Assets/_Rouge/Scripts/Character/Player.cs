@@ -25,13 +25,18 @@ public class Player : BaseCharacter
     [SerializeField] private Transform _cameraRoot;
 
 
-    private float _comboAttackDelta;
-    private float _comboAttackTimeout = 0.8f;
+    [Header("Combat")]
+    [SerializeField] private float _comboAttackTimeout = 0.8f;
+    [SerializeField] private float _lastPrimaryAttackTime = 0;
+    [SerializeField] private string _currentCombatName;
+    public int currentPrimaryAttackIndex = 0;
 
-    [SerializeField] private int _fireClickCount;
-
+    [Header("Other")]
     public AvatarMask attackMask;
     public CharacterAnimationData characterAnimationData;
+
+    public List<AnimationClipData> combatAnimationsQueue = new List<AnimationClipData>();
+
 
 
     [Inject]
@@ -45,7 +50,10 @@ public class Player : BaseCharacter
         base.Awake();
         _mainCamera = Camera.main;
 
-        InputEvents.OnFireClicked += IncreaseFireClickCount;
+        InputEvents.OnFireClicked += IncreasePrimaryAttackClickCount;
+        InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
+
+        ResetPrimaryAttack();
     }
 
     public override void Start()
@@ -65,7 +73,6 @@ public class Player : BaseCharacter
         base.Update();
 
         FireClickTimer();
-
     }
 
     public override void FixedUpdate()
@@ -73,31 +80,46 @@ public class Player : BaseCharacter
         base.FixedUpdate();
     }
 
-    float lastFireClickedTime = 0;
-
-    void IncreaseFireClickCount()
+    void OnAttackButtonClicked(EAttackType type)
     {
-        lastFireClickedTime = Time.time;
-        _fireClickCount++;
+        switch (type)
+        {
+            case EAttackType.Primary:
+                break;
+            case EAttackType.Secondary:
+                break;
+            case EAttackType.Utility:
+                break;
+            case EAttackType.Ultimate:
+                break;
+        }
+    }
 
-        _fireClickCount = Mathf.Clamp(_fireClickCount, 0, 3);
+    void IncreasePrimaryAttackClickCount()
+    {
+
 
         TryToPrimaryAttack();
     }
 
     float GetAttackLayerAnimationTime()
     {
+        // if (_animator.GetCurrentAnimatorStateInfo(1).IsName(_currentCombatName))
+        // {
+        //     Debug.LogError($"return correct normolized time by {_currentCombatName}");
+        // }
+        // else
+        // {
+        //     Debug.LogError($"return error time");
+        // }
         return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
     }
 
     void FireClickTimer()
     {
-        if (Time.time - lastFireClickedTime > _comboAttackTimeout)
+        if (Time.time - _lastPrimaryAttackTime > _comboAttackTimeout)
         {
-            _fireClickCount = 0;
-
-            _animator.SetBool("Primary Attack 2", false);
-            _animator.SetBool("Primary Attack 3", false);
+            ResetPrimaryAttack();
         }
     }
 
@@ -107,25 +129,65 @@ public class Player : BaseCharacter
         PrimaryAttack();
     }
 
-    public List<AnimationClipData> combatAnimationsQueue = new List<AnimationClipData>();
+
 
     void PrimaryAttack()
     {
         _inputService.ResetFire();
 
+        if (currentPrimaryAttackIndex < 0)
+        {
+            currentPrimaryAttackIndex = 0;
+            _lastPrimaryAttackTime = Time.time;
+        }
+        else
+        {
+            currentPrimaryAttackIndex++;
+            _lastPrimaryAttackTime = Time.time;
+            // if (GetAttackLayerAnimationTime() > 0.8f)
+            // {
 
-        //_animator.SetLayerWeight(1,1);
-        //_animator.SetTrigger("Melee Attack 1");
-        //attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root,false);
-        //StartCoroutine(IEResetAttack());
+            // }
+            // else
+            // {
+            //     return;
+            // }
+        }
+        // if (currentPrimaryAttackIndex > characterAnimationData.GetCombatAnimationsByType(EAttackType.Primary).animationClipDatas.Count - 1)
+        // {
+        //     ResetPrimaryAttack();
+        // }
+        _animator.SetLayerWeight(1, 1);
 
+        AnimationClipData nextAnimationClip = new AnimationClipData();
+
+        nextAnimationClip = characterAnimationData.GetAnimationClip(EAttackType.Primary, ref currentPrimaryAttackIndex);
+
+        _comboAttackTimeout = nextAnimationClip.GetTimerToNextCombo;
+
+        //BlockMovement(nextAnimationClip.IsStopMovement);
+        //attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, nextAnimationClip.IsAllowRootRotation);
+
+
+        Debug.LogError($"Try play {nextAnimationClip.GetAnimationName}");
+
+        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime);
+        _currentCombatName = nextAnimationClip.GetAnimationName;
+
+        //
+    }
+
+    void ResetPrimaryAttack()
+    {
+        currentPrimaryAttackIndex = -1;
+        _animator.SetLayerWeight(1, 0);
     }
 
     IEnumerator IEResetAttack()
     {
         yield return new WaitForEndOfFrame();
 
-        _animator.ResetTrigger("Primary Attack 1");
+
     }
 
     public override void InitComponents()
@@ -136,6 +198,8 @@ public class Player : BaseCharacter
 
     public override void Rotation()
     {
+        if (_blockMovement) return;
+
         base.Rotation();
 
         Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, _inputService.GetMoveInput().y).normalized;
@@ -155,6 +219,8 @@ public class Player : BaseCharacter
 
     public override void Movement()
     {
+        if (_blockMovement) return;
+
         base.Movement();
 
         // Сначала проверяем бежит ли игрок вперед или назад
@@ -290,13 +356,13 @@ public class Player : BaseCharacter
     {
         _animator.SetFloat("Motion_Y", _animationMotion);
         _animator.SetFloat("Motion_X", _inputService.GetMoveInput().x);
-
     }
 
 
     private void OnDestroy()
     {
-        InputEvents.OnFireClicked -= IncreaseFireClickCount;
+        InputEvents.OnFireClicked -= IncreasePrimaryAttackClickCount;
+        InputEvents.OnAttackButtonClicked -= OnAttackButtonClicked;
     }
 }
 

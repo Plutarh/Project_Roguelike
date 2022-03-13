@@ -13,17 +13,26 @@ MonoBehaviour:
   m_Name: Character Animations
   m_EditorClassIdentifier: 
   _animatorController: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
-  animationDatas:
-  - animationClipDatas:
-    - _animationName: Melee Attack 1
-      animationClip: {fileID: -203655887218126122, guid: 323bf93c0e6738240883d4a7586b18db, type: 3}
+  _animationDatas:
+  - attackType: 0
+    animationClipDatas:
+    - _animationClipName: Melee Attack 1
+      animationClip: {fileID: -203655887218126122, guid: 72321298071660644986b1572e05ce24, type: 3}
       _stopMovement: 0
       _allowRootRotation: 0
-    - _animationName: Melee Attack 2
+      _timerToNextCombo: 1.5
+      _crossFade: 0.05
+    - _animationClipName: Melee Attack 2
       animationClip: {fileID: 296130795608717920, guid: 323bf93c0e6738240883d4a7586b18db, type: 3}
       _stopMovement: 0
       _allowRootRotation: 0
-    - _animationName: Melee Attack 3
+      _timerToNextCombo: 1.5
+      _crossFade: 0.15
+    - _animationClipName: Melee Attack 3
       animationClip: {fileID: -203655887218126122, guid: 80d3837d3c8f7e843a81c74547b201b7, type: 3}
-      _stopMovement: 1
-      _allowRootRotation: 1
+      _stopMovement: 0
+      _allowRootRotation: 0
+      _timerToNextCombo: 0.5
+      _crossFade: 0.2
+  - attackType: 1
+    animationClipDatas: []

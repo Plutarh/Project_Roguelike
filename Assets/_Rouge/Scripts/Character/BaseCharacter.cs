@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 public class BaseCharacter : Pawn
-{   
+{
     [Header("Components")]
     [SerializeField] protected Animator _animator;
     [SerializeField] protected CharacterController _characterController;
@@ -27,7 +27,7 @@ public class BaseCharacter : Pawn
 
     [Space]
     [SerializeField] protected float _currentMoveSpeed;
-    
+
     [Space]
     [SerializeField] protected Vector3 _moveInput;
 
@@ -36,9 +36,12 @@ public class BaseCharacter : Pawn
     [SerializeField] protected bool _isGrounded;
     [SerializeField] protected Transform _groundChecker;
 
+    [Space]
+    [SerializeField] protected bool _blockMovement;
+
     protected float _jumpTimeoutDelta;
 
-   
+
 
     public override void Awake()
     {
@@ -77,57 +80,61 @@ public class BaseCharacter : Pawn
         Vector3 spherePosition = Vector3.zero;
 
         // Если есть отдельный трансформ для граунд чека, то юзаем его, если нету, то юзаем обычный трансформ 
-        if(_groundChecker != null)
-            spherePosition = new Vector3(_groundChecker.position.x,_groundChecker.position.y - 0.15f,_groundChecker.position.z);
+        if (_groundChecker != null)
+            spherePosition = new Vector3(_groundChecker.position.x, _groundChecker.position.y - 0.15f, _groundChecker.position.z);
         else
             spherePosition = new Vector3(transform.position.x, transform.position.y - 0.15f, transform.position.z);
 
-        _isGrounded = Physics.CheckSphere(spherePosition,0.3f,_groundLayers,QueryTriggerInteraction.Ignore);
+        _isGrounded = Physics.CheckSphere(spherePosition, 0.3f, _groundLayers, QueryTriggerInteraction.Ignore);
 
-        
+
     }
 
-    
+    public void BlockMovement(bool state)
+    {
+        _blockMovement = state;
+    }
+
     public virtual void Movement()
     {
-       
+
     }
 
     public virtual void Gravity()
     {
-       
+
     }
 
     public virtual void TryToJump()
     {
-        
+
     }
 
     public virtual void Jump()
     {
-       
+
     }
 
     // Виртуальный метод, потому что повороты игрока зависят от камеры и инпута, ИИ юзают навмеш агента
     public virtual void Rotation()
     {
-        
+
     }
 
     public virtual void UpdateAnimator()
     {
         //_animator.SetFloat("Motion",_animationMotion);
     }
-    
-    private void OnDrawGizmos() 
+
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
 
-        if(_groundChecker != null)
+        if (_groundChecker != null)
         {
             Vector3 spherePosition = new Vector3(_groundChecker.position.x, _groundChecker.position.y - 0.15f, _groundChecker.position.z);
             Gizmos.DrawSphere(spherePosition, 0.3f);
         }
-       
+
     }
 }

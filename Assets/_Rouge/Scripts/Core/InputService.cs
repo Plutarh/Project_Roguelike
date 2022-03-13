@@ -5,7 +5,7 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class InputService : MonoBehaviour , IInputService
+public class InputService : MonoBehaviour, IInputService
 {
     [Header("Character Input Values")]
     [SerializeField] private Vector2 _move;
@@ -24,16 +24,16 @@ public class InputService : MonoBehaviour , IInputService
 
     [SerializeReference] private PlayerInput _playerInput;
 
-  
 
-    public void OnMove(InputValue value) 
+
+    public void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
     }
 
     public void OnLook(InputValue value)
     {
-        if(cursorInputForLook)
+        if (cursorInputForLook)
         {
             LookInput(value.Get<Vector2>());
         }
@@ -101,14 +101,15 @@ public class InputService : MonoBehaviour , IInputService
 
     public bool IsCurrentDeviceMouse()
     {
-       return _playerInput.currentControlScheme == "KeyboardMouse";
+        return _playerInput.currentControlScheme == "KeyboardMouse";
     }
 
     public void OnFire(InputValue value)
     {
         _fire = value.isPressed;
-       
+
         InputEvents.OnFireClicked?.Invoke();
+        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Primary);
     }
 
     public bool GetFire()
@@ -121,6 +122,6 @@ public class InputService : MonoBehaviour , IInputService
         _fire = false;
     }
 
-  
+
 }
 
