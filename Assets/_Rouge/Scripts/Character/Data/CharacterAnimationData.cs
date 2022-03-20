@@ -93,9 +93,9 @@ public class AnimationClipData
         get => _stopMovement;
     }
 
-    public bool IsAllowRootRotation
+    public bool IsAnimationFullbody
     {
-        get => _allowRootRotation;
+        get => _animationFullbody;
     }
 
     public float GetCrossFadeTime
@@ -103,10 +103,16 @@ public class AnimationClipData
         get => _crossFade;
     }
 
+    public float GetStopMovementTime
+    {
+        get => _stopMovementTime;
+    }
+
     [SerializeField] private string _animationClipName;
     [SerializeField] private AnimationClip animationClip;
     [SerializeField] private bool _stopMovement;
-    [SerializeField] private bool _allowRootRotation;
+    [SerializeField] private float _stopMovementTime;
+    [SerializeField] private bool _animationFullbody;
     [SerializeField] private float _timerToNextCombo = 0.5f;
     [SerializeField] private float _crossFade = 0.1f;
 

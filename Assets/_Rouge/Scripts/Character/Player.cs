@@ -61,10 +61,6 @@ public class Player : BaseCharacter
     public override void Start()
     {
 
-        foreach (AvatarMaskBodyPart bodyPart in Enum.GetValues(typeof(AvatarMaskBodyPart)))
-        {
-
-        }
     }
 
     public override void Update()
@@ -75,6 +71,7 @@ public class Player : BaseCharacter
         TryToJump();
         SetMoveInput(_inputService.GetMoveInput());
         TryToPrimaryAttack();
+
 
     }
 
@@ -113,19 +110,16 @@ public class Player : BaseCharacter
     {
         if (_animator.GetCurrentAnimatorStateInfo(1).IsName(_currentCombatName))
             return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
+        else if (_animator.GetCurrentAnimatorStateInfo(0).IsName(_currentCombatName))
+            return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
         else
-            return 0;
+            return 1;
     }
 
     void PrimaryAttackResetTimer()
     {
         if (Time.time - _lastPrimaryAttackTime > _comboAttackTimeout)
         {
-            if (currentPrimaryAttackIndex >= 0)
-            {
-                //_animator.SetLayerWeight(1, 0);
-            }
-
             ResetPrimaryAttack();
         }
     }
@@ -161,37 +155,25 @@ public class Player : BaseCharacter
 
         _comboAttackTimeout = nextAnimationClip.GetTimerToNextCombo;
 
-        // BlockMovement(nextAnimationClip.IsStopMovement);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, nextAnimationClip.IsAllowRootRotation);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftLeg, nextAnimationClip.IsAllowRootRotation);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg, nextAnimationClip.IsAllowRootRotation);
+        BlockMovement(nextAnimationClip.IsStopMovement);
+        StartCoroutine(IEWaitToUnblockMovement(nextAnimationClip.GetStopMovementTime));
 
-
-        if (nextAnimationClip.IsAllowRootRotation)
-        {
-            //_animator.SetLayerWeight(1, 0);
-        }
-        else
-        {
-            //_animator.SetLayerWeight(1, 1);
-        }
-
-
-
-        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime, nextAnimationClip.IsAllowRootRotation ? 0 : 1);
+        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime, nextAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextAnimationClip.GetAnimationName;
 
+    }
 
+    IEnumerator IEWaitToUnblockMovement(float waitTime)
+    {
+        if (waitTime <= 0) yield break;
+
+        yield return new WaitForSecondsRealtime(waitTime);
+        BlockMovement(false);
     }
 
     void ResetPrimaryAttack()
     {
         currentPrimaryAttackIndex = -1;
-
-        // BlockMovement(false);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.Root, false);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftLeg, false);
-        // attackMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightLeg, false);
     }
 
     void ChangeAttackLayerWeightSmooth(float targetWeight)
@@ -203,8 +185,6 @@ public class Player : BaseCharacter
             _animator.SetLayerWeight(1, currentWeight);
         });
     }
-
-
 
     public override void Rotation()
     {
