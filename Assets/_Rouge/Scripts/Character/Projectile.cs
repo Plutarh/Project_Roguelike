@@ -11,6 +11,11 @@ public class Projectile : MonoBehaviour
     private void Awake()
     {
         _body = GetComponent<Rigidbody>();
+
+
+        // DEBUG
+        damageData = new DamageData();
+        damageData.damage = 50;
     }
 
     private void Update()
@@ -39,6 +44,7 @@ public class Projectile : MonoBehaviour
     {
         if (other == null) return;
 
+        Debug.Log($"Hit with {other.transform.name}");
         IDamageable damageable;
         if (other.transform.TryGetComponent<IDamageable>(out damageable))
         {

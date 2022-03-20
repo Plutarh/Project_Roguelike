@@ -2,17 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIBase : MonoBehaviour
+public class AIBase : BaseCharacter
 {
-    // Start is called before the first frame update
-    void Start()
+    private RagdollController ragdollController;
+
+    public override void Awake()
     {
-        
+        base.Awake();
+
+        ragdollController = GetComponent<RagdollController>();
     }
 
-    // Update is called once per frame
-    void Update()
+
+
+    public override void Death()
     {
-        
+        base.Death();
+        ragdollController.EnableRagdoll();
     }
 }

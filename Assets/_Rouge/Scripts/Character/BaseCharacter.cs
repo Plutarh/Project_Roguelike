@@ -46,6 +46,7 @@ public class BaseCharacter : Pawn
 
     public override void Awake()
     {
+        base.Awake();
         InitComponents();
     }
 

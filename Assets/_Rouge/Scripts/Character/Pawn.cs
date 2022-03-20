@@ -9,39 +9,42 @@ public class Pawn : MonoBehaviour, IDamageable
     {
         get => _health;
     }
-    
+
     [SerializeField] private Health _health;
 
     public virtual void Awake()
     {
         _health = GetComponent<Health>();
     }
-    
+
     public virtual void Start()
     {
-        
+
     }
 
-   
+
     public virtual void Update()
     {
-        
+
     }
 
-    public virtual void FixedUpdate() 
+    public virtual void FixedUpdate()
     {
-        
+
     }
 
     public virtual void TakeDamage(DamageData damageData)
     {
+        if (_health == null) Debug.LogError("Health component NULLED");
+        if (damageData == null) Debug.LogError("Damage data NULLED");
+
         _health.DecreaseHealth(damageData.damage);
 
-        if(_health.IsDead) Death();
+        if (_health.IsDead) Death();
     }
 
     public virtual void Death()
     {
-        
+
     }
 }
