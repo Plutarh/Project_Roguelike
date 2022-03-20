@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -19,24 +20,25 @@ public class RagdollController : MonoBehaviour
 
     private Animator _animator;
     private CharacterController _characterController;
+    private NavMeshAgent _navmeshAgent;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+        _navmeshAgent = GetComponent<NavMeshAgent>();
+
         DisableRagdoll();
     }
 
     public void EnableRagdoll()
     {
-        if (_animator != null)
-        {
-            _animator.enabled = false;
-            _characterController.enabled = false;
+        if (_animator != null) _animator.enabled = false;
+        if (_characterController != null) _characterController.enabled = false;
+        if (_navmeshAgent != null) _navmeshAgent.enabled = false;
 
-            _rigidbodies.ForEach(rb => rb.isKinematic = false);
-            _colliders.ForEach(c => c.enabled = true);
-        }
+        _rigidbodies.ForEach(rb => rb.isKinematic = false);
+        _colliders.ForEach(c => c.enabled = true);
     }
 
     void DisableRagdoll()
@@ -45,10 +47,6 @@ public class RagdollController : MonoBehaviour
         _colliders.ForEach(c => c.enabled = false);
     }
 
-    public void RagdollAtPart()
-    {
-
-    }
 
     public void FindAll()
     {
