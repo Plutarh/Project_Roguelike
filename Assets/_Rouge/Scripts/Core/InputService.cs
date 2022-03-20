@@ -108,7 +108,6 @@ public class InputService : MonoBehaviour, IInputService
     {
         _fire = value.isPressed;
 
-        InputEvents.OnFireClicked?.Invoke();
         InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Primary);
     }
 

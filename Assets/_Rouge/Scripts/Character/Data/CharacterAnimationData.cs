@@ -6,6 +6,11 @@ using System.Linq;
 [CreateAssetMenu(fileName = "Character Animations", menuName = "Character Animation", order = 51)]
 public class CharacterAnimationData : ScriptableObject
 {
+    public string GetCharacterName
+    {
+        get => _characterName;
+    }
+
     public RuntimeAnimatorController GetAnimatorController
     {
         get => _animatorController;
@@ -17,7 +22,7 @@ public class CharacterAnimationData : ScriptableObject
     }
 
 
-
+    [SerializeField] private string _characterName;
     [SerializeField] private RuntimeAnimatorController _animatorController;
     [SerializeField] private List<CombatAnimationData> _animationDatas = new List<CombatAnimationData>();
 

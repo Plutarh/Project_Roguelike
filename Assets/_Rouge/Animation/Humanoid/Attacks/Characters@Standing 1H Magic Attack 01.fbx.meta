@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 72321298071660644986b1572e05ce24
+guid: f326f82a136872c4dbef303c9f35a3e4
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Melee Attack 1
+    second: Magic Attack 1
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -21,7 +21,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Inbetween bone
       rotation in copied configuration does not match rotation in animation file:\n\t'Ball_L'
-      : rotation error = 6.222712 deg\n"
+      : rotation error = 1.502089 deg\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'mixamo.com' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
@@ -41,11 +41,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Melee Attack 1
+      name: Magic Attack 1
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 69
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -66,8 +66,8 @@ ModelImporter:
       curves: []
       events: []
       transformMask: []
-      maskType: 1
-      maskSource: {fileID: 31900000, guid: 30853d614057f444ea024d182dcf91d3, type: 2}
+      maskType: 3
+      maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:

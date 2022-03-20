@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c3b91c45994b9242b3dc8cd8930cb49, type: 3}
-  m_Name: Character Animations
+  m_Name: Warrior
   m_EditorClassIdentifier: 
+  _characterName: Warrior
   _animatorController: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
   _animationDatas:
   - attackType: 0
@@ -19,20 +20,23 @@ MonoBehaviour:
     - _animationClipName: Melee Attack 1
       animationClip: {fileID: -203655887218126122, guid: 72321298071660644986b1572e05ce24, type: 3}
       _stopMovement: 0
-      _allowRootRotation: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
       _timerToNextCombo: 1.5
       _crossFade: 0.05
     - _animationClipName: Melee Attack 2
       animationClip: {fileID: 296130795608717920, guid: 323bf93c0e6738240883d4a7586b18db, type: 3}
       _stopMovement: 0
-      _allowRootRotation: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
       _timerToNextCombo: 1.5
       _crossFade: 0.15
     - _animationClipName: Melee Attack 3
       animationClip: {fileID: -203655887218126122, guid: 80d3837d3c8f7e843a81c74547b201b7, type: 3}
       _stopMovement: 1
-      _allowRootRotation: 0
-      _timerToNextCombo: 3
-      _crossFade: 0.2
+      _stopMovementTime: 1.6
+      _animationFullbody: 1
+      _timerToNextCombo: 2
+      _crossFade: 0.05
   - attackType: 1
     animationClipDatas: []

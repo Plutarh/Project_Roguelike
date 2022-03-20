@@ -354,8 +354,9 @@ GameObject:
   - component: {fileID: 6171975998455214671}
   - component: {fileID: 5998406689888486502}
   - component: {fileID: 8757885998664219468}
+  - component: {fileID: 1310941197237695304}
   m_Layer: 0
-  m_Name: Test_Character
+  m_Name: Mage_Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -390,7 +391,7 @@ Animator:
   m_GameObject: {fileID: 7230643067007699184}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 61af343484760d048824dcb6b55246f5, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 40c396d6a09af25468884614c5b2d3d4, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -465,15 +466,21 @@ MonoBehaviour:
     m_Bits: 449
   _isGrounded: 0
   _groundChecker: {fileID: 0}
+  _blockMovement: 0
+  _battleState: 0
   _targetRotation: 0
   _rotationSmoothTime: 0.12
   _rotationVelocity: 0
   _targetDirection: {x: 0, y: 0, z: 0}
   _mainCamera: {fileID: 0}
   _cameraRoot: {fileID: 8354847417727851175}
-  _fireClickCount: 0
+  _comboAttackTimeout: 0.8
+  _lastPrimaryAttackTime: 0
+  _currentCombatName: 
+  currentPrimaryAttackIndex: 0
   attackMask: {fileID: 31900000, guid: 118ef9eb938ca0440a365d6640410526, type: 2}
-  characterAnimationData: {fileID: 11400000, guid: eb83433f2edfb6344b71264baf5977ca, type: 2}
+  characterAnimationData: {fileID: 11400000, guid: a43f90c65a799bd4bab85446a9160c85, type: 2}
+  combatAnimationsQueue: []
 --- !u!114 &6171975998455214671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,6 +590,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootBone: {fileID: 7227248324858605442}
+--- !u!114 &1310941197237695304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7230643067007699184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de9b90d402c7b1458074fc3db54c18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _projectileMuzzles:
+  - {fileID: 7229203019081294744}
+  - {fileID: 7229092560091502530}
+  _primaryAttackProjectilePrefab: {fileID: 5887784242665147008, guid: 9443b560cd311bb41b083a780fdbc455, type: 3}
 --- !u!1 &7230695701393823346
 GameObject:
   m_ObjectHideFlags: 0
@@ -2296,13 +2319,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a35dfec36df8eb8459ddaacd5f978c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiAimConstraint: {fileID: 4977775059775115609}
-  aimTarget: {fileID: 7811305163649090793}
-  maximumDistanceToAim: 30
-  weightChangeSpeed: 5
-  aimSpeed: 6
-  forwardDistance: 5
-  dotProd: 0
+  _multiAimConstraint: {fileID: 4977775059775115609}
+  _aimTarget: {fileID: 7811305163649090793}
+  _maximumDistanceToAim: 30
+  _weightChangeSpeed: 5
+  _aimSpeed: 6
+  _forwardDistance: 5
+  _disableAim: 0
 --- !u!1 &8537094048611276865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2433,13 +2456,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a35dfec36df8eb8459ddaacd5f978c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  multiAimConstraint: {fileID: 1996263839509349367}
-  aimTarget: {fileID: 7811305163649090793}
-  maximumDistanceToAim: 30
-  weightChangeSpeed: 5
-  aimSpeed: 6
-  forwardDistance: 5
-  dotProd: 0
+  _multiAimConstraint: {fileID: 1996263839509349367}
+  _aimTarget: {fileID: 7811305163649090793}
+  _maximumDistanceToAim: 30
+  _weightChangeSpeed: 5
+  _aimSpeed: 6
+  _forwardDistance: 5
+  _disableAim: 0
 --- !u!1 &9220503424900357415
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,6 +2561,10 @@ PrefabInstance:
     - target: {fileID: 1496818227521236, guid: 9645f5b5d6cb3bd498cb78b75cd106a9, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1496818227521236, guid: 9645f5b5d6cb3bd498cb78b75cd106a9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4274009004656016, guid: 9645f5b5d6cb3bd498cb78b75cd106a9, type: 3}
       propertyPath: m_RootOrder

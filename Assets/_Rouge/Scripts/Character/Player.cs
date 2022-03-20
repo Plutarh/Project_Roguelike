@@ -51,7 +51,6 @@ public class Player : BaseCharacter
         base.Awake();
         _mainCamera = Camera.main;
 
-        InputEvents.OnFireClicked += IncreasePrimaryAttackClickCount;
         InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
 
         ResetPrimaryAttack();
@@ -91,6 +90,7 @@ public class Player : BaseCharacter
         switch (type)
         {
             case EAttackType.Primary:
+                TryToPrimaryAttack();
                 break;
             case EAttackType.Secondary:
                 break;
@@ -99,11 +99,6 @@ public class Player : BaseCharacter
             case EAttackType.Ultimate:
                 break;
         }
-    }
-
-    void IncreasePrimaryAttackClickCount()
-    {
-        TryToPrimaryAttack();
     }
 
     float GetAttackLayerAnimationTime()
@@ -161,6 +156,7 @@ public class Player : BaseCharacter
         _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime, nextAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextAnimationClip.GetAnimationName;
 
+        Debug.Log($"Play animation {_currentCombatName}");
     }
 
     IEnumerator IEWaitToUnblockMovement(float waitTime)
@@ -176,18 +172,18 @@ public class Player : BaseCharacter
         currentPrimaryAttackIndex = -1;
     }
 
-    void ChangeAttackLayerWeightSmooth(float targetWeight)
+    public Vector3 GetAimDirection()
     {
-        float currentWeight = _animator.GetLayerWeight(1);
-
-        DOTween.To(() => currentWeight, x => currentWeight = x, targetWeight, 1).OnUpdate(() =>
-        {
-            _animator.SetLayerWeight(1, currentWeight);
-        });
+        return _mainCamera.transform.forward;
     }
 
     public override void Rotation()
     {
+        if (_inputService == null)
+        {
+            Debug.LogError("Input service NULL");
+            return;
+        }
         if (_blockMovement) return;
 
         base.Rotation();
@@ -209,7 +205,11 @@ public class Player : BaseCharacter
 
     public override void Movement()
     {
-        if (_blockMovement) return;
+        if (_inputService == null)
+        {
+            Debug.LogError("Input service NULL");
+            return;
+        }
 
         base.Movement();
 
@@ -228,7 +228,7 @@ public class Player : BaseCharacter
             targetMoveSpeed = _backwardMoveSpeed;
         }
 
-        if (_inputService.GetMoveInput() == Vector2.zero) targetMoveSpeed = 0;
+        if (_inputService.GetMoveInput() == Vector2.zero || _blockMovement) targetMoveSpeed = 0;
 
 
         // Берем текущую скорость движения, без учета гравитации
@@ -351,7 +351,6 @@ public class Player : BaseCharacter
 
     private void OnDestroy()
     {
-        InputEvents.OnFireClicked -= IncreasePrimaryAttackClickCount;
         InputEvents.OnAttackButtonClicked -= OnAttackButtonClicked;
     }
 }
