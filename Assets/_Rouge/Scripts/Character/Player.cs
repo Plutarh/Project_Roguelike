@@ -25,19 +25,23 @@ public class Player : BaseCharacter
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Transform _cameraRoot;
 
-
     [Header("Combat")]
     [SerializeField] private float _comboAttackTimeout = 0.8f;
     [SerializeField] private float _lastPrimaryAttackTime = 0;
     [SerializeField] private string _currentCombatName;
-    public int currentPrimaryAttackIndex = 0;
+
+    private int currentPrimaryAttackIndex = 0;
+
+    [SerializeField] private float _fallTimeoutDelta;
+    [SerializeField] private float _fallTimeout = 0.2f;
+
+    [Space]
+    [SerializeField] private float _jumpHeight;
+    [SerializeField] private float _jumpTimeout = 0.1f;
+    [SerializeField] private float _verticalVelocity;
 
     [Header("Other")]
-    public AvatarMask attackMask;
     public CharacterAnimationData characterAnimationData;
-
-    public List<AnimationClipData> combatAnimationsQueue = new List<AnimationClipData>();
-
 
 
     [Inject]
@@ -87,6 +91,7 @@ public class Player : BaseCharacter
 
     void OnAttackButtonClicked(EAttackType type)
     {
+        // FastRotateToCameraForward();
         switch (type)
         {
             case EAttackType.Primary:
@@ -177,7 +182,14 @@ public class Player : BaseCharacter
         return _mainCamera.transform.forward;
     }
 
-    public override void Rotation()
+    void FastRotateToCameraForward()
+    {
+        float rotation = Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+        // Поворачиваем перса под угол камеры
+        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+    }
+
+    public void Rotation()
     {
         if (_inputService == null)
         {
@@ -185,8 +197,6 @@ public class Player : BaseCharacter
             return;
         }
         if (_blockMovement) return;
-
-        base.Rotation();
 
         Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, _inputService.GetMoveInput().y).normalized;
 
@@ -203,15 +213,13 @@ public class Player : BaseCharacter
         _targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
     }
 
-    public override void Movement()
+    public void Movement()
     {
         if (_inputService == null)
         {
             Debug.LogError("Input service NULL");
             return;
         }
-
-        base.Movement();
 
         // Сначала проверяем бежит ли игрок вперед или назад
         bool forwardMovement = _inputService.GetMoveInput().y > 0 ? true : false;
@@ -284,7 +292,7 @@ public class Player : BaseCharacter
         }
     }
 
-    public override void TryToJump()
+    public void TryToJump()
     {
         if (_inputService.GetJump() == false) return;
         if (_jumpTimeoutDelta > 0 || !_isGrounded) return;
@@ -292,19 +300,14 @@ public class Player : BaseCharacter
         Jump();
     }
 
-    public override void Jump()
+    public void Jump()
     {
-        base.Jump();
-
         _animator.SetBool("Jump", true);
         _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
     }
 
-    public override void Gravity()
+    public void Gravity()
     {
-        base.Gravity();
-
-
         if (_isGrounded)
         {
             _animator.SetBool("FreeFall", false);
@@ -342,7 +345,7 @@ public class Player : BaseCharacter
         _animator.SetBool("Land", _isGrounded);
     }
 
-    public override void UpdateAnimator()
+    public void UpdateAnimator()
     {
         _animator.SetFloat("Motion_Y", _animationMotion);
         _animator.SetFloat("Motion_X", _inputService.GetMoveInput().x);

@@ -391,7 +391,7 @@ Animator:
   m_GameObject: {fileID: 7230643067007699184}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 61af343484760d048824dcb6b55246f5, type: 3}
-  m_Controller: {fileID: 9100000, guid: 40c396d6a09af25468884614c5b2d3d4, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -479,7 +479,7 @@ MonoBehaviour:
   _currentCombatName: 
   currentPrimaryAttackIndex: 0
   attackMask: {fileID: 31900000, guid: 118ef9eb938ca0440a365d6640410526, type: 2}
-  characterAnimationData: {fileID: 11400000, guid: a43f90c65a799bd4bab85446a9160c85, type: 2}
+  characterAnimationData: {fileID: 11400000, guid: eb83433f2edfb6344b71264baf5977ca, type: 2}
   combatAnimationsQueue: []
 --- !u!114 &6171975998455214671
 MonoBehaviour:
@@ -2325,7 +2325,7 @@ MonoBehaviour:
   _weightChangeSpeed: 5
   _aimSpeed: 6
   _forwardDistance: 5
-  _disableAim: 0
+  _disableAim: 1
 --- !u!1 &8537094048611276865
 GameObject:
   m_ObjectHideFlags: 0

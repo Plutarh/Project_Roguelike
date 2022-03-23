@@ -14,15 +14,8 @@ public class BaseCharacter : Pawn
     [SerializeField] protected float _sprintSpeed;
     [SerializeField] protected float _speedChangeRate;
 
-    [SerializeField] protected float _fallTimeoutDelta;
-    [SerializeField] protected float _fallTimeout = 0.2f;
 
     [SerializeField] protected float _animationMotion;
-
-    [Space]
-    [SerializeField] protected float _jumpHeight;
-    [SerializeField] protected float _jumpTimeout = 0.1f;
-    [SerializeField] protected float _verticalVelocity;
     [SerializeField] protected float _gravity = -9.81f;
 
     [Space]
@@ -59,10 +52,6 @@ public class BaseCharacter : Pawn
     public override void Update()
     {
         GroundCheck();
-        Rotation();
-        Gravity();
-        Movement();
-        UpdateAnimator();
     }
 
     public void SetMoveInput(Vector3 _input)
@@ -95,37 +84,6 @@ public class BaseCharacter : Pawn
     public void BlockMovement(bool state)
     {
         _blockMovement = state;
-    }
-
-    public virtual void Movement()
-    {
-
-    }
-
-    public virtual void Gravity()
-    {
-
-    }
-
-    public virtual void TryToJump()
-    {
-
-    }
-
-    public virtual void Jump()
-    {
-
-    }
-
-    // Виртуальный метод, потому что повороты игрока зависят от камеры и инпута, ИИ юзают навмеш агента
-    public virtual void Rotation()
-    {
-
-    }
-
-    public virtual void UpdateAnimator()
-    {
-        //_animator.SetFloat("Motion",_animationMotion);
     }
 
     private void OnDrawGizmos()
