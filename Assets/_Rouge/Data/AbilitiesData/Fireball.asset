@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c94673441b1ebf4abb099fb7d8a9033, type: 3}
+  m_Name: Fireball
+  m_EditorClassIdentifier: 
+  abilityData:
+    name: Fireball
+    description: Throw firebal with N damage
+    icon: {fileID: 0}
+    cooldown: 0
+  abilityComponent: {fileID: 4343057458297859599, guid: 5717fff2a84952b439351bc28085bbb0, type: 3}

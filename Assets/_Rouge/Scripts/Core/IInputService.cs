@@ -18,6 +18,7 @@ public interface IInputService
     void SetCursorState(bool newState);
     void OnFire(InputValue value);
 
+
     Vector2 GetMoveInput();
     Vector2 GetLookInput();
 
@@ -29,6 +30,7 @@ public interface IInputService
     bool GetFire();
     void ResetFire();
 
-   
+    bool GetSprint();
+
 }
 

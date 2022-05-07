@@ -4,6 +4,10 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class BaseCharacter : Pawn
 {
+    public CharacterController CharController => _characterController;
+
+    public Animator Animator => _animator;
+
     [Header("Components")]
     [SerializeField] protected Animator _animator;
     [SerializeField] protected CharacterController _characterController;
@@ -15,14 +19,12 @@ public class BaseCharacter : Pawn
     [SerializeField] protected float _speedChangeRate;
 
 
-    [SerializeField] protected float _animationMotion;
+
     [SerializeField] protected float _gravity = -9.81f;
 
     [Space]
     [SerializeField] protected float _currentMoveSpeed;
 
-    [Space]
-    [SerializeField] protected Vector3 _moveInput;
 
     [Space]
     [SerializeField] protected LayerMask _groundLayers;
@@ -35,7 +37,8 @@ public class BaseCharacter : Pawn
 
     protected float _jumpTimeoutDelta;
 
-    protected float _battleStateTimeout = 3;
+    [SerializeField] protected float _battleStateTimeout = 3;
+    [SerializeField] protected float _battleStateTimeoutDelta;
 
     public override void Awake()
     {
@@ -52,11 +55,27 @@ public class BaseCharacter : Pawn
     public override void Update()
     {
         GroundCheck();
+        BattleStateTimer();
     }
 
-    public void SetMoveInput(Vector3 _input)
+    void BattleStateTimer()
     {
-        _moveInput = _input;
+        if (_battleState == false) return;
+
+        if (_battleStateTimeoutDelta > 0)
+        {
+            _battleStateTimeoutDelta -= Time.deltaTime;
+
+            if (_battleStateTimeoutDelta <= 0) _battleState = false;
+        }
+    }
+
+
+
+    public void SetBattleState()
+    {
+        _battleState = true;
+        _battleStateTimeoutDelta = _battleStateTimeout;
     }
 
     public virtual void InitComponents()
@@ -76,8 +95,14 @@ public class BaseCharacter : Pawn
         else
             spherePosition = new Vector3(transform.position.x, transform.position.y - 0.15f, transform.position.z);
 
+        bool lastCheck = _isGrounded;
         _isGrounded = Physics.CheckSphere(spherePosition, 0.3f, _groundLayers, QueryTriggerInteraction.Ignore);
 
+        if (lastCheck == false && _isGrounded) OnLanded();
+    }
+
+    public virtual void OnLanded()
+    {
 
     }
 

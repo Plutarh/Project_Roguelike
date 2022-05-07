@@ -44,8 +44,8 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     void BindInputService()
     {
         Container
-            .Bind<IInputService>()
-            .To<InputService>()
+            .Bind<InputService>()
+            // .To<InputService>()
             .FromComponentInNewPrefab(inputServicePrefab)
             .AsSingle();
     }

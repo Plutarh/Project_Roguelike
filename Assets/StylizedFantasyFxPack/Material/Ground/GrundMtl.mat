@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GrundMtl
+  m_Shader: {fileID: -6465566751694194690, guid: 6c8d1b97961a0464386582cbf5c55e28, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_166ae530d5424a009896d21fde7d311a:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_e644f8c0b64148b185fca71fda31a0b2:
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Boolean_1: 0
+    - Boolean_959453d435174457959e3e6a888bb7e4: 0
+    - ENUM_F07930A445FF42DAA6B95D022AB302AF: 0
+    m_Colors:
+    - Color_9d915e5a707d4eaf9b5382a71794d469: {r: 1, g: 1, b: 1, a: 1}
+    - Vector2_1: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_2: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_3: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_3fedefbe865d4ce499095e1d094748c6: {r: 50, g: 50, b: 0, a: 0}
+    - Vector2_8d04a62d6df94b13b28adbcb7650f8eb: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_8f39a608856545d1a601c5508f22d4e2: {r: 0, g: 0, b: 0, a: 0}
+    - Vector4_9222840ef2dc481a9fc45f6901d5d8e2: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Tile: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []

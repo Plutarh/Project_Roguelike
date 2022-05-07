@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c3b91c45994b9242b3dc8cd8930cb49, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: 
+  _characterName: Mage
+  _animatorController: {fileID: 9100000, guid: 1ccf279b509bd0d48a2faece7e1d7d0f, type: 2}
+  _combatAnimationDatas:
+  - attackTypeName: Primary
+    attackType: 0
+    animationClipDatas:
+    - _animationClipName: Fire_Mage_Primary_Attack_1
+      animationClip: {fileID: -203655887218126122, guid: bc87f7b120032ca4b8a86992a852e7df, type: 3}
+      _stopMovement: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
+      _crossFade: 0.15
+      _timerToNextCombo: 2
+    - _animationClipName: Fire_Mage_Primary_Attack_1_m
+      animationClip: {fileID: -203655887218126122, guid: bc87f7b120032ca4b8a86992a852e7df, type: 3}
+      _stopMovement: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
+      _crossFade: 0.15
+      _timerToNextCombo: 2
+  - attackTypeName: Secondary
+    attackType: 1
+    animationClipDatas:
+    - _animationClipName: Fire_Mage_Secondary_Attack_1
+      animationClip: {fileID: -203655887218126122, guid: 8bd6a932819e4ec4ea03f9a192bcc028, type: 3}
+      _stopMovement: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
+      _crossFade: 0.15
+      _timerToNextCombo: 0
+  - attackTypeName: Utility
+    attackType: 2
+    animationClipDatas:
+    - _animationClipName: Fire_Mage_Utility_Skill_1
+      animationClip: {fileID: -203655887218126122, guid: 1035ffebd66322e49a270f507988a353, type: 3}
+      _stopMovement: 0
+      _stopMovementTime: 0
+      _animationFullbody: 1
+      _crossFade: 0.01
+      _timerToNextCombo: 0
+  - attackTypeName: Ultimate
+    attackType: 3
+    animationClipDatas:
+    - _animationClipName: Fire_Mage_Ultimate_Attack_1
+      animationClip: {fileID: -203655887218126122, guid: 9f52938f66698e7478310daa371f1768, type: 3}
+      _stopMovement: 0
+      _stopMovementTime: 0
+      _animationFullbody: 0
+      _crossFade: 0.15
+      _timerToNextCombo: 0

@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
 
+
 public class Health : MonoBehaviour
 {
-    public float GetCurrentHealth
+    public float CurrentHealth
     {
         get => _currentHealth;
     }
 
-    public float GetMaxHealth
+    public float MaxHealth
     {
         get => _maxHealth;
     }
@@ -18,7 +19,7 @@ public class Health : MonoBehaviour
         get => _isDead;
     }
 
-    public Action OnHealthDecreased;
+    public Action<DamageData> OnHealthDecreased;
     public Action OnHealthIncreased;
     public Action OnDeath;
 
@@ -26,7 +27,12 @@ public class Health : MonoBehaviour
     [SerializeField] private float _maxHealth;
     [SerializeField] private bool _isDead;
 
-    private void Awake() 
+    private void OnValidate()
+    {
+        _currentHealth = _maxHealth;
+    }
+
+    private void Awake()
     {
         ResetHealth();
     }
@@ -36,32 +42,43 @@ public class Health : MonoBehaviour
         _currentHealth = _maxHealth;
     }
 
-    public void DecreaseHealth(float _healthToDecrease)
+    public void DecreaseHealth(DamageData damageData)
     {
-        _currentHealth -= _healthToDecrease;
+        if (damageData.combatValue == 0) return;
 
-        OnHealthDecreased?.Invoke();
+        _currentHealth -= damageData.combatValue;
 
-        if(_currentHealth <= 0) 
+        if (_currentHealth <= 0)
         {
             _currentHealth = 0;
             _isDead = true;
-            OnDeath?.Invoke();
         }
+
+        OnHealthDecreased?.Invoke(damageData);
+
+        if (_isDead)
+            OnDeath?.Invoke();
     }
 
     public void IncreaseHealth(float _healthToIncrease)
     {
+        if (_healthToIncrease == 0) return;
+
         _currentHealth += _healthToIncrease;
 
-        if(_currentHealth > _maxHealth) _currentHealth = _maxHealth;
+        if (_currentHealth > _maxHealth) _currentHealth = _maxHealth;
 
         OnHealthIncreased?.Invoke();
     }
 
-    public void InstaKill()
+    public float GetHealth01()
     {
-        _currentHealth = 0;
-        _isDead = true;
+        if (_maxHealth == 0 || _currentHealth == 0)
+            return 0;
+
+        float value = Mathf.Clamp(_currentHealth / _maxHealth, 0f, 1f);
+        return value;
     }
+
+
 }

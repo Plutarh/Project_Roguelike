@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-[CreateAssetMenu(fileName = "Character Animations", menuName = "Character Animation", order = 51)]
+[CreateAssetMenu(fileName = "Character Animations", menuName = "Character/Player/Attack Combos", order = 51)]
 public class CharacterAnimationData : ScriptableObject
 {
     public string GetCharacterName
@@ -18,30 +18,39 @@ public class CharacterAnimationData : ScriptableObject
 
     public List<CombatAnimationData> GetCombatAnimations
     {
-        get => _animationDatas;
+        get => _combatAnimationDatas;
     }
 
 
     [SerializeField] private string _characterName;
     [SerializeField] private RuntimeAnimatorController _animatorController;
-    [SerializeField] private List<CombatAnimationData> _animationDatas = new List<CombatAnimationData>();
+    [SerializeField] private List<CombatAnimationData> _combatAnimationDatas = new List<CombatAnimationData>();
 
 
     public void Refresh()
     {
-        _animationDatas.ForEach(ad => ad.animationClipDatas.ForEach(acd => acd.Refresh()));
+        foreach (var ad in GetCombatAnimations)
+        {
+            ad.attackTypeName = ad.attackType.ToString();
+            foreach (var acd in ad.animationClipDatas)
+            {
+                acd.Refresh();
+            }
+        }
+
+        //_animationDatas.ForEach(ad => ad.animationClipDatas.ForEach(acd => acd.Refresh()));
     }
 
     public CombatAnimationData GetCombatAnimationsByType(EAttackType type)
     {
-        return _animationDatas.FirstOrDefault(ad => ad.attackType == type);
+        return GetCombatAnimations.FirstOrDefault(ad => ad.attackType == type);
     }
 
-    public AnimationClipData GetAnimationClip(EAttackType type, ref int clipIndex)
+    public CombatAnimationClipData GetCombatAnimationClip(EAttackType type, ref int clipIndex)
     {
-        var foundedCombatData = _animationDatas.FirstOrDefault(ad => ad.attackType == type);
+        var foundedCombatData = GetCombatAnimations.FirstOrDefault(ad => ad.attackType == type);
 
-        AnimationClipData foundedClip = new AnimationClipData();
+        CombatAnimationClipData foundedClip = new CombatAnimationClipData();
 
         if (foundedCombatData == null)
         {
@@ -50,80 +59,12 @@ public class CharacterAnimationData : ScriptableObject
         else
         {
             if (clipIndex > foundedCombatData.animationClipDatas.Count - 1)
-            {
                 clipIndex = 0;
-            }
+
             foundedClip = foundedCombatData.animationClipDatas[clipIndex];
-            // }
-            // Debug.LogError($"Index out of range by combo clip. Current index {clipIndex} but total clips count is {foundedCombatData.animationClipDatas.Count}");
-            //     foundedClip = foundedCombatData.animationClipDatas[0];
-            // }
-            // else
-            // {
-            //     foundedClip = foundedCombatData.animationClipDatas[clipIndex];
-            // }
         }
 
         return foundedClip;
-    }
-}
-
-[System.Serializable]
-public class CombatAnimationData
-{
-    public EAttackType attackType;
-    public List<AnimationClipData> animationClipDatas = new List<AnimationClipData>();
-}
-
-[System.Serializable]
-public class AnimationClipData
-{
-    public string GetAnimationName
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(_animationClipName))
-                Refresh();
-            return _animationClipName;
-        }
-    }
-
-    public float GetTimerToNextCombo
-    {
-        get => _timerToNextCombo;
-    }
-
-    public bool IsStopMovement
-    {
-        get => _stopMovement;
-    }
-
-    public bool IsAnimationFullbody
-    {
-        get => _animationFullbody;
-    }
-
-    public float GetCrossFadeTime
-    {
-        get => _crossFade;
-    }
-
-    public float GetStopMovementTime
-    {
-        get => _stopMovementTime;
-    }
-
-    [SerializeField] private string _animationClipName;
-    [SerializeField] private AnimationClip animationClip;
-    [SerializeField] private bool _stopMovement;
-    [SerializeField] private float _stopMovementTime;
-    [SerializeField] private bool _animationFullbody;
-    [SerializeField] private float _timerToNextCombo = 0.5f;
-    [SerializeField] private float _crossFade = 0.1f;
-
-    public void Refresh()
-    {
-        _animationClipName = animationClip.name;
     }
 }
 

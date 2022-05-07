@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Rouge/Scenes/Character_Test.unity
+    path: Assets/_Rouge/Scenes/Game.unity
     guid: 857881a3adb5bc74280afb028ffebf27
   m_configObjects: {}

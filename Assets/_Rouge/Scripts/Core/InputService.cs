@@ -5,14 +5,18 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class InputService : MonoBehaviour, IInputService
+public class InputService : MonoBehaviour//, IInputService
 {
     [Header("Character Input Values")]
     [SerializeField] private Vector2 _move;
     [SerializeField] private Vector2 _look;
     [SerializeField] private bool _jump;
     [SerializeField] private bool _sprint;
+
     [SerializeField] private bool _fire;
+    [SerializeField] private bool _secondaryFire;
+    [SerializeField] private bool _utility;
+    [SerializeField] private bool _ultimate;
 
     [Header("Movement Settings")]
     [SerializeField] private bool analogMovement;
@@ -24,11 +28,13 @@ public class InputService : MonoBehaviour, IInputService
 
     [SerializeReference] private PlayerInput _playerInput;
 
+    [SerializeField] private Vector3 _mousePosition;
+
 
 
     public void OnMove(InputValue value)
     {
-        MoveInput(value.Get<Vector2>());
+        MoveInput(value.Get<Vector2>().normalized);
     }
 
     public void OnLook(InputValue value)
@@ -74,6 +80,11 @@ public class InputService : MonoBehaviour, IInputService
         SetCursorState(cursorLocked);
     }
 
+    public void OnMousePosition(InputValue value)
+    {
+        _mousePosition = value.Get<Vector2>();
+    }
+
     public void SetCursorState(bool newState)
     {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
@@ -87,6 +98,16 @@ public class InputService : MonoBehaviour, IInputService
     public Vector2 GetLookInput()
     {
         return _look;
+    }
+
+    public Vector3 GetMousePosition()
+    {
+        return _mousePosition;
+    }
+
+    public bool GetSprint()
+    {
+        return _sprint;
     }
 
     public bool GetJump()
@@ -107,7 +128,6 @@ public class InputService : MonoBehaviour, IInputService
     public void OnFire(InputValue value)
     {
         _fire = value.isPressed;
-
         InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Primary);
     }
 
@@ -121,6 +141,53 @@ public class InputService : MonoBehaviour, IInputService
         _fire = false;
     }
 
+    public void OnSecondaryFire(InputValue value)
+    {
+        _secondaryFire = value.isPressed;
+        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Secondary);
+    }
+
+    public bool GetSecondaryFire()
+    {
+        return _secondaryFire;
+    }
+
+    public void ResetSecondaryFire()
+    {
+        _secondaryFire = false;
+    }
+
+    public void OnUtility(InputValue value)
+    {
+        _utility = value.isPressed;
+        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Utility);
+    }
+
+    public bool GetUtility()
+    {
+        return _utility;
+    }
+
+    public void ResetUtility()
+    {
+        _utility = false;
+    }
+
+    public void OnUltimate(InputValue value)
+    {
+        _ultimate = value.isPressed;
+        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Ultimate);
+    }
+
+    public bool GetUltimate()
+    {
+        return _ultimate;
+    }
+
+    public void ResetUltimate()
+    {
+        _ultimate = false;
+    }
 
 }
 

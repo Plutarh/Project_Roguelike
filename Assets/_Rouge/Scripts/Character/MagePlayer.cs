@@ -1,39 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class MagePlayer : MonoBehaviour
+public class MagePlayer : PlayerCharacter
 {
-    [SerializeField] private List<Transform> _projectileMuzzles = new List<Transform>();
+    [SerializeField] private List<Transform> _hands = new List<Transform>();
 
-    [SerializeField] private Projectile _primaryAttackProjectilePrefab;
-
-    Player _player;
-
-    private void Awake()
+    public override void Awake()
     {
-        _player = GetComponent<Player>();
+        base.Awake();
+        _primaryAbility.SetAbilityExecutePositions(_hands);
     }
 
-    public void AnimStartPrimaryAttack_1()
+    public override void AnimPreparePrimaryAttack_1()
     {
-        var projectile = CreateProjectile(_primaryAttackProjectilePrefab);
+        base.AnimPreparePrimaryAttack_1();
 
-        projectile.SetMoveDirection(_player.GetAimDirection());
+
     }
 
-    public void AnimStartPrimaryAttack_2()
+    public override void AnimStartPrimaryAttack_1()
     {
-        var projectile = CreateProjectile(_primaryAttackProjectilePrefab);
-
-        projectile.SetMoveDirection(_player.GetAimDirection());
+        base.AnimStartPrimaryAttack_1();
     }
 
-    Projectile CreateProjectile(Projectile prefab)
+    public override void AnimStartSecondaryAttack_1()
     {
-        var createdProjectile = Instantiate(prefab, _projectileMuzzles[0].transform.position, Quaternion.identity);
+        base.AnimStartSecondaryAttack_1();
+    }
 
-        return createdProjectile;
+    public override void AnimPrepareSecondaryAttack_1()
+    {
+        base.AnimPrepareSecondaryAttack_1();
+    }
+
+    public override void AnimPrepareUltimateAttack_1()
+    {
+        base.AnimPrepareUltimateAttack_1();
+    }
+
+    public override void AnimStartUltimateAttack_1()
+    {
+        base.AnimStartUltimateAttack_1();
+    }
+
+    public override void AnimPrepareUtilitySkill_1()
+    {
+        base.AnimPrepareUtilitySkill_1();
+    }
+
+    public override void AnimStartUtilitySkill_1()
+    {
+        base.AnimStartUtilitySkill_1();
     }
 
 }

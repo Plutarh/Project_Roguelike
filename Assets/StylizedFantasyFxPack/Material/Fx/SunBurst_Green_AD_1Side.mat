@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SunBurst_Green_AD_1Side
+  m_Shader: {fileID: -6465566751694194690, guid: 36198298e608c3942a6edcd3c5c49039, type: 3}
+  m_ShaderKeywords: ENUM_4A152EEFCA0D42B2BB2AA8739D1E5263_A ENUM_DFF9525847184174BF82CA4D165E3494_B
+    ENUM_F07930A445FF42DAA6B95D022AB302AF_C
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_166ae530d5424a009896d21fde7d311a:
+        m_Texture: {fileID: 2800000, guid: a07e6ddf46712e04e96aed93cb4b0200, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_333577a1f0e146a28539e02f36f9550e:
+        m_Texture: {fileID: 2800000, guid: a07e6ddf46712e04e96aed93cb4b0200, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_50307c64a29641e2b25861c618fa4575:
+        m_Texture: {fileID: 2800000, guid: 29c3783dcefbc6a4fb26becff5b982a3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_82200baeb0304e919b93ee24bb1f84d2:
+        m_Texture: {fileID: 2800000, guid: f6d3a7f2a5340fa48a62f09e12f71e04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_e644f8c0b64148b185fca71fda31a0b2:
+        m_Texture: {fileID: 2800000, guid: 964cc18ec03cb0e45ac819fc275846b6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_55e9d63cc942413ba5e701a4e39643ce_Texture_1:
+        m_Texture: {fileID: 2800000, guid: f6d3a7f2a5340fa48a62f09e12f71e04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_68091e3d0dfb43709de29112cc3d50c5_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Boolean_1: 1
+    - Boolean_29d41f8053d443e7b7704a6ceceb471a: 0
+    - Boolean_959453d435174457959e3e6a888bb7e4: 0
+    - Boolean_b5c23253e342455cb005a29aef32110e: 0
+    - Boolean_d26afea5274d4c1fb5f3cf9e7921410f: 0
+    - ENUM_12B67F8350E0421E869133B6CBE29071: 0
+    - ENUM_4A152EEFCA0D42B2BB2AA8739D1E5263: 0
+    - ENUM_DFF9525847184174BF82CA4D165E3494: 1
+    - ENUM_F07930A445FF42DAA6B95D022AB302AF: 2
+    - Vector1_0eaa3d07145845ddab580825395a5975: 1
+    - Vector1_1fe48bc9ec8d4c379690641fa496590a: 1
+    - Vector1_214565c1e291445b9525b79f9dfa5359: -0.52
+    - Vector1_2d94867c577c45b6bf7406548eaa5704: -36.9
+    - Vector1_2da9f41267cf4a83a22b34530fd625c7: 0.21
+    - Vector1_91fda72de17842f6ab2edcac7767f729: 4
+    - Vector1_a8ee95c3568447fea7fa89a170d94278: -0.03
+    - Vector1_bc43e9ab111c449abe7ba15f61de096f: 6.06
+    - Vector1_d48e241ad6df4c52900ec82c14ccc3ce: 15.25
+    - Vector1_d4d0cc3170df4371b723247f4ecba78e: 0.89
+    m_Colors:
+    - Color_9d915e5a707d4eaf9b5382a71794d469: {r: 10.378505, g: 11.984314, b: 9.286275, a: 1}
+    - Color_a4dfe7f7e3b249c3b0c48b149284f915: {r: 2, g: 1.6862745, b: 1.1843138, a: 1}
+    - Vector2_1: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_2: {r: 0, g: 0, b: 0, a: 0}
+    - Vector2_3: {r: 0, g: 1, b: 0, a: 0}
+    - Vector2_3fedefbe865d4ce499095e1d094748c6: {r: 1, g: 1, b: 0, a: 0}
+    - Vector2_8d04a62d6df94b13b28adbcb7650f8eb: {r: 1, g: 0, b: 0, a: 0}
+    - Vector2_8f39a608856545d1a601c5508f22d4e2: {r: 0, g: 0, b: 0, a: 0}
+    - Vector4_6c5a83d606fd436ea1b3727047d96e0b: {r: 1, g: 1, b: 0, a: 0}
+    - Vector4_9222840ef2dc481a9fc45f6901d5d8e2: {r: 1, g: 1, b: 0, a: 0}
+    - Vector4_b10326d8ec3c420792ab283995424e98: {r: 2.06, g: 0, b: 0, a: 0}
+    - Vector4_f9cf3284f94549e5ba708306d35bf852: {r: 1, g: 1, b: 0, a: 0}
+    - Vector4_f9cf3284f94549e5ba708306d35bf852_1: {r: 1, g: 1, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Tile: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []

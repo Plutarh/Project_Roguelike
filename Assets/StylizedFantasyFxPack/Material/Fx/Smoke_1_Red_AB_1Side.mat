@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Smoke_1_Red_AB_1Side
+  m_Shader: {fileID: -6465566751694194690, guid: aca4aa02dddd67343918546379f2e82e, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_da7a7a6e7db9415cb6a6f4b09bdb6270:
+        m_Texture: {fileID: 2800000, guid: e7e7861e44b14144187dffda2813f141, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_e08d1b192841490fbc925652f82b64e7:
+        m_Texture: {fileID: 2800000, guid: 369f9249d2f4e6a44a27cdab5748af1e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_ecf16928a6994c9c8ae97c7dabcd2136:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_f9ab338ffa87479ea9207621725bf4aa:
+        m_Texture: {fileID: 2800000, guid: 29c3783dcefbc6a4fb26becff5b982a3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_7b118903d05b4fd29f20a2ada749ddc7_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 0c97272411d42014083cb69ee751a75b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_b1678914f29c443fab759253024d5e87_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_09388d5ea03841618b6d51fdfe7bd92d: 0
+    - Vector1_251c9c313c1e48729918a99f5eef04c3: 1
+    m_Colors:
+    - Color_11671b329f054cf0b8be2168aca7fda3: {r: 7.129739, g: 3.3595626, b: 0, a: 1}
+    - Color_33558125a2994a4a877146a47404887e: {r: 47.937256, g: 23.090197, b: 19.576471, a: 0}
+    - Color_ef0def640d444875aa362e5e6b6c6f0e: {r: 16, g: 1.0666667, b: 0, a: 1}
+  m_BuildTextureStacks: []

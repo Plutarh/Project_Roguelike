@@ -9,15 +9,33 @@ using Zenject;
 
 public class Player : BaseCharacter
 {
-    public Transform GetCameraRoot
+    public Transform CameraRoot
     {
         get => _cameraRoot;
     }
 
-    private IInputService _inputService;
+    public Camera Camera
+    {
+        get => _mainCamera;
+    }
+
+    public InputService InputService
+    {
+        get => _inputService;
+    }
+
+
+
+
+    private InputService _inputService;
 
     [SerializeField] private float _targetRotation;
 
+    [Header("Animations Motion")]
+    [SerializeField] private float _horizontalAnimationMotion;
+    [SerializeField] private float _verticalAnimationMotion;
+
+    [Space]
     [Range(0.0f, 0.3f)]
     [SerializeField] private float _rotationSmoothTime = 0.12f;
     [SerializeField] private float _rotationVelocity;
@@ -25,12 +43,7 @@ public class Player : BaseCharacter
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private Transform _cameraRoot;
 
-    [Header("Combat")]
-    [SerializeField] private float _comboAttackTimeout = 0.8f;
-    [SerializeField] private float _lastPrimaryAttackTime = 0;
-    [SerializeField] private string _currentCombatName;
 
-    private int currentPrimaryAttackIndex = 0;
 
     [SerializeField] private float _fallTimeoutDelta;
     [SerializeField] private float _fallTimeout = 0.2f;
@@ -40,12 +53,17 @@ public class Player : BaseCharacter
     [SerializeField] private float _jumpTimeout = 0.1f;
     [SerializeField] private float _verticalVelocity;
 
-    [Header("Other")]
-    public CharacterAnimationData characterAnimationData;
 
+
+    [SerializeField] private float attackSpeed;
+
+
+    CharacterControllerPusher _characterControllerPusher;
+
+    public Action OnAttackAnimation;
 
     [Inject]
-    public void Construct(IInputService inputService)
+    public void Construct(InputService inputService)
     {
         _inputService = inputService;
     }
@@ -55,10 +73,8 @@ public class Player : BaseCharacter
         base.Awake();
         _mainCamera = Camera.main;
 
-        InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
-
-        ResetPrimaryAttack();
         _animator.SetLayerWeight(1, 1);
+        SetTeam(EPawnTeam.Player);
     }
 
     public override void Start()
@@ -70,12 +86,14 @@ public class Player : BaseCharacter
     {
         base.Update();
 
-        PrimaryAttackResetTimer();
+        Movement();
+        Rotation();
+        Gravity();
         TryToJump();
-        SetMoveInput(_inputService.GetMoveInput());
-        TryToPrimaryAttack();
+        UpdateMotionAnimator();
 
 
+        _animator.SetFloat("Attack_Speed_Multiplier", attackSpeed);
     }
 
     public override void FixedUpdate()
@@ -86,107 +104,40 @@ public class Player : BaseCharacter
     public override void InitComponents()
     {
         base.InitComponents();
-        _inputService = GetComponent<InputService>();
+        _characterControllerPusher = GetComponent<CharacterControllerPusher>();
     }
 
-    void OnAttackButtonClicked(EAttackType type)
+    public override void TakeDamage(DamageData damageData)
     {
-        // FastRotateToCameraForward();
-        switch (type)
-        {
-            case EAttackType.Primary:
-                TryToPrimaryAttack();
-                break;
-            case EAttackType.Secondary:
-                break;
-            case EAttackType.Utility:
-                break;
-            case EAttackType.Ultimate:
-                break;
-        }
+        base.TakeDamage(damageData);
+
+        if (_characterControllerPusher != null)
+            _characterControllerPusher.Impact(damageData);
     }
 
-    float GetAttackLayerAnimationTime()
-    {
-        if (_animator.GetCurrentAnimatorStateInfo(1).IsName(_currentCombatName))
-            return _animator.GetCurrentAnimatorStateInfo(1).normalizedTime;
-        else if (_animator.GetCurrentAnimatorStateInfo(0).IsName(_currentCombatName))
-            return _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        else
-            return 1;
-    }
 
-    void PrimaryAttackResetTimer()
-    {
-        if (Time.time - _lastPrimaryAttackTime > _comboAttackTimeout)
-        {
-            ResetPrimaryAttack();
-        }
-    }
-
-    void TryToPrimaryAttack()
-    {
-        if (_inputService.GetFire() == false) return;
-        PrimaryAttack();
-    }
-
-    void PrimaryAttack()
-    {
-        _inputService.ResetFire();
-
-        if (currentPrimaryAttackIndex < 0)
-        {
-            currentPrimaryAttackIndex = 0;
-        }
-        else
-        {
-            if (GetAttackLayerAnimationTime() > 0.65f)
-                currentPrimaryAttackIndex++;
-            else
-                return;
-        }
-
-
-        _lastPrimaryAttackTime = Time.time;
-
-        AnimationClipData nextAnimationClip = new AnimationClipData();
-
-        nextAnimationClip = characterAnimationData.GetAnimationClip(EAttackType.Primary, ref currentPrimaryAttackIndex);
-
-        _comboAttackTimeout = nextAnimationClip.GetTimerToNextCombo;
-
-        BlockMovement(nextAnimationClip.IsStopMovement);
-        StartCoroutine(IEWaitToUnblockMovement(nextAnimationClip.GetStopMovementTime));
-
-        _animator.CrossFade(nextAnimationClip.GetAnimationName, nextAnimationClip.GetCrossFadeTime, nextAnimationClip.IsAnimationFullbody ? 0 : 1);
-        _currentCombatName = nextAnimationClip.GetAnimationName;
-
-        Debug.Log($"Play animation {_currentCombatName}");
-    }
-
-    IEnumerator IEWaitToUnblockMovement(float waitTime)
-    {
-        if (waitTime <= 0) yield break;
-
-        yield return new WaitForSecondsRealtime(waitTime);
-        BlockMovement(false);
-    }
-
-    void ResetPrimaryAttack()
-    {
-        currentPrimaryAttackIndex = -1;
-    }
-
-    public Vector3 GetAimDirection()
+    public override Vector3 GetAimDirection()
     {
         return _mainCamera.transform.forward;
     }
 
-    void FastRotateToCameraForward()
+    public override Vector3 GetAimPoint()
     {
-        float rotation = Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
-        // Поворачиваем перса под угол камеры
-        transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+        Vector3 rayPoint = Vector3.zero;
+
+        RaycastHit hit;
+        Ray ray = _mainCamera.ScreenPointToRay(InputService.GetMousePosition());
+
+
+        float raycastDistance = 400;
+
+        if (Physics.Raycast(ray, out hit, raycastDistance))
+            rayPoint = hit.point;
+        else
+
+            rayPoint = ray.GetPoint(raycastDistance);
+
+        return rayPoint;
     }
 
     public void Rotation()
@@ -200,9 +151,11 @@ public class Player : BaseCharacter
 
         Vector3 inputDirection = new Vector3(_inputService.GetMoveInput().x, 0.0f, _inputService.GetMoveInput().y).normalized;
 
-        if (_inputService.GetMoveInput() != Vector2.zero)
+        // Поворачиваем игрока по камере
+        if (_inputService.GetMoveInput() != Vector2.zero || _battleState)
         {
-            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+            // Если игрок в батл стейте то поворот по Z будет игнорироваться
+            _targetRotation = Mathf.Atan2(_battleState ? 0 : inputDirection.x, _battleState ? 0 : inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
 
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, _rotationSmoothTime);
 
@@ -222,19 +175,24 @@ public class Player : BaseCharacter
         }
 
         // Сначала проверяем бежит ли игрок вперед или назад
-        bool forwardMovement = _inputService.GetMoveInput().y > 0 ? true : false;
+        bool backwardMove = _inputService.GetMoveInput().y > 0 ? false : true;
 
         float targetMoveSpeed = 0;
 
-        if (forwardMovement)
+        // DEBUG
+        if (_inputService.GetSprint())
         {
-            // TODO добавить спринт скорость в зависимости от инпут кнопки спринта
-            targetMoveSpeed = _moveSpeed;
+
+            targetMoveSpeed = 60;
         }
         else
         {
-            targetMoveSpeed = _backwardMoveSpeed;
+            if (backwardMove)
+                targetMoveSpeed = _moveSpeed;
+            else
+                targetMoveSpeed = _backwardMoveSpeed;
         }
+
 
         if (_inputService.GetMoveInput() == Vector2.zero || _blockMovement) targetMoveSpeed = 0;
 
@@ -276,20 +234,48 @@ public class Player : BaseCharacter
         {
             if (_inputService.GetMoveInput().magnitude != 0)
             {
-                _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
-                // if (forwardMovement)
-                //     _animationMotion = Mathf.Lerp(_animationMotion, 1, currentHorizontalSpeed / _moveSpeed);
-                // else
-                //     _animationMotion = Mathf.Lerp(_animationMotion, -1, currentHorizontalSpeed / _backwardMoveSpeed);
+                // в бэтл стейте есть отыгрываем анимации во всех направлениях
+                if (_battleState)
+                {
+                    int verticalDir = 0;
+                    if (_inputService.GetMoveInput().y != 0)
+                        verticalDir = _inputService.GetMoveInput().y > 0 ? 1 : -1;
 
+                    _verticalAnimationMotion = Mathf.Lerp(_verticalAnimationMotion
+                            , 1 * verticalDir
+                            , Time.deltaTime * _speedChangeRate);
+
+                    int horizontalDir = 0;
+                    if (_inputService.GetMoveInput().x != 0)
+                        horizontalDir = _inputService.GetMoveInput().x > 0 ? 1 : -1;
+
+                    _horizontalAnimationMotion = Mathf.Lerp(_horizontalAnimationMotion
+                            , 1 * horizontalDir
+                            , Time.deltaTime * _speedChangeRate);
+
+                }
+                // Вне бэтл стейта, всегда играется анимация бега вперед, горизонтальных анимаций нету
+                else
+                {
+                    _verticalAnimationMotion = Mathf.Lerp(_verticalAnimationMotion, 1, _currentMoveSpeed / _moveSpeed);
+                    _horizontalAnimationMotion = 0;
+                }
             }
-            else _animationMotion = 0;
+            else
+            {
+                _verticalAnimationMotion = 0;
+                _horizontalAnimationMotion = 0;
+            }
         }
         else
         {
             // Если таргет скорость равна нулю, то просто плавно сбавляем бленд
-            _animationMotion = Mathf.Lerp(_animationMotion, 0, Time.deltaTime * _speedChangeRate);
+            _verticalAnimationMotion = Mathf.Lerp(_verticalAnimationMotion, 0, Time.deltaTime * _speedChangeRate);
+            _horizontalAnimationMotion = 0;
         }
+
+        _verticalAnimationMotion = Mathf.Clamp(_verticalAnimationMotion, -1, 1);
+        _horizontalAnimationMotion = Mathf.Clamp(_horizontalAnimationMotion, -1, 1);
     }
 
     public void TryToJump()
@@ -341,20 +327,23 @@ public class Player : BaseCharacter
     public override void GroundCheck()
     {
         base.GroundCheck();
-
         _animator.SetBool("Land", _isGrounded);
     }
 
-    public void UpdateAnimator()
+    public override void OnLanded()
     {
-        _animator.SetFloat("Motion_Y", _animationMotion);
-        _animator.SetFloat("Motion_X", _inputService.GetMoveInput().x);
+        base.OnLanded();
+        Debug.Log("Landed");
     }
 
+    public void UpdateMotionAnimator()
+    {
+        _animator.SetFloat("Motion_Y", _verticalAnimationMotion);
+        _animator.SetFloat("Motion_X", _horizontalAnimationMotion);
+    }
 
     private void OnDestroy()
     {
-        InputEvents.OnAttackButtonClicked -= OnAttackButtonClicked;
+
     }
 }
-
