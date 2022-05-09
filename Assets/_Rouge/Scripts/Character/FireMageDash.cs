@@ -15,6 +15,7 @@ public class FireMageDash : BaseAbility
     [SerializeField] private Material _ghostTrailMaterial;
     [SerializeField] private int _ghostCount = 6;
     [SerializeField] private float _ghostLifeTime = 0.6f;
+
     public override void Awake()
     {
         base.Awake();
@@ -86,11 +87,14 @@ public class FireMageDash : BaseAbility
 
         float timeForGhost = time / _ghostCount;
         float lastTimeCreatedGhost = 0;
+
+        var dashDirection = owner.transform.TransformDirection(owner.MoveDirection.normalized);
+        owner.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
         while (time > 0)
         {
 
             time -= Time.deltaTime;
-            owner.CharController.Move(owner.transform.forward * _dashForce);
+            owner.CharController.Move(dashDirection * _dashForce);
 
             if (Time.time > lastTimeCreatedGhost)
             {

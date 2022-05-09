@@ -174,6 +174,9 @@ public class Player : BaseCharacter
             return;
         }
 
+        _moveDirection.x = _inputService.GetMoveInput().x;
+        _moveDirection.z = _inputService.GetMoveInput().y;
+
         // Сначала проверяем бежит ли игрок вперед или назад
         bool backwardMove = _inputService.GetMoveInput().y > 0 ? false : true;
 
@@ -182,7 +185,6 @@ public class Player : BaseCharacter
         // DEBUG
         if (_inputService.GetSprint())
         {
-
             targetMoveSpeed = 60;
         }
         else
@@ -196,6 +198,7 @@ public class Player : BaseCharacter
 
         if (_inputService.GetMoveInput() == Vector2.zero || _blockMovement) targetMoveSpeed = 0;
 
+        if (_blockMovement) return;
 
         // Берем текущую скорость движения, без учета гравитации
         float currentHorizontalSpeed = new Vector3(_characterController.velocity.x, 0f, _characterController.velocity.z).magnitude;

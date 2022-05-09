@@ -8,6 +8,8 @@ public class BaseCharacter : Pawn
 
     public Animator Animator => _animator;
 
+    public Vector3 MoveDirection => _moveDirection;
+
     [Header("Components")]
     [SerializeField] protected Animator _animator;
     [SerializeField] protected CharacterController _characterController;
@@ -17,7 +19,7 @@ public class BaseCharacter : Pawn
     [SerializeField] protected float _backwardMoveSpeed;
     [SerializeField] protected float _sprintSpeed;
     [SerializeField] protected float _speedChangeRate;
-
+    protected Vector3 _moveDirection;
 
 
     [SerializeField] protected float _gravity = -9.81f;

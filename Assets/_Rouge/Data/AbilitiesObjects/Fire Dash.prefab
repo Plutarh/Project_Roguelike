@@ -55,7 +55,7 @@ MonoBehaviour:
   _trailFxPrefab: {fileID: 198523248014880124, guid: 673011a12ec748844a398a9504a957a4, type: 3}
   _createdTrailFx: {fileID: 0}
   _executeTime: 0.3
-  _dashForce: 0.1
+  _dashForce: 0.3
   _ghostTrailMaterial: {fileID: 2100000, guid: 1376c8cdc92bae643adf4c168aac2d7a, type: 2}
   _ghostCount: 6
   _ghostLifeTime: 0.6
