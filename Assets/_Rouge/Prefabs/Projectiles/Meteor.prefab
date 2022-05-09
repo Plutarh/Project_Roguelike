@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 905032527037181217}
   - component: {fileID: 905032527037181230}
   - component: {fileID: 905032527037181231}
-  - component: {fileID: 905032527037181216}
   m_Layer: 10
   m_Name: Sphere
   m_TagString: Untagged
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &905032527037181216
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905032527037181218}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2601881639376803142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4943,7 +4929,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.85
+  m_Radius: 1.07
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &238336560438079309
 MonoBehaviour:
@@ -4957,6 +4943,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72dd6fa254f70c1469df57f10368c18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageType: 1
+  damageRadius: 8
   _moveSpeed: 20
   _delayToGravity: 0.6
   _lifetime: 10

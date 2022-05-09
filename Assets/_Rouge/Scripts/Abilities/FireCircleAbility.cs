@@ -64,7 +64,7 @@ public class FireCircleAbility : BaseAbility
 
         Destroy(fx, 3);
     }
-    bool show;
+
     void CastDamageShpere()
     {
         var colliders = Physics.OverlapSphere(owner.transform.position, _radius, _layer).ToList();
@@ -77,12 +77,12 @@ public class FireCircleAbility : BaseAbility
             if (pawn.GetTeam() == owner.GetTeam()) continue;
             pawn.TakeDamage(_damageData);
         }
-        show = true;
+
     }
 
     private void OnDrawGizmos()
     {
-        if (show == false) return;
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _radius);
     }

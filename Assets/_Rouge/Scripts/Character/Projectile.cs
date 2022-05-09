@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] private EProjectileDamageType damageType;
+    [SerializeField] private float damageRadius;
+
     [SerializeField] private float _moveSpeed;
 
     [SerializeField] private float _delayToGravity = 1.5f;
@@ -87,6 +90,22 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    void AOEDamage()
+    {
+        var colliders = Physics.OverlapSphere(transform.position, damageRadius).ToList();
+
+        if (colliders.Count == 0) return;
+
+        foreach (var col in colliders)
+        {
+            var pawn = col.transform.root.GetComponent<IDamageable>();
+
+            if (pawn == null) continue;
+            if (pawn.GetTeam() == _owner.GetTeam()) continue;
+            pawn.TakeDamage(_damageData);
+        }
+    }
+
     void CreateOnHitFX()
     {
         if (onHitFX != null)
@@ -96,7 +115,7 @@ public class Projectile : MonoBehaviour
         var parcticles = _unparent.GetComponentsInChildren<ParticleSystem>().ToList();
         parcticles.ForEach(p => p.Stop());
 
-        Destroy(gameObject);
+
         Destroy(_unparent.gameObject, 0.5f);
     }
 
@@ -105,14 +124,30 @@ public class Projectile : MonoBehaviour
     {
         if (other == null) return;
 
-        Debug.Log($"Hit with {other.transform.name}");
-        IDamageable damageable;
-        if (other.transform.TryGetComponent<IDamageable>(out damageable))
+        switch (damageType)
         {
-            if (damageable.GetTeam() == _owner.GetTeam()) return;
-            Hit(damageable);
+            case EProjectileDamageType.SingleDamage:
+                IDamageable damageable;
+                if (other.transform.TryGetComponent<IDamageable>(out damageable))
+                {
+                    if (damageable.GetTeam() == _owner.GetTeam()) return;
+                    Hit(damageable);
+                }
+                break;
+            case EProjectileDamageType.AOE:
+                AOEDamage();
+                break;
         }
 
+
+
         CreateOnHitFX();
+        Destroy(gameObject);
     }
+}
+
+public enum EProjectileDamageType
+{
+    SingleDamage,
+    AOE
 }

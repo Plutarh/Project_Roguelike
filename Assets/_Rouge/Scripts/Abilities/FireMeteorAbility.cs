@@ -12,23 +12,14 @@ public class FireMeteorAbility : BaseAbility
     {
         base.PrepareExecuting(damageData);
 
-
-
         _meteor = CreateProjectile(_meteorPrefab);
-
         _meteor.SetOwner(owner);
-
         _meteor.SetDamageData(damageData);
-
-
-
-        Debug.LogError("Create meteor");
     }
 
     public override void Execute()
     {
         base.Execute();
-
 
         _meteor.transform.SetParent(null);
         _meteor.SetProjectileDirection(owner.GetAimPoint());
