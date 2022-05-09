@@ -15,6 +15,11 @@ public class Characteristics : MonoBehaviour
 
     [SerializeField] private List<Characteristic> _characteristics = new List<Characteristic>();
 
+    public float GetTypedValue(ECharacteristicType type)
+    {
+        return _characteristics.FirstOrDefault(ch => ch.characteristicType == type).CurrentValue;
+    }
+
 
 #if UNITY_EDITOR
     private void OnValidate()

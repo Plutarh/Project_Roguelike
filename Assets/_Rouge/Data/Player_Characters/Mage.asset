@@ -23,14 +23,14 @@ MonoBehaviour:
       _stopMovement: 0
       _stopMovementTime: 0
       _animationFullbody: 0
-      _crossFade: 0.15
+      _crossFade: 0.1
       _timerToNextCombo: 2
     - _animationClipName: Fire_Mage_Primary_Attack_1_m
       animationClip: {fileID: -203655887218126122, guid: bc87f7b120032ca4b8a86992a852e7df, type: 3}
       _stopMovement: 0
       _stopMovementTime: 0
       _animationFullbody: 0
-      _crossFade: 0.15
+      _crossFade: 0.1
       _timerToNextCombo: 2
   - attackTypeName: Secondary
     attackType: 1
@@ -40,7 +40,7 @@ MonoBehaviour:
       _stopMovement: 0
       _stopMovementTime: 0
       _animationFullbody: 0
-      _crossFade: 0.15
+      _crossFade: 0.05
       _timerToNextCombo: 0
   - attackTypeName: Utility
     attackType: 2

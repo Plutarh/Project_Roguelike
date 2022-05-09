@@ -9,15 +9,17 @@ public class FireBallAbility : BaseAbility
 
     [SerializeField] private List<Projectile> _primaryAttackProjectilesToMove = new List<Projectile>();
 
-    public override void PrepareExecuting()
+    public override void PrepareExecuting(DamageData damageData)
     {
-        base.PrepareExecuting();
+        base.PrepareExecuting(damageData);
 
         _muzzleIndex = _abilityPositionIndex;
 
         var projectile = CreateProjectile(_fireBallPrefab);
 
         projectile.SetOwner(owner);
+
+        projectile.SetDamageData(damageData);
         _primaryAttackProjectilesToMove.Add(projectile);
 
 
@@ -28,7 +30,7 @@ public class FireBallAbility : BaseAbility
     public override void Execute()
     {
         base.Execute();
-        Debug.LogError("Primary abil");
+
 
         var firstProjectile = _primaryAttackProjectilesToMove.First();
 

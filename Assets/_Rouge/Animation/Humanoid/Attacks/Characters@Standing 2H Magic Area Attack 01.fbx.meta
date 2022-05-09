@@ -62,7 +62,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.6837431
+        functionName: AnimStartSecondaryAttack_1
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.44853735
+        functionName: AnimPrepareSecondaryAttack_1
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

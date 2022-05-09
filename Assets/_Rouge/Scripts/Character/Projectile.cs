@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private DamageData damageData;
     [SerializeField] private float _moveSpeed;
 
     [SerializeField] private float _delayToGravity = 1.5f;
@@ -16,6 +15,7 @@ public class Projectile : MonoBehaviour
     private Rigidbody _body;
 
     private Pawn _owner;
+    private DamageData _damageData;
 
     private void Awake()
     {
@@ -37,6 +37,11 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         else
             _lifetime -= Time.deltaTime;
+    }
+
+    public void SetDamageData(DamageData damageData)
+    {
+        _damageData = damageData;
     }
 
     public void SetOwner(Pawn newOwner)
@@ -65,12 +70,9 @@ public class Projectile : MonoBehaviour
 
     void Hit(IDamageable damageable)
     {
-        // TODO remove DEBUG
-        damageData = new DamageData();
-        damageData.combatValue = 25;
-        damageData.whoOwner = _owner;
 
-        damageable.TakeDamage(damageData);
+
+        damageable.TakeDamage(_damageData);
 
         if (onHitFX != null)
             Instantiate(onHitFX, transform.position, Quaternion.identity);
@@ -78,7 +80,12 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject);
 
         // Если попали в игрока то говорим об этом. В будущем добавить проверку на локального игрока
-        if (damageData.whoOwner.GetTeam() == EPawnTeam.Player)
+        if (_damageData == null)
+            Debug.LogError("DMG null");
+        if (_damageData.whoOwner == null)
+            Debug.LogError("dmg data owner null");
+
+        if (_damageData.whoOwner.GetTeam() == EPawnTeam.Player)
         {
             GlobalEvents.OnPlayerHittedDamageable?.Invoke();
         }

@@ -15,9 +15,9 @@ public class FireMageDash : BaseAbility
         base.Update();
     }
 
-    public override void PrepareExecuting()
+    public override void PrepareExecuting(DamageData damageData)
     {
-        base.PrepareExecuting();
+        base.PrepareExecuting(damageData);
 
         if (_executeFX != null)
         {

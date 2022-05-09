@@ -5,13 +5,16 @@ public abstract class BaseAbility : MonoBehaviour
 {
     public bool IsReady
     {
-        get
-        {
-            return _cooldownTimer <= 0 && _stackLeft > 0;
-        }
-
+        get => _cooldownTimer <= 0 && _stackLeft > 0;
     }
+
     public BaseCharacter owner;
+
+    public float DamageMultiplyer
+    {
+        get => _damageMultiplier;
+        set => _damageMultiplier = value;
+    }
 
     [SerializeField] protected float _cooldown;
     [SerializeField] protected float _cooldownTimer;
@@ -24,6 +27,10 @@ public abstract class BaseAbility : MonoBehaviour
     [SerializeField] protected List<Transform> _abilityExecutePositions = new List<Transform>();
     [SerializeField] protected int _abilityPositionIndex = 0;
 
+    [SerializeField] protected float _damageMultiplier = 1;
+
+    protected DamageData _damageData;
+
     public virtual void Update()
     {
         CooldownTick(Time.deltaTime);
@@ -34,9 +41,9 @@ public abstract class BaseAbility : MonoBehaviour
         owner = newOwner;
     }
 
-    public virtual void PrepareExecuting()
+    public virtual void PrepareExecuting(DamageData damageData = null)
     {
-
+        _damageData = damageData;
     }
 
     public virtual void Execute()

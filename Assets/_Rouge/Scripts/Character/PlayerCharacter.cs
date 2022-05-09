@@ -66,15 +66,34 @@ public class PlayerCharacter : MonoBehaviour
         _primaryAbility.transform.localPosition = Vector3.zero;
         _primaryAbility.SetOwner(_player);
 
+        _secondaryAbility = Instantiate(_secondaryAbilityData.abilityComponent, _abilitiesParent);
+        _secondaryAbility.transform.localPosition = Vector3.zero;
+        _secondaryAbility.SetOwner(_player);
+
         _utilityAbility = Instantiate(_utilityAbilityData.abilityComponent, _abilitiesParent);
         _utilityAbility.transform.localPosition = Vector3.zero;
         _utilityAbility.SetOwner(_player);
+
+        if (_ultimateAbilityData != null && _ultimateAbilityData.abilityData != null)
+        {
+            _ultimateAbility = Instantiate(_ultimateAbilityData.abilityComponent, _abilitiesParent);
+            _ultimateAbility.transform.localPosition = Vector3.zero;
+            _ultimateAbility.SetOwner(_player);
+        }
+    }
+
+    public DamageData CreateDamageData(float damageMultiplyer)
+    {
+        DamageData damageData = new DamageData();
+        damageData.whoOwner = _player;
+        damageData.combatValue = _player.Characteristics.GetTypedValue(ECharacteristicType.Damage) * damageMultiplyer;
+        return damageData;
     }
 
     public virtual void AnimPreparePrimaryAttack_1()
     {
         _primaryAbility.SetAbilityExecutePositionIndex(_currentPrimaryAttackIndex);
-        _primaryAbility.PrepareExecuting();
+        _primaryAbility.PrepareExecuting(CreateDamageData(_primaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartPrimaryAttack_1()
@@ -85,16 +104,17 @@ public class PlayerCharacter : MonoBehaviour
 
     public virtual void AnimPrepareSecondaryAttack_1()
     {
-
+        _secondaryAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartSecondaryAttack_1()
     {
-
+        _secondaryAbility.Execute();
     }
+
     public virtual void AnimPrepareUtilitySkill_1()
     {
-        _utilityAbility.PrepareExecuting();
+        _utilityAbility.PrepareExecuting(CreateDamageData(_utilityAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartUtilitySkill_1()
@@ -136,6 +156,8 @@ public class PlayerCharacter : MonoBehaviour
     {
         // FastRotateToCameraForward();
         _player.SetBattleState();
+
+        if (GetAttackLayerAnimationTime() < 0.6f) return;
 
         switch (type)
         {
@@ -272,26 +294,6 @@ public class AbilityData
     public string description;
     public Sprite icon;
     public float cooldown;
-}
-
-[System.Serializable]
-public class AbilityModifedData : AbilityData
-{
-    public float cooldownTimer;
-    public bool IsReady
-    {
-        get => cooldownTimer <= 0;
-    }
-
-    public void Tick(float deltaTime)
-    {
-        if (cooldownTimer < 0) return;
-
-        cooldownTimer -= deltaTime;
-
-        if (cooldownTimer < 0)
-            cooldownTimer = cooldown;
-    }
 }
 
 public class BaseAction

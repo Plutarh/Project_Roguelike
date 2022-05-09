@@ -487,8 +487,8 @@ MonoBehaviour:
     _levelIncreaseMultiplier: 0
   - charecteristicName: Damage
     characteristicType: 1
-    _currentValue: 0
-    _maxValue: 0
+    _currentValue: 25
+    _maxValue: 25
     _levelIncreaseMultiplier: 0
   - charecteristicName: Defense
     characteristicType: 2
@@ -519,7 +519,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimationData: {fileID: 11400000, guid: a43f90c65a799bd4bab85446a9160c85, type: 2}
   _primaryAbilityData: {fileID: 11400000, guid: 7be70a27577fc2947815afead247457d, type: 2}
-  _secondaryAbilityData: {fileID: 0}
+  _secondaryAbilityData: {fileID: 11400000, guid: ce2bdb7a64077d147a7b0bc946b04a16, type: 2}
   _utilityAbilityData: {fileID: 11400000, guid: f4cc2c73b948c7d4d9654356ffd9d60b, type: 2}
   _ultimateAbilityData: {fileID: 0}
   _primaryAbility: {fileID: 0}
