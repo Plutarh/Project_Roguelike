@@ -31,6 +31,11 @@ public abstract class BaseAbility : MonoBehaviour
 
     protected DamageData _damageData;
 
+    public virtual void Awake()
+    {
+
+    }
+
     public virtual void Update()
     {
         CooldownTick(Time.deltaTime);
