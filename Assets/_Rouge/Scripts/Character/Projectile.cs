@@ -73,14 +73,7 @@ public class Projectile : MonoBehaviour
 
     void Hit(IDamageable damageable)
     {
-
-
         damageable.TakeDamage(_damageData);
-
-        if (onHitFX != null)
-            Instantiate(onHitFX, transform.position, Quaternion.identity);
-
-        Destroy(gameObject);
 
         // Если попали в игрока то говорим об этом. В будущем добавить проверку на локального игрока
         if (_damageData == null)
@@ -92,8 +85,19 @@ public class Projectile : MonoBehaviour
         {
             GlobalEvents.OnPlayerHittedDamageable?.Invoke();
         }
+    }
 
+    void CreateOnHitFX()
+    {
+        if (onHitFX != null)
+            Instantiate(onHitFX, transform.position, Quaternion.identity);
 
+        _unparent.SetParent(null);
+        var parcticles = _unparent.GetComponentsInChildren<ParticleSystem>().ToList();
+        parcticles.ForEach(p => p.Stop());
+
+        Destroy(gameObject);
+        Destroy(_unparent.gameObject, 0.5f);
     }
 
 
@@ -107,11 +111,8 @@ public class Projectile : MonoBehaviour
         {
             if (damageable.GetTeam() == _owner.GetTeam()) return;
             Hit(damageable);
-
-            _unparent.SetParent(null);
-            var parcticles = _unparent.GetComponentsInChildren<ParticleSystem>().ToList();
-            parcticles.ForEach(p => p.Stop());
-            Destroy(_unparent.gameObject, 0.5f);
         }
+
+        CreateOnHitFX();
     }
 }

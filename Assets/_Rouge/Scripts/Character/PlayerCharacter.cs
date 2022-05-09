@@ -99,7 +99,7 @@ public class PlayerCharacter : MonoBehaviour
     public virtual void AnimStartPrimaryAttack_1()
     {
         _primaryAbility.Execute();
-        _player.OnAttackAnimation?.Invoke();
+
     }
 
     public virtual void AnimPrepareSecondaryAttack_1()
@@ -120,17 +120,17 @@ public class PlayerCharacter : MonoBehaviour
     public virtual void AnimStartUtilitySkill_1()
     {
         _utilityAbility.Execute();
-        _player.OnAttackAnimation?.Invoke();
+
     }
 
     public virtual void AnimPrepareUltimateAttack_1()
     {
-
+        _ultimateAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartUltimateAttack_1()
     {
-
+        _ultimateAbility.Execute();
     }
 
 
@@ -174,6 +174,8 @@ public class PlayerCharacter : MonoBehaviour
                 TryToUltimate();
                 break;
         }
+
+        _player.OnAttackAnimation?.Invoke();
     }
 
     float GetAttackLayerAnimationTime()
