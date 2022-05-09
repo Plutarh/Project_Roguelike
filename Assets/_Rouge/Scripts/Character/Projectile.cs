@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -16,6 +17,8 @@ public class Projectile : MonoBehaviour
 
     private Pawn _owner;
     private DamageData _damageData;
+
+    [SerializeField] private Transform _unparent;
 
     private void Awake()
     {
@@ -90,6 +93,7 @@ public class Projectile : MonoBehaviour
             GlobalEvents.OnPlayerHittedDamageable?.Invoke();
         }
 
+
     }
 
 
@@ -103,6 +107,11 @@ public class Projectile : MonoBehaviour
         {
             if (damageable.GetTeam() == _owner.GetTeam()) return;
             Hit(damageable);
+
+            _unparent.SetParent(null);
+            var parcticles = _unparent.GetComponentsInChildren<ParticleSystem>().ToList();
+            parcticles.ForEach(p => p.Stop());
+            Destroy(_unparent.gameObject, 0.5f);
         }
     }
 }

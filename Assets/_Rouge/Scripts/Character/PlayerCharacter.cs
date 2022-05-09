@@ -196,6 +196,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void TryToPrimaryAttack()
     {
+        if (_primaryAbility.IsReady == false) return;
         if (_player.InputService.GetFire() == false) return;
         PrimaryAttack();
     }
@@ -223,6 +224,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void TryToSecondaryAttack()
     {
+        if (_secondaryAbility.IsReady == false) return;
         if (_player.InputService.GetSecondaryFire() == false) return;
         SecondaryAttack();
     }
@@ -237,6 +239,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void TryToUtility()
     {
+        if (_utilityAbility.IsReady == false) return;
         if (_player.InputService.GetUtility() == false) return;
         UtilitySkill();
     }
@@ -251,6 +254,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void TryToUltimate()
     {
+        if (_ultimateAbility.IsReady == false) return;
         if (_player.InputService.GetUltimate() == false) return;
         UltimateAttack();
     }

@@ -60,5 +60,5 @@ MonoBehaviour:
       _stopMovement: 0
       _stopMovementTime: 0
       _animationFullbody: 0
-      _crossFade: 0.15
+      _crossFade: 0.05
       _timerToNextCombo: 0

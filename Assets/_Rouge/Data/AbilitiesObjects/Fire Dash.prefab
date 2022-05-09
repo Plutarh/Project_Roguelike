@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  _cooldown: 1
+  _cooldown: 2
   _cooldownTimer: 0
   _noCooldown: 0
   _maxStackCount: 1

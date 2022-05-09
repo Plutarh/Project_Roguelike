@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  _cooldown: 1
+  _cooldown: 2
   _cooldownTimer: 0
   _noCooldown: 0
   _maxStackCount: 0
@@ -57,3 +57,4 @@ MonoBehaviour:
   _layer:
     serializedVersion: 2
     m_Bits: 2176
+  _handsTrailPrefab: {fileID: 357351668361576336, guid: baf13a469f31ae4428a4da7610c112f2, type: 3}

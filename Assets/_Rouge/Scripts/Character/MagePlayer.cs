@@ -11,6 +11,7 @@ public class MagePlayer : PlayerCharacter
     {
         base.Awake();
         _primaryAbility.SetAbilityExecutePositions(_hands);
+        _secondaryAbility.SetAbilityExecutePositions(_hands);
     }
 
     public override void AnimPreparePrimaryAttack_1()

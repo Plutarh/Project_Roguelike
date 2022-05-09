@@ -63,15 +63,15 @@ ModelImporter:
       bodyMask: 00000000010000000100000000000000000000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.6557195
-        functionName: AnimStartUltimateAttack_1
+      - time: 0.09028137
+        functionName: AnimPrepareUltimateAttack_1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.42674753
-        functionName: AnimPrepareUltimateAttack_1
+      - time: 0.6557195
+        functionName: AnimStartUltimateAttack_1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
