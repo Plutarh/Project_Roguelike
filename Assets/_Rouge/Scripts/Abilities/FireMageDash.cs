@@ -90,6 +90,9 @@ public class FireMageDash : BaseAbility
 
         var dashDirection = owner.transform.TransformDirection(owner.MoveDirection.normalized);
         owner.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
+
+        if (dashDirection == Vector3.zero) dashDirection = owner.transform.forward;
+
         while (time > 0)
         {
 

@@ -673,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemiesHealthBars: []
-  _healthBarMoveSpeed: 50
+  _healthBarMoveSpeed: 100
   _moveOffset: {x: 0, y: 50}
   _targetCanvas: {fileID: 182695890005994195}
 --- !u!114 &542020542236457780

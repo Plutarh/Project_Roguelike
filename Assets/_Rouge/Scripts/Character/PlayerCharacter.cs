@@ -62,24 +62,19 @@ public class PlayerCharacter : MonoBehaviour
             _abilitiesParent.SetAsFirstSibling();
         }
 
-        _primaryAbility = Instantiate(_primaryAbilityData.abilityComponent, _abilitiesParent);
-        _primaryAbility.transform.localPosition = Vector3.zero;
-        _primaryAbility.SetOwner(_player);
+        _primaryAbility = CreateAbility(_primaryAbilityData);
+        _secondaryAbility = CreateAbility(_secondaryAbilityData);
+        _utilityAbility = CreateAbility(_utilityAbilityData);
+        _ultimateAbility = CreateAbility(_ultimateAbilityData);
 
-        _secondaryAbility = Instantiate(_secondaryAbilityData.abilityComponent, _abilitiesParent);
-        _secondaryAbility.transform.localPosition = Vector3.zero;
-        _secondaryAbility.SetOwner(_player);
+    }
 
-        _utilityAbility = Instantiate(_utilityAbilityData.abilityComponent, _abilitiesParent);
-        _utilityAbility.transform.localPosition = Vector3.zero;
-        _utilityAbility.SetOwner(_player);
-
-        if (_ultimateAbilityData != null && _ultimateAbilityData.abilityData != null)
-        {
-            _ultimateAbility = Instantiate(_ultimateAbilityData.abilityComponent, _abilitiesParent);
-            _ultimateAbility.transform.localPosition = Vector3.zero;
-            _ultimateAbility.SetOwner(_player);
-        }
+    BaseAbility CreateAbility(AbilityScriptable abilityScriptable)
+    {
+        var createdAbility = Instantiate(abilityScriptable.abilityComponent, _abilitiesParent);
+        createdAbility.transform.localPosition = Vector3.zero;
+        createdAbility.SetOwner(_player);
+        return createdAbility;
     }
 
     public DamageData CreateDamageData(float damageMultiplyer)
@@ -284,7 +279,7 @@ public class PlayerCharacter : MonoBehaviour
         _player.Animator.CrossFade(nextCombatAnimationClip.AnimationName, nextCombatAnimationClip.CrossFadeTime, nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextCombatAnimationClip.AnimationName;
 
-        Debug.LogError("Cross Fade to " + nextCombatAnimationClip.AnimationName);
+        Debug.Log("<color=green>Cross Fade to </color>" + nextCombatAnimationClip.AnimationName);
     }
 
     private void OnDestroy()

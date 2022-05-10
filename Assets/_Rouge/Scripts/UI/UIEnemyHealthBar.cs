@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -6,6 +7,9 @@ using UnityEngine.UI;
 
 public class UIEnemyHealthBar : UIHealthBar
 {
+    public bool IsDeactivated => _deactivated;
+
+    bool _deactivated;
     public RectTransform rectTransform;
 
 
@@ -14,11 +18,17 @@ public class UIEnemyHealthBar : UIHealthBar
 
     [SerializeField] private UICombatText _combatTextPrefab;
 
+    public Action<UIEnemyHealthBar> OnHide;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
     }
 
+    public void QuickHide()
+    {
+        canvasGroup.alpha = 0;
+    }
 
     public override void UpdateBar(CombatData combatData)
     {
@@ -33,7 +43,13 @@ public class UIEnemyHealthBar : UIHealthBar
 
         if (combatData is DamageData)
             ShowDamageText(combatData as DamageData);
+
         HideWithDelay(3);
+    }
+
+    public void Deactivate()
+    {
+        _deactivated = true;
     }
 
     void ShowDamageText(DamageData damageData)
@@ -51,6 +67,9 @@ public class UIEnemyHealthBar : UIHealthBar
             hideTween = null;
         }
 
-        hideTween = canvasGroup.DOFade(0, 0.2f).SetDelay(delay);
+        hideTween = canvasGroup.DOFade(0, 0.2f).SetDelay(delay).OnComplete(() =>
+        {
+            OnHide?.Invoke(this);
+        });
     }
 }

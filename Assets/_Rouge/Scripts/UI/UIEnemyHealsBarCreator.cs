@@ -27,6 +27,7 @@ public class UIEnemyHealsBarCreator : MonoBehaviour
         var createdHealthBar = Instantiate(_baseEnemyHealthBarPrefab, transform);
 
         createdHealthBar.SetPawn(pawn);
+        createdHealthBar.QuickHide();
 
         _enemyHealthBarsMover.AddNewHealthBar(createdHealthBar);
     }

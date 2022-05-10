@@ -27,12 +27,12 @@ public class UIEnemyHealthBarsMover : MonoBehaviour
 
     private void LateUpdate()
     {
-
+        UpdateHealthBarsPositions();
     }
 
     private void Update()
     {
-        UpdateHealthBarsPositions();
+
     }
 
     public void AddNewHealthBar(UIEnemyHealthBar newHealthBar)
@@ -45,41 +45,32 @@ public class UIEnemyHealthBarsMover : MonoBehaviour
 
     void UpdateHealthBarsPositions()
     {
-
         if (mainCamera == null)
-        {
             mainCamera = Camera.main;
-        }
 
         for (int i = 0; i < _enemiesHealthBars.Count; i++)
         {
             var healthBar = _enemiesHealthBars[i];
-            if (healthBar == null) continue;
-            if (healthBar.TargetPawn == null || healthBar.TargetPawn.Health.IsDead)
-            {
-                DestroyHealthBar(healthBar);
+            if (healthBar == null || healthBar.TargetPawn == null)
                 continue;
-            }
+
+            if (healthBar.TargetPawn.Health.IsDead)
+                DisableEnemyHealthBar(healthBar);
 
             Vector3 pawnScreenPoint = Camera.main.WorldToScreenPoint(healthBar.TargetPawn.transform.position);
+
             if (IsTargetVisible(pawnScreenPoint))
-            {
                 healthBar.gameObject.SetActive(true);
-            }
             else
-            {
                 healthBar.gameObject.SetActive(false);
-                continue;
-            }
+
 
             Vector2 pawnViewportPoint = mainCamera.WorldToViewportPoint(healthBar.TargetPawn.HeadBone.transform.position);
 
             SetHealthBarSizeByCameraDistance(healthBar);
 
-
             Vector2 screenPosition = new Vector2(((pawnViewportPoint.x * _targetCanvas.sizeDelta.x) - (_targetCanvas.sizeDelta.x * 0.5f)),
                 ((pawnViewportPoint.y * _targetCanvas.sizeDelta.y) - (_targetCanvas.sizeDelta.y * 0.5f)));
-
 
             healthBar.rectTransform.anchoredPosition = Vector2.Lerp(healthBar.rectTransform.anchoredPosition, screenPosition + Vector2.Scale((Vector2)healthBar.transform.localScale, _moveOffset), Time.deltaTime * _healthBarMoveSpeed);
         }
@@ -109,31 +100,22 @@ public class UIEnemyHealthBarsMover : MonoBehaviour
         _enemiesHealthBars.Clear();
     }
 
-    public void DestroyEnemyHealthBar(AIBase pawn)
+
+    void DisableEnemyHealthBar(UIEnemyHealthBar healthBar)
     {
-        if (pawn == null) return;
-        StartCoroutine(IEDestroyPawnHealthBar(pawn));
+        if (healthBar.IsDeactivated) return;
+        healthBar.Deactivate();
+        healthBar.HideWithDelay(1);
+        healthBar.OnHide += DestroyEnemyHealthBar;
     }
 
-    void DestroyHealthBar(UIEnemyHealthBar targetHealthBar)
+    void DestroyEnemyHealthBar(UIEnemyHealthBar healthBar)
     {
-        if (_enemiesHealthBars.Contains(targetHealthBar)) _enemiesHealthBars.Remove(targetHealthBar);
-        targetHealthBar.HideWithDelay();
-        Destroy(targetHealthBar.gameObject, 2f);
-    }
+        if (_enemiesHealthBars.Contains(healthBar))
+            _enemiesHealthBars.Remove(healthBar);
 
-
-    IEnumerator IEDestroyPawnHealthBar(AIBase pawn)
-    {
-        if (pawn == null) yield break;
-        yield return new WaitForSecondsRealtime(1);
-        if (_enemiesHealthBars.Any(hb => hb.TargetPawn == pawn))
-        {
-            var targetHealthBar = _enemiesHealthBars.FirstOrDefault(hb => hb.TargetPawn == pawn);
-            if (targetHealthBar == null) yield break;
-            if (_enemiesHealthBars.Contains(targetHealthBar)) _enemiesHealthBars.Remove(targetHealthBar);
-            Destroy(targetHealthBar.gameObject);
-        }
+        healthBar.OnHide -= DestroyEnemyHealthBar;
+        Destroy(healthBar.gameObject);
     }
 
 }
