@@ -19,7 +19,6 @@ public class UIHealthBar : MonoBehaviour
     public void SetPawn(Pawn pawn)
     {
         _pawn = pawn;
-
         _pawn.Health.OnHealthDecreased += UpdateBar;
     }
 
@@ -31,7 +30,6 @@ public class UIHealthBar : MonoBehaviour
 
     public virtual void UpdateBar(CombatData damageData)
     {
-
         float targetValue = _pawn.Health.GetHealth01();
         _healthImage.DOFillAmount(targetValue, 0.1f).OnComplete(() =>
         {

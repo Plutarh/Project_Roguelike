@@ -72,7 +72,9 @@ public class UIEnemyHealthBarsMover : MonoBehaviour
             Vector2 screenPosition = new Vector2(((pawnViewportPoint.x * _targetCanvas.sizeDelta.x) - (_targetCanvas.sizeDelta.x * 0.5f)),
                 ((pawnViewportPoint.y * _targetCanvas.sizeDelta.y) - (_targetCanvas.sizeDelta.y * 0.5f)));
 
-            healthBar.rectTransform.anchoredPosition = Vector2.Lerp(healthBar.rectTransform.anchoredPosition, screenPosition + Vector2.Scale((Vector2)healthBar.transform.localScale, _moveOffset), Time.deltaTime * _healthBarMoveSpeed);
+            healthBar.rectTransform.anchoredPosition = Vector2.Lerp(healthBar.rectTransform.anchoredPosition
+                , screenPosition + Vector2.Scale((Vector2)healthBar.transform.localScale, _moveOffset)
+                , Time.deltaTime * _healthBarMoveSpeed);
         }
     }
 

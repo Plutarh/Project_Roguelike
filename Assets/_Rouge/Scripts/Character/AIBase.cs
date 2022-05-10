@@ -120,6 +120,12 @@ public class AIBase : BaseCharacter
         _navMeshAgent.acceleration = _speedChangeRate;
     }
 
+    void StopNavmesh(bool state)
+    {
+        if (_navMeshAgent.isOnNavMesh)
+            _navMeshAgent.isStopped = state;
+    }
+
     public void ChangeState(EAIState newState)
     {
         if (_currentState == newState) return;
@@ -128,19 +134,20 @@ public class AIBase : BaseCharacter
         switch (_currentState)
         {
             case EAIState.Idle:
-                _navMeshAgent.isStopped = true;
+
+                StopNavmesh(true);
                 FindTarget();
                 _lastIdlePatrollStateChangeTime = Time.time + Random.Range(10, 20);
                 break;
             case EAIState.Chase:
-                _navMeshAgent.isStopped = false;
+                StopNavmesh(false);
                 break;
             case EAIState.Attack:
                 Attack();
                 break;
             case EAIState.Patroll:
                 _lastIdlePatrollStateChangeTime = Time.time + Random.Range(10, 20);
-                _navMeshAgent.isStopped = false;
+                StopNavmesh(false);
                 break;
             case EAIState.Retreat:
                 var retreatPosition = FindRandomPoint(_spawnPosition);
@@ -281,7 +288,7 @@ public class AIBase : BaseCharacter
 
     void Chasing()
     {
-        if (_navMeshAgent.isStopped) return;
+        if (_navMeshAgent.isOnNavMesh && _navMeshAgent.isStopped) return;
 
         if (_currentTarget == null || _currentTarget.Health.IsDead)
         {
@@ -329,7 +336,7 @@ public class AIBase : BaseCharacter
     void Attack()
     {
         RotationToTarget();
-        _navMeshAgent.isStopped = true;
+        StopNavmesh(true);
         if (GetCombatAnimationTime() < 0.95f || CanAttack() == false) return;
 
         if (GetDistanceToTarget() > _attackDistance)

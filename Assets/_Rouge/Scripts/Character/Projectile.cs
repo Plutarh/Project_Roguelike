@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private GameObject onHitFX;
 
     [SerializeField] private Vector3 _moveDirection;
+
+    [SerializeField] private List<ScriptableEffect> _effectsOnHit = new List<ScriptableEffect>();
 
     private Rigidbody _body;
 
@@ -43,6 +46,11 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         else
             _lifetime -= Time.deltaTime;
+    }
+
+    public void AddScriptableEffect(ScriptableEffect newEffect)
+    {
+        _effectsOnHit.Add(newEffect);
     }
 
     public void SetDamageData(DamageData damageData)
@@ -76,7 +84,14 @@ public class Projectile : MonoBehaviour
 
     void Hit(IDamageable damageable)
     {
+        // Наносим урон пулькой
         damageable.TakeDamage(_damageData);
+
+        // Вешаем эффекты которые были на пульке
+        foreach (var effect in _effectsOnHit)
+        {
+            damageable.AddEffect(effect.InitializeEffect(damageable.GetGameObject(), _damageData));
+        }
 
         // Если попали в игрока то говорим об этом. В будущем добавить проверку на локального игрока
         if (_damageData == null)
@@ -101,8 +116,7 @@ public class Projectile : MonoBehaviour
             var pawn = col.transform.root.GetComponent<IDamageable>();
 
             if (pawn == null) continue;
-            if (pawn.GetTeam() == _owner.GetTeam()) continue;
-            pawn.TakeDamage(_damageData);
+            Hit(pawn);
         }
     }
 

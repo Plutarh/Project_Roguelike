@@ -50,12 +50,14 @@ public class BaseCharacter : Pawn
 
     public override void Start()
     {
-
+        base.Start();
     }
 
 
     public override void Update()
     {
+        base.Update();
+
         GroundCheck();
         BattleStateTimer();
     }

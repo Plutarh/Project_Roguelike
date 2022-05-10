@@ -9,14 +9,14 @@ public class UIEnemyHealthBar : UIHealthBar
 {
     public bool IsDeactivated => _deactivated;
 
-    bool _deactivated;
     public RectTransform rectTransform;
 
-
-    Tween hideTween;
-    Tween showTween;
-
     [SerializeField] private UICombatText _combatTextPrefab;
+
+    private bool _deactivated;
+
+    private Tween _hideTween;
+    private Tween _showTween;
 
     public Action<UIEnemyHealthBar> OnHide;
 
@@ -32,12 +32,12 @@ public class UIEnemyHealthBar : UIHealthBar
 
     public override void UpdateBar(CombatData combatData)
     {
-        if (showTween != null)
+        if (_showTween != null)
         {
-            showTween.Kill();
-            showTween = null;
+            _showTween.Kill();
+            _showTween = null;
         }
-        showTween = canvasGroup.DOFade(1, 0.05f);
+        _showTween = canvasGroup.DOFade(1, 0.05f);
 
         base.UpdateBar(combatData);
 
@@ -61,15 +61,16 @@ public class UIEnemyHealthBar : UIHealthBar
 
     public void HideWithDelay(float delay = 0)
     {
-        if (hideTween != null)
+        if (_hideTween != null)
         {
-            hideTween.Kill();
-            hideTween = null;
+            _hideTween.Kill();
+            _hideTween = null;
         }
 
-        hideTween = canvasGroup.DOFade(0, 0.2f).SetDelay(delay).OnComplete(() =>
+        _hideTween = canvasGroup.DOFade(0, 0.2f).SetDelay(delay).OnComplete(() =>
         {
             OnHide?.Invoke(this);
         });
     }
+
 }

@@ -17,6 +17,9 @@ public class FireBallAbility : BaseAbility
 
         var projectile = CreateProjectile(_fireBallPrefab);
 
+        // Закинем в пульку эффекты
+        _effects.ForEach(ef => projectile.AddScriptableEffect(ef));
+
         projectile.SetOwner(owner);
 
         projectile.SetDamageData(damageData);

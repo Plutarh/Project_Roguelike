@@ -29,6 +29,8 @@ public abstract class BaseAbility : MonoBehaviour
 
     [SerializeField] protected float _damageMultiplier = 1;
 
+    [SerializeField] protected List<ScriptableEffect> _effects = new List<ScriptableEffect>();
+
     protected DamageData _damageData;
 
     public virtual void Awake()

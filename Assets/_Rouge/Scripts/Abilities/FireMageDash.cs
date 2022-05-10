@@ -88,10 +88,14 @@ public class FireMageDash : BaseAbility
         float timeForGhost = time / _ghostCount;
         float lastTimeCreatedGhost = 0;
 
-        var dashDirection = owner.transform.TransformDirection(owner.MoveDirection.normalized);
-        owner.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
 
-        if (dashDirection == Vector3.zero) dashDirection = owner.transform.forward;
+        Vector3 dashDirection = Vector3.zero;
+        if (owner.MoveDirection != Vector3.zero)
+            dashDirection = owner.transform.TransformDirection(owner.MoveDirection.normalized);
+        else
+            dashDirection = owner.transform.forward;
+
+        owner.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
 
         while (time > 0)
         {
