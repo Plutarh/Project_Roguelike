@@ -90,11 +90,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72dd6fa254f70c1469df57f10368c18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageType: 0
+  damageRadius: 0
   _moveSpeed: 50
   _delayToGravity: 10
   _lifetime: 10
-  onHitFX: {fileID: 1031266608383040251, guid: 2389adb91a4e50e40aafad8334098f5d, type: 3}
+  onHitFX: {fileID: 2311330348669595641, guid: 987a225d3ba6aed40996ad7c94c1f7e3, type: 3}
   _moveDirection: {x: 0, y: 0, z: 0}
+  _effectsOnHit: []
   _unparent: {fileID: 18172478595069784}
 --- !u!54 &5702993214065958355
 Rigidbody:
