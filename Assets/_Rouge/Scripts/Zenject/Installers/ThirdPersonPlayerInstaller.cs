@@ -36,6 +36,11 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
             .WithId("Player_Transform")
             .FromInstance(playerInstance.transform);
 
+        Container
+            .Bind<PlayerCharacter>()
+            .FromInstance(playerInstance.GetComponent<PlayerCharacter>())
+            .AsSingle();
+
         Container.QueueForInject(playerInstance);
 
         _playerInstance = playerInstance;

@@ -52,4 +52,6 @@ MonoBehaviour:
   _abilityExecutePositions: []
   _abilityPositionIndex: 0
   _damageMultiplier: 20
+  _effects: []
+  abilityScriptable: {fileID: 11400000, guid: c5d37a799f611d647ade86a87248b2ee, type: 2}
   _meteorPrefab: {fileID: 238336560438079309, guid: 9b4eb0d4f46b008409957a3e6c00f0f6, type: 3}

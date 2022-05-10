@@ -24,7 +24,11 @@ public class Projectile : MonoBehaviour
     private Pawn _owner;
     private DamageData _damageData;
 
+
+
     [SerializeField] private Transform _unparent;
+
+    [SerializeField] private List<IDamageable> _damagedTargets = new List<IDamageable>();
 
     private void Awake()
     {
@@ -116,7 +120,11 @@ public class Projectile : MonoBehaviour
             var pawn = col.transform.root.GetComponent<IDamageable>();
 
             if (pawn == null) continue;
+            if (_damagedTargets.Contains(pawn)) continue;
+            if (pawn.GetTeam() == _owner.GetTeam()) continue;
+
             Hit(pawn);
+            _damagedTargets.Add(pawn);
         }
     }
 

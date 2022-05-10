@@ -15,6 +15,5 @@ MonoBehaviour:
   abilityData:
     name: Fire circle
     description: Create fire circle
-    icon: {fileID: 0}
-    cooldown: 0
+    icon: {fileID: 21300000, guid: d699282c6de62489796419955c2019d0, type: 3}
   abilityComponent: {fileID: 3915937066057509175, guid: d518cd832687edd4f94a4f95812a2c87, type: 3}

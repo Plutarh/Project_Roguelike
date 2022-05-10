@@ -52,6 +52,8 @@ MonoBehaviour:
   _abilityExecutePositions: []
   _abilityPositionIndex: 0
   _damageMultiplier: 1
+  _effects: []
+  abilityScriptable: {fileID: 11400000, guid: f4cc2c73b948c7d4d9654356ffd9d60b, type: 2}
   _trailFxPrefab: {fileID: 198523248014880124, guid: 673011a12ec748844a398a9504a957a4, type: 3}
   _createdTrailFx: {fileID: 0}
   _executeTime: 0.3

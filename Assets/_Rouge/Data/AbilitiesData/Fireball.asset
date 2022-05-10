@@ -15,6 +15,5 @@ MonoBehaviour:
   abilityData:
     name: Fireball
     description: Throw firebal with N damage
-    icon: {fileID: 0}
-    cooldown: 0
+    icon: {fileID: 21300000, guid: 626bd51851d024b9fb411583031e4785, type: 3}
   abilityComponent: {fileID: 4343057458297859599, guid: 5717fff2a84952b439351bc28085bbb0, type: 3}

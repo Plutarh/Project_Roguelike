@@ -15,6 +15,5 @@ MonoBehaviour:
   abilityData:
     name: Fire Meteor
     description: Summon meteor
-    icon: {fileID: 0}
-    cooldown: 0
+    icon: {fileID: 21300000, guid: 8b84c3ea5e7ac4834914732b6f381895, type: 3}
   abilityComponent: {fileID: 2386040965417208731, guid: db6e1ce4f4d1a624d889df27cd4763b4, type: 3}

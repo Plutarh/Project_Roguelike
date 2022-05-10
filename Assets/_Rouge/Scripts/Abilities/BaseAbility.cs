@@ -3,10 +3,9 @@ using UnityEngine;
 
 public abstract class BaseAbility : MonoBehaviour
 {
-    public bool IsReady
-    {
-        get => _cooldownTimer <= 0;
-    }
+    public bool IsReady => _cooldownTimer <= 0;
+    public float CooldownTimer => _cooldownTimer;
+    public float Cooldown => _cooldown;
 
     public BaseCharacter owner;
 
@@ -32,6 +31,8 @@ public abstract class BaseAbility : MonoBehaviour
     [SerializeField] protected List<ScriptableEffect> _effects = new List<ScriptableEffect>();
 
     protected DamageData _damageData;
+
+    public AbilityScriptable abilityScriptable;
 
     public virtual void Awake()
     {

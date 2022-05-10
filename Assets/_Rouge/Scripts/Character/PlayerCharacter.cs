@@ -1,13 +1,13 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCharacter : MonoBehaviour
 {
-    public int PrimaryAttackIndex
-    {
-        get => _currentPrimaryAttackIndex;
-    }
+    public int PrimaryAttackIndex => _currentPrimaryAttackIndex;
 
+    public List<BaseAbility> AllAbilities => _allAbilities;
 
     protected Player _player;
 
@@ -27,6 +27,8 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] protected BaseAbility _utilityAbility;
     [SerializeField] protected BaseAbility _ultimateAbility;
 
+    private List<BaseAbility> _allAbilities = new List<BaseAbility>();
+
 
     [Header("Combat")]
     [SerializeField] private float _comboAttackTimeout = 0.8f;
@@ -36,6 +38,8 @@ public class PlayerCharacter : MonoBehaviour
     Transform _abilitiesParent;
 
     [SerializeField] protected int _currentPrimaryAttackIndex = 0;
+
+    public Action OnAbilitiesInitialized;
 
     public virtual void Awake()
     {
@@ -63,10 +67,18 @@ public class PlayerCharacter : MonoBehaviour
         }
 
         _primaryAbility = CreateAbility(_primaryAbilityData);
-        _secondaryAbility = CreateAbility(_secondaryAbilityData);
-        _utilityAbility = CreateAbility(_utilityAbilityData);
-        _ultimateAbility = CreateAbility(_ultimateAbilityData);
+        _allAbilities.Add(_primaryAbility);
 
+        _secondaryAbility = CreateAbility(_secondaryAbilityData);
+        _allAbilities.Add(_secondaryAbility);
+
+        _utilityAbility = CreateAbility(_utilityAbilityData);
+        _allAbilities.Add(_utilityAbility);
+
+        _ultimateAbility = CreateAbility(_ultimateAbilityData);
+        _allAbilities.Add(_ultimateAbility);
+
+        OnAbilitiesInitialized?.Invoke();
     }
 
     BaseAbility CreateAbility(AbilityScriptable abilityScriptable)
@@ -294,10 +306,6 @@ public class AbilityData
     public string name;
     public string description;
     public Sprite icon;
-    public float cooldown;
 }
 
-public class BaseAction
-{
 
-}

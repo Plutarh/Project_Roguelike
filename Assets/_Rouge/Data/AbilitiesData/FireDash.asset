@@ -15,6 +15,5 @@ MonoBehaviour:
   abilityData:
     name: Fire dash
     description: Push you forward
-    icon: {fileID: 0}
-    cooldown: 0
+    icon: {fileID: 21300000, guid: 3d0439688b65749518180e4d6eaae65a, type: 3}
   abilityComponent: {fileID: 2667964155692268895, guid: a75dc13af5b73f34090124da86f63a6d, type: 3}
