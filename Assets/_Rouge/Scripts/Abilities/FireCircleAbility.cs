@@ -76,6 +76,7 @@ public class FireCircleAbility : BaseAbility
             if (pawn == null) continue;
             if (pawn.GetTeam() == owner.GetTeam()) continue;
             pawn.TakeDamage(_damageData);
+            AddEffectToTarget(pawn);
         }
 
     }

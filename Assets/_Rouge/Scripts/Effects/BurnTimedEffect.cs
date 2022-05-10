@@ -66,6 +66,20 @@ public class BurnTimedEffect : TimedEffect
         _burningFX = GameObject.Instantiate(_burnScriptableEffect.burnFX, _target.GetGameObject().transform.position, Quaternion.AngleAxis(90, Vector3.right));
         _burningFX.transform.SetParent(_target.GetGameObject().transform);
 
+        var targetSkin = _target.GetGameObject().GetComponent<BaseCharacter>().Skin;
+
+        if (targetSkin != null)
+        {
+            var burnShape = _burningFX.shape;
+            burnShape.shapeType = ParticleSystemShapeType.SkinnedMeshRenderer;
+            burnShape.skinnedMeshRenderer = targetSkin;
+        }
+        else
+        {
+            var burnShape = _burningFX.shape;
+            burnShape.shapeType = ParticleSystemShapeType.Box;
+        }
+
         _burningFX.transform.localPosition = Vector3.zero;
     }
 }

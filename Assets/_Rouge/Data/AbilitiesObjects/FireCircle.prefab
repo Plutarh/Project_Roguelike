@@ -51,9 +51,11 @@ MonoBehaviour:
   _stackLeft: 0
   _abilityExecutePositions: []
   _abilityPositionIndex: 0
-  _damageMultiplier: 5
+  _damageMultiplier: 2
+  _effects:
+  - {fileID: 11400000, guid: 2d3570465126702438060709726e0df6, type: 2}
   _fx: {fileID: 5116378823122699176, guid: 09014cffaad972946ab308f72a081e62, type: 3}
-  _radius: 3.36
+  _radius: 6
   _layer:
     serializedVersion: 2
     m_Bits: 2176

@@ -9,6 +9,7 @@ public class BaseCharacter : Pawn
     public Animator Animator => _animator;
 
     public Vector3 MoveDirection => _moveDirection;
+    public SkinnedMeshRenderer Skin => _skinnedMeshRenderer;
 
     [Header("Components")]
     [SerializeField] protected Animator _animator;
@@ -41,6 +42,8 @@ public class BaseCharacter : Pawn
 
     [SerializeField] protected float _battleStateTimeout = 3;
     [SerializeField] protected float _battleStateTimeoutDelta;
+
+    protected SkinnedMeshRenderer _skinnedMeshRenderer;
 
     public override void Awake()
     {
@@ -86,6 +89,7 @@ public class BaseCharacter : Pawn
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController>();
+        _skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
     // Кастуем сферу под ногами, для нахождения земли

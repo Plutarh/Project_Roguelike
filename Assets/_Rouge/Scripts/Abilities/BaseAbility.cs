@@ -60,6 +60,14 @@ public abstract class BaseAbility : MonoBehaviour
         RefreshCooldown();
     }
 
+    public void AddEffectToTarget(IDamageable pawn)
+    {
+        foreach (var effect in _effects)
+        {
+            pawn.AddEffect(effect.InitializeEffect(pawn.GetGameObject(), _damageData));
+        }
+    }
+
     public virtual void SetAbilityExecutePositions(List<Transform> newExecutePositions)
     {
         _abilityExecutePositions = newExecutePositions;

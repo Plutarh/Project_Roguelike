@@ -29,7 +29,7 @@ public class AIBase : BaseCharacter
 
     private RagdollController _ragdollController;
     private NavMeshAgent _navMeshAgent;
-    private SkinnedMeshRenderer _skinnedMeshRenderer;
+
 
     private string _currentCombatName;
 
@@ -86,7 +86,7 @@ public class AIBase : BaseCharacter
     {
         base.InitComponents();
         _ragdollController = GetComponent<RagdollController>();
-        _skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+
 
         _meleeDamageCollider = GetComponentInChildren<MeleeDamageCollider>();
         _meleeDamageCollider.SetOwner(this);
