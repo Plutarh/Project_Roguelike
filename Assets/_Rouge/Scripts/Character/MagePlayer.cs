@@ -10,6 +10,7 @@ public class MagePlayer : PlayerCharacter
     public override void Awake()
     {
         base.Awake();
+
         _primaryAbility.SetAbilityExecutePositions(_hands);
         _secondaryAbility.SetAbilityExecutePositions(_hands);
     }

@@ -54,7 +54,6 @@ public class PlayerCharacter : MonoBehaviour
     public virtual void Update()
     {
         PrimaryAttackResetTimer();
-        TryToPrimaryAttack();
     }
 
     void InitializeAbilities()
@@ -162,10 +161,10 @@ public class PlayerCharacter : MonoBehaviour
     void OnAttackButtonClicked(EAttackType type)
     {
         // FastRotateToCameraForward();
+
+        if (GetAttackLayerAnimationTime() < 0.8f) return;
         _player.SetBattleState();
-
-        if (GetAttackLayerAnimationTime() < 0.6f) return;
-
+        Debug.Log($"Current state - {_currentCombatName} Combat time " + GetAttackLayerAnimationTime());
         switch (type)
         {
             case EAttackType.Primary:
@@ -286,7 +285,9 @@ public class PlayerCharacter : MonoBehaviour
         _comboAttackTimeout = nextCombatAnimationClip.GetTimerToNextCombo;
 
         _player.BlockMovement(nextCombatAnimationClip.IsStopMovement);
-        StartCoroutine(IEWaitToUnblockMovement(nextCombatAnimationClip.StopMovementTime));
+
+        if (nextCombatAnimationClip.IsStopMovement)
+            StartCoroutine(IEWaitToUnblockMovement(nextCombatAnimationClip.StopMovementTime));
 
         _player.Animator.CrossFade(nextCombatAnimationClip.AnimationName, nextCombatAnimationClip.CrossFadeTime, nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextCombatAnimationClip.AnimationName;
