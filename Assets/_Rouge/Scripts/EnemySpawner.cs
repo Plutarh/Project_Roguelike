@@ -14,6 +14,9 @@ public class EnemySpawner : MonoBehaviour
     IEnemyFactory _enemyFactory;
 
 
+    [SerializeField] private Color colorPicker;
+
+
     [Inject]
     public void Construct(IEnemyFactory enemyFactory)
     {
