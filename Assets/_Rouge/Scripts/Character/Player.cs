@@ -56,6 +56,7 @@ public class Player : BaseCharacter
 
 
     [SerializeField] private float attackSpeed;
+    [SerializeField] private LayerMask aimLayers;
 
 
     CharacterControllerPusher _characterControllerPusher;
@@ -129,9 +130,9 @@ public class Player : BaseCharacter
         Ray ray = _mainCamera.ScreenPointToRay(InputService.GetMousePosition());
 
 
-        float raycastDistance = 400;
+        float raycastDistance = 600;
 
-        if (Physics.Raycast(ray, out hit, raycastDistance))
+        if (Physics.Raycast(ray, out hit, raycastDistance, aimLayers))
             rayPoint = hit.point;
         else
 

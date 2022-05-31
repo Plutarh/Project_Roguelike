@@ -547,7 +547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _characteristics: {fileID: 0}
   _health: {fileID: 7230643067007699186}
-  _myTeam: 0
+  _myTeam: 1
   _headBone: {fileID: 0}
   _animator: {fileID: 7282051720630695434}
   _characterController: {fileID: 7230643067007699187}
@@ -580,6 +580,9 @@ MonoBehaviour:
   _jumpTimeout: 0.1
   _verticalVelocity: 0
   attackSpeed: 1.4
+  aimLayers:
+    serializedVersion: 2
+    m_Bits: 7120
 --- !u!114 &6171975998455214671
 MonoBehaviour:
   m_ObjectHideFlags: 0

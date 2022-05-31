@@ -415,6 +415,5 @@ public class AIBase : BaseCharacter
         base.Death();
         _ragdollController.EnableRagdoll();
 
-        Destroy(gameObject, 3f);
     }
 }

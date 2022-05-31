@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+
     [SerializeField] private EProjectileDamageType damageType;
     [SerializeField] private float damageRadius;
+
+    public bool immortal;
 
     [SerializeField] private float _moveSpeed;
 
@@ -164,7 +167,9 @@ public class Projectile : MonoBehaviour
 
 
         CreateOnHitFX();
-        Destroy(gameObject);
+
+        if (!immortal)
+            Destroy(gameObject);
     }
 }
 

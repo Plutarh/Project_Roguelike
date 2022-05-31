@@ -21,7 +21,7 @@ public class FireBallAbility : BaseAbility
         _effects.ForEach(ef => projectile.AddScriptableEffect(ef));
 
         projectile.SetOwner(owner);
-
+        projectile.immortal = true;
         projectile.SetDamageData(damageData);
         _primaryAttackProjectilesToMove.Add(projectile);
 
@@ -35,19 +35,21 @@ public class FireBallAbility : BaseAbility
         base.Execute();
 
 
-        var firstProjectile = _primaryAttackProjectilesToMove.First();
+        var projectileToMove = _primaryAttackProjectilesToMove.First();
 
-        if (firstProjectile == null)
+        if (projectileToMove == null)
         {
             Debug.LogError("Animation didnt create projectile - PrimaryAttack_1");
+            _primaryAttackProjectilesToMove.Clear();
             return;
         }
 
         _primaryAttackProjectilesToMove.RemoveAt(0);
 
-        firstProjectile.transform.SetParent(null);
-        firstProjectile.SetProjectileDirection(owner.GetAimPoint());
-        firstProjectile.StartMove();
+        projectileToMove.transform.SetParent(null);
+        projectileToMove.immortal = false;
+        projectileToMove.SetProjectileDirection(owner.GetAimPoint());
+        projectileToMove.StartMove();
     }
 
     Projectile CreateProjectile(Projectile prefab)

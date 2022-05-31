@@ -2094,6 +2094,7 @@ GameObject:
   - component: {fileID: 3511261523385920634}
   - component: {fileID: 2814780808224134078}
   - component: {fileID: 6792066189197821519}
+  - component: {fileID: 6297060057933171951}
   m_Layer: 11
   m_Name: Skeleton_Enemy
   m_TagString: Untagged
@@ -2333,6 +2334,18 @@ NavMeshAgent:
   m_BaseOffset: -0.15
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6297060057933171951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8510486120028591691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf963c9e706a314ea8f613504776691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8510525046124055169
 GameObject:
   m_ObjectHideFlags: 0

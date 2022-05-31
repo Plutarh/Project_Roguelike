@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,9 @@ public class Pawn : MonoBehaviour, IDamageable
     [SerializeField] private Transform _headBone;
 
     Dictionary<ScriptableEffect, TimedEffect> _timedEffects = new Dictionary<ScriptableEffect, TimedEffect>();
+
+
+    public Action OnDeath;
 
     public virtual void Awake()
     {
@@ -98,7 +102,7 @@ public class Pawn : MonoBehaviour, IDamageable
 
     public virtual void Death()
     {
-
+        OnDeath?.Invoke();
     }
 
     public void AddEffect(TimedEffect effect)

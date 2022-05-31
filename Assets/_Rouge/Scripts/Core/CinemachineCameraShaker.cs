@@ -84,6 +84,7 @@ public class CinemachineCameraShaker : MonoBehaviour
 
     public void OnPlayerAttackShake()
     {
+        return;
         Shake(_onAttackAmplitude, _onAttackFrequency);
     }
 
