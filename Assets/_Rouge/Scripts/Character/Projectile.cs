@@ -79,7 +79,11 @@ public class Projectile : MonoBehaviour
     {
         _body.isKinematic = false;
         _body.AddForce(_moveDirection.normalized * _moveSpeed, ForceMode.VelocityChange);
+
+        transform.rotation = Quaternion.LookRotation(_moveDirection.normalized, Vector3.up);
     }
+
+
 
     void GravityTimer()
     {
@@ -152,9 +156,10 @@ public class Projectile : MonoBehaviour
         switch (damageType)
         {
             case EProjectileDamageType.SingleDamage:
-                IDamageable damageable;
-                if (other.transform.TryGetComponent<IDamageable>(out damageable))
+                var damageable = other.transform.gameObject.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
+                    if (_owner == null) Debug.LogError("Projectile owner null", this);
                     if (damageable.GetTeam() == _owner.GetTeam()) return;
                     Hit(damageable);
                 }

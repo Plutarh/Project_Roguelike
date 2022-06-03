@@ -92,6 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageType: 0
   damageRadius: 0
+  immortal: 0
   _moveSpeed: 50
   _delayToGravity: 10
   _lifetime: 10
