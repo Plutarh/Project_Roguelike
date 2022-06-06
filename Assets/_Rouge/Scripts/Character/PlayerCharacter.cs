@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public class PlayerCharacter : MonoBehaviour
+public class PlayerCharacter : NetworkBehaviour
 {
     public int PrimaryAttackIndex => _currentPrimaryAttackIndex;
 
@@ -43,16 +44,30 @@ public class PlayerCharacter : MonoBehaviour
 
     public virtual void Awake()
     {
-        _player = GetComponent<Player>();
+        if (!isLocalPlayer) return;
         InitializeAbilities();
 
-        InputEvents.OnAttackButtonClicked += OnAttackButtonClicked;
+
 
         ResetPrimaryAttack();
     }
 
+    public virtual void Start()
+    {
+
+
+    }
+
+    public void Initialize(Player player)
+    {
+        _player = player;
+        _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
+    }
+
     public virtual void Update()
     {
+        if (!isLocalPlayer) return;
+
         PrimaryAttackResetTimer();
     }
 
@@ -139,8 +154,6 @@ public class PlayerCharacter : MonoBehaviour
         _ultimateAbility.Execute();
     }
 
-
-
     IEnumerator IEWaitToUnblockMovement(float waitTime)
     {
         if (waitTime <= 0) yield break;
@@ -157,7 +170,7 @@ public class PlayerCharacter : MonoBehaviour
 
     void OnAttackButtonClicked(EAttackType type)
     {
-        // FastRotateToCameraForward();
+        if (!_player.isLocalPlayer) return;
 
         if (GetAttackLayerAnimationTime() < 0.8f) return;
         _player.SetBattleState();
@@ -296,7 +309,7 @@ public class PlayerCharacter : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputEvents.OnAttackButtonClicked -= OnAttackButtonClicked;
+        _player.InputService.OnAttackButtonClicked -= OnAttackButtonClicked;
     }
 }
 

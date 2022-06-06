@@ -15,11 +15,28 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     [SerializeField] private Player _playerInstance;
     [SerializeField] private PlayerCamera _playerCameraInstance;
 
+    public static ThirdPersonPlayerInstaller get;
+
+    private void Awake()
+    {
+        get = this;
+    }
+
     public override void InstallBindings()
     {
-        BindInputService();
+        //BindInputService();
         //BindPlayerInstance();
         // BindPlayerCameraInstance();
+    }
+
+    public void BindLocalPlayer(Player playerInstance)
+    {
+        _playerInstance = playerInstance;
+        BindInputService();
+        BindPlayerInstance();
+        BindPlayerCameraInstance();
+
+        Debug.Log($"Bind local player with ID {playerInstance.netId}");
     }
 
     public List<Vector3> GetPlayerSpawnPositions()
@@ -30,35 +47,31 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     }
 
 
-    public void BindAll()
-    {
-        BindInputService();
-        BindPlayerCameraInstance();
-    }
 
     void BindPlayerInstance()
     {
-        var playerInstance = Container
-            .InstantiatePrefabForComponent<Player>(playerUnit, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
+        // var playerInstance = Container
+        //     .InstantiatePrefabForComponent<Player>(playerUnit, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
 
         Container
             .Bind<Player>()
-            .FromInstance(playerInstance)
+            .FromInstance(_playerInstance)
             .AsSingle();
 
         Container
             .Bind<Transform>()
             .WithId("Player_Transform")
-            .FromInstance(playerInstance.transform);
+            .FromInstance(_playerInstance.transform)
+            .AsSingle();
 
         Container
             .Bind<PlayerCharacter>()
-            .FromInstance(playerInstance.GetComponent<PlayerCharacter>())
+            .FromInstance(_playerInstance.GetComponent<PlayerCharacter>())
             .AsSingle();
 
-        Container.QueueForInject(playerInstance);
+        Container.QueueForInject(_playerInstance);
 
-        _playerInstance = playerInstance;
+        // _playerInstance = playerInstance;
     }
 
     void BindInputService()
@@ -68,6 +81,8 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
             // .To<InputService>()
             .FromComponentInNewPrefab(inputServicePrefab)
             .AsSingle();
+
+        Debug.Log("Bind input service");
     }
 
     void BindPlayerCameraInstance()

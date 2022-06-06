@@ -19,20 +19,15 @@ public class CustomNetworkManager : NetworkManager
 
     }
 
-    IEnumerator IEWaitToSpawnPlayer()
-    {
-        yield return new WaitForSecondsRealtime(0.5f);
-        ActivatePlayerSpawn();
-    }
-
     public void OnCreateCharacter(NetworkConnectionToClient connection, SpawnPositionMessage message)
     {
-        GameObject playerObject = Instantiate(playerPrefab, message.spawnPosition, Quaternion.identity);
+        _player = Instantiate(playerPrefab, message.spawnPosition, Quaternion.identity);
 
-        _player = playerObject;
-
-        NetworkServer.AddPlayerForConnection(connection, playerObject);
+        NetworkServer.AddPlayerForConnection(connection, _player);
         Debug.Log("On Create Character");
+
+        Debug.Log($"player with ID {_player.GetComponent<NetworkBehaviour>().netId} spawned on {message.spawnPosition}");
+
     }
 
     public override void OnStartServer()
@@ -40,8 +35,6 @@ public class CustomNetworkManager : NetworkManager
         base.OnStartServer();
         Debug.Log("On Start Server");
         NetworkServer.RegisterHandler<SpawnPositionMessage>(OnCreateCharacter);
-
-
     }
 
     public override void OnClientConnect()
@@ -50,7 +43,7 @@ public class CustomNetworkManager : NetworkManager
         Debug.Log("On Client connect");
         _playerConnected = true;
 
-        StartCoroutine(IEWaitToSpawnPlayer());
+        ActivatePlayerSpawn();
     }
 
     public void ActivatePlayerSpawn()
@@ -66,7 +59,6 @@ public class CustomNetworkManager : NetworkManager
         NetworkClient.Send(message);
         _playerSpawned = true;
 
-        Debug.Log($"{message.spawnPosition}");
     }
 
     public override void OnServerDisconnect(NetworkConnectionToClient conn)

@@ -60,10 +60,11 @@ public class Player : BaseCharacter
 
     public Action OnAttackAnimation;
 
+    PlayerCharacter _playerCharacter;
+
     [Inject]
     public void Construct(InputService inputService)
     {
-
         _inputService = inputService;
     }
 
@@ -81,6 +82,18 @@ public class Player : BaseCharacter
     {
 
         base.Start();
+
+
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        Debug.Log($"On start local player {netId}");
+        ThirdPersonPlayerInstaller.get.BindLocalPlayer(this);
+
+        _playerCharacter = GetComponent<PlayerCharacter>();
+        _playerCharacter.Initialize(this);
     }
 
     public override void Update()
@@ -88,6 +101,11 @@ public class Player : BaseCharacter
         base.Update();
 
         if (!isLocalPlayer) return;
+        if (_inputService == null)
+        {
+            Debug.LogError("Input service nulled");
+            return;
+        }
 
         Movement();
         Rotation();

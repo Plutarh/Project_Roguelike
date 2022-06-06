@@ -31,6 +31,8 @@ public class InputService : MonoBehaviour//, IInputService
     [SerializeField] private Vector3 _mousePosition;
 
 
+    public Action<EAttackType> OnAttackButtonClicked;
+
 
     public void OnMove(InputValue value)
     {
@@ -128,7 +130,7 @@ public class InputService : MonoBehaviour//, IInputService
     public void OnFire(InputValue value)
     {
         _fire = value.isPressed;
-        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Primary);
+        OnAttackButtonClicked?.Invoke(EAttackType.Primary);
     }
 
     public bool GetFire()
@@ -144,7 +146,7 @@ public class InputService : MonoBehaviour//, IInputService
     public void OnSecondaryFire(InputValue value)
     {
         _secondaryFire = value.isPressed;
-        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Secondary);
+        OnAttackButtonClicked?.Invoke(EAttackType.Secondary);
     }
 
     public bool GetSecondaryFire()
@@ -160,7 +162,7 @@ public class InputService : MonoBehaviour//, IInputService
     public void OnUtility(InputValue value)
     {
         _utility = value.isPressed;
-        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Utility);
+        OnAttackButtonClicked?.Invoke(EAttackType.Utility);
     }
 
     public bool GetUtility()
@@ -176,7 +178,7 @@ public class InputService : MonoBehaviour//, IInputService
     public void OnUltimate(InputValue value)
     {
         _ultimate = value.isPressed;
-        InputEvents.OnAttackButtonClicked?.Invoke(EAttackType.Ultimate);
+        OnAttackButtonClicked?.Invoke(EAttackType.Ultimate);
     }
 
     public bool GetUltimate()

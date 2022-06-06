@@ -48,6 +48,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (_player == null) return;
         CameraRotation();
         // Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 5, Color.red);
     }
