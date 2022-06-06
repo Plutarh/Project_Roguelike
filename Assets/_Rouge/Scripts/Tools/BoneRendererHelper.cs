@@ -5,16 +5,17 @@ using UnityEngine.Animations.Rigging;
 
 public class BoneRendererHelper : MonoBehaviour
 {
+#if UNITY_EDITOR
     [SerializeField] private Transform rootBone;
     BoneRenderer boneRenderer;
-    private void OnValidate() 
+    private void OnValidate()
     {
-        if(boneRenderer == null)
+        if (boneRenderer == null)
             boneRenderer = GetComponent<BoneRenderer>();
 
-        if(rootBone != null)
+        if (rootBone != null)
         {
-            if(boneRenderer.transforms.Length == 0)
+            if (boneRenderer.transforms.Length == 0)
             {
                 var allBones = rootBone.GetComponentsInChildren<Transform>();
 
@@ -22,4 +23,5 @@ public class BoneRendererHelper : MonoBehaviour
             }
         }
     }
+#endif
 }

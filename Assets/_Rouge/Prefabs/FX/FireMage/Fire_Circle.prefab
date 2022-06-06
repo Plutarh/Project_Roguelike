@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5118856491854845344}
   - component: {fileID: 5028070771917148142}
   - component: {fileID: 5026365634247294978}
+  - component: {fileID: -3138614607136085649}
   m_Layer: 0
   m_Name: Fire_Circle
   m_TagString: Untagged
@@ -4624,6 +4625,19 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &-3138614607136085649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5116378823122699176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70c7ceaa6cd01db41a13a3ae0b291410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnlyDeactivate: 0
 --- !u!1 &5116975412208424454
 GameObject:
   m_ObjectHideFlags: 0

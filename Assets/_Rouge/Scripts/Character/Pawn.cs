@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 [RequireComponent(typeof(Characteristics))]
 [RequireComponent(typeof(Health))]
-public class Pawn : MonoBehaviour, IDamageable
+public class Pawn : NetworkBehaviour, IDamageable
 {
     public Characteristics Characteristics
     {

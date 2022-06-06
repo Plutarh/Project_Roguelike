@@ -67,7 +67,7 @@ public class CharacterAnimationData : ScriptableObject
         return foundedClip;
     }
 }
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(CharacterAnimationData))]
 public class CharacterAnimationDataEditor : Editor
 {
@@ -81,6 +81,7 @@ public class CharacterAnimationDataEditor : Editor
         }
     }
 }
+#endif
 
 [System.Serializable]
 public enum EAttackType

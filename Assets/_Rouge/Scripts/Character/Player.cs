@@ -24,9 +24,6 @@ public class Player : BaseCharacter
         get => _inputService;
     }
 
-
-
-
     private InputService _inputService;
 
     [SerializeField] private float _targetRotation;
@@ -66,12 +63,14 @@ public class Player : BaseCharacter
     [Inject]
     public void Construct(InputService inputService)
     {
+
         _inputService = inputService;
     }
 
     public override void Awake()
     {
         base.Awake();
+
         _mainCamera = Camera.main;
 
         _animator.SetLayerWeight(1, 1);
@@ -81,11 +80,14 @@ public class Player : BaseCharacter
     public override void Start()
     {
 
+        base.Start();
     }
 
     public override void Update()
     {
         base.Update();
+
+        if (!isLocalPlayer) return;
 
         Movement();
         Rotation();
@@ -100,6 +102,7 @@ public class Player : BaseCharacter
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        if (!isLocalPlayer) return;
     }
 
     public override void InitComponents()
@@ -322,7 +325,10 @@ public class Player : BaseCharacter
             else
                 _animator.SetBool("FreeFall", true);
 
-            _inputService.ResetJump();
+            if (_inputService != null)
+                _inputService.ResetJump();
+            else
+                Debug.LogError("Player Input service NULL");
         }
 
         _verticalVelocity += _gravity * Time.deltaTime;

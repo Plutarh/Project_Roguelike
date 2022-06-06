@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5017221299856858270}
   - component: {fileID: 5147264526970508098}
   - component: {fileID: 5146114732271837236}
+  - component: {fileID: 3467189139775236138}
   m_Layer: 0
   m_Name: Burn_FX
   m_TagString: Untagged
@@ -4655,6 +4656,19 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &3467189139775236138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5020467107122520828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70c7ceaa6cd01db41a13a3ae0b291410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnlyDeactivate: 0
 --- !u!1 &7879878043215176699
 GameObject:
   m_ObjectHideFlags: 0

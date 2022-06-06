@@ -155,16 +155,15 @@ public class PlayerCharacter : MonoBehaviour
         _currentPrimaryAttackIndex = -1;
     }
 
-
-
-
     void OnAttackButtonClicked(EAttackType type)
     {
         // FastRotateToCameraForward();
 
         if (GetAttackLayerAnimationTime() < 0.8f) return;
         _player.SetBattleState();
-        Debug.Log($"Current state - {_currentCombatName} Combat time " + GetAttackLayerAnimationTime());
+
+        // Debug.Log($"Current state - {_currentCombatName} Combat time " + GetAttackLayerAnimationTime());
+
         switch (type)
         {
             case EAttackType.Primary:
@@ -292,7 +291,7 @@ public class PlayerCharacter : MonoBehaviour
         _player.Animator.CrossFade(nextCombatAnimationClip.AnimationName, nextCombatAnimationClip.CrossFadeTime, nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextCombatAnimationClip.AnimationName;
 
-        Debug.Log("<color=green>Cross Fade to </color>" + nextCombatAnimationClip.AnimationName);
+        //Debug.Log("<color=green>Cross Fade to </color>" + nextCombatAnimationClip.AnimationName);
     }
 
     private void OnDestroy()

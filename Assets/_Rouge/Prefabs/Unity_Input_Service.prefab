@@ -49,10 +49,14 @@ MonoBehaviour:
   _jump: 0
   _sprint: 0
   _fire: 0
+  _secondaryFire: 0
+  _utility: 0
+  _ultimate: 0
   analogMovement: 0
-  cursorLocked: 1
+  cursorLocked: 0
   cursorInputForLook: 1
   _playerInput: {fileID: 1350314716790753404}
+  _mousePosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1350314716790753404
 MonoBehaviour:
   m_ObjectHideFlags: 0

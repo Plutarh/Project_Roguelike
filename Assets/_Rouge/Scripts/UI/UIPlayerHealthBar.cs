@@ -3,15 +3,16 @@ using Zenject;
 public class UIPlayerHealthBar : UIHealthBar
 {
     Player _player;
-    [Inject]
-    public void Construct(Player playerChar)
-    {
-        _player = playerChar;
+    // [Inject]
+    // public void Construct(Player playerChar)
+    // {
+    //     _player = playerChar;
 
-    }
+    // }
 
     private void Awake()
     {
-        SetPawn(_player);
+        if (_player != null)
+            SetPawn(_player);
     }
 }

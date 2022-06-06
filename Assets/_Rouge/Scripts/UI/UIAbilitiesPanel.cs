@@ -12,13 +12,13 @@ public class UIAbilitiesPanel : MonoBehaviour
 
     PlayerCharacter _playerCharacter;
 
-    [Inject]
-    public void Construct(PlayerCharacter playerChar)
-    {
-        _playerCharacter = playerChar;
+    // [Inject]
+    // public void Construct(PlayerCharacter playerChar)
+    // {
+    //     _playerCharacter = playerChar;
 
-        _playerCharacter.OnAbilitiesInitialized += CreateAbilities;
-    }
+    //     _playerCharacter.OnAbilitiesInitialized += CreateAbilities;
+    // }
 
 
     private void Start()
@@ -28,10 +28,15 @@ public class UIAbilitiesPanel : MonoBehaviour
 
     private void Update()
     {
-        UpdateAbilityFrames();
+
     }
 
-    void UpdateAbilityFrames()
+    private void LateUpdate()
+    {
+        RefreshAbilityFrames();
+    }
+
+    void RefreshAbilityFrames()
     {
         for (int i = 0; i < _playerCharacter.AllAbilities.Count; i++)
         {
@@ -64,11 +69,11 @@ public class UIAbilitiesPanel : MonoBehaviour
             _abilitiesFrames.Add(createdAbility);
         }
 
-        UpdateAbilityFrames();
+        RefreshAbilityFrames();
     }
 
-    private void OnDestroy()
-    {
-        _playerCharacter.OnAbilitiesInitialized -= CreateAbilities;
-    }
+    // private void OnDestroy()
+    // {
+    //     _playerCharacter.OnAbilitiesInitialized -= CreateAbilities;
+    // }
 }

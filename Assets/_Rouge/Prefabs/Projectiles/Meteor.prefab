@@ -4895,6 +4895,7 @@ GameObject:
   - component: {fileID: 8007644184278885428}
   - component: {fileID: 238336560438079309}
   - component: {fileID: 2152222924949026846}
+  - component: {fileID: -2945759259493878647}
   m_Layer: 10
   m_Name: Meteor
   m_TagString: Untagged
@@ -4910,7 +4911,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8007644184278885427}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.78, y: 17.66, z: 5.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5961550404260745877}
@@ -4943,13 +4944,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72dd6fa254f70c1469df57f10368c18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   damageType: 1
   damageRadius: 8
+  immortal: 0
   _moveSpeed: 20
   _delayToGravity: 0.6
   _lifetime: 10
   onHitFX: {fileID: 2909527908523536801, guid: 8c6fb7fe3e75d424d9dd497f06235787, type: 3}
   _moveDirection: {x: 0, y: 0, z: 0}
+  _effectsOnHit: []
   _unparent: {fileID: 5961550404260745877}
 --- !u!54 &2152222924949026846
 Rigidbody:
@@ -4967,3 +4972,37 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &-2945759259493878647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8007644184278885427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}

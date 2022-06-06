@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : NetworkBehaviour
 {
 
     [SerializeField] private EProjectileDamageType damageType;

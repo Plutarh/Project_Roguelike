@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -6,7 +7,7 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     [Header("Prefabs")]
     [SerializeField] private Player playerUnit;
     [SerializeField] private PlayerCamera playerCameraPrefab;
-    [SerializeField] private Transform playerUnitSpawnPoint;
+    [SerializeField] private List<Transform> _playerUnitSpawnPoints = new List<Transform>();
     [SerializeField] private InputService inputServicePrefab;
 
     [Space]
@@ -17,14 +18,28 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     public override void InstallBindings()
     {
         BindInputService();
-        BindPlayerInstance();
+        //BindPlayerInstance();
+        // BindPlayerCameraInstance();
+    }
+
+    public List<Vector3> GetPlayerSpawnPositions()
+    {
+        List<Vector3> spawnPositions = new List<Vector3>();
+        _playerUnitSpawnPoints.ForEach(pusp => spawnPositions.Add(pusp.position));
+        return spawnPositions;
+    }
+
+
+    public void BindAll()
+    {
+        BindInputService();
         BindPlayerCameraInstance();
     }
 
     void BindPlayerInstance()
     {
         var playerInstance = Container
-            .InstantiatePrefabForComponent<Player>(playerUnit, playerUnitSpawnPoint.position, Quaternion.identity, null);
+            .InstantiatePrefabForComponent<Player>(playerUnit, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
 
         Container
             .Bind<Player>()
@@ -58,7 +73,7 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     void BindPlayerCameraInstance()
     {
         var cameraInstance =
-         Container.InstantiatePrefabForComponent<PlayerCamera>(playerCameraPrefab, playerUnitSpawnPoint.position, Quaternion.identity, null);
+         Container.InstantiatePrefabForComponent<PlayerCamera>(playerCameraPrefab, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
 
         Container
             .Bind<PlayerCamera>()
@@ -72,15 +87,19 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
 
     private void OnDrawGizmos()
     {
-        if (playerUnitSpawnPoint != null && playerUnit != null)
+        if (_playerUnitSpawnPoints.Count > 0 && playerUnit != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawMesh(playerUnit.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh,
+            foreach (var spawnPos in _playerUnitSpawnPoints)
+            {
+                Gizmos.DrawMesh(playerUnit.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh,
                 -1,
-                playerUnitSpawnPoint.transform.position,
-                playerUnitSpawnPoint.transform.rotation);
+                spawnPos.position,
+                spawnPos.rotation);
 
-            Gizmos.DrawSphere(playerUnitSpawnPoint.transform.position, 0.3f);
+                Gizmos.DrawSphere(spawnPos.position, 0.3f);
+            }
+
         }
     }
 }
