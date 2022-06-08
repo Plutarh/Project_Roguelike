@@ -6,7 +6,7 @@ using Zenject;
 
 public class PlayerHUD : MonoBehaviour
 {
-    Player _player;
+    PlayerMover _player;
 
     [SerializeField] private CanvasGroup _playerDamagedOverlay;
 

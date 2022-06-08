@@ -28,12 +28,12 @@ public class PlayerCamera : MonoBehaviour
 
     public float rotationMultiplier = 5;
 
-    private Player _player;
+    private PlayerMover _player;
 
     private CinemachineCameraShaker _camerShaker;
 
     [Inject]
-    public void Construct(Player player, InputService inputService)
+    public void Construct(PlayerMover player, InputService inputService)
     {
         _player = player;
         _inputService = inputService;

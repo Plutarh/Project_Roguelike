@@ -2,7 +2,7 @@ using Zenject;
 
 public class UIPlayerHealthBar : UIHealthBar
 {
-    Player _player;
+    PlayerMover _player;
     // [Inject]
     // public void Construct(Player playerChar)
     // {

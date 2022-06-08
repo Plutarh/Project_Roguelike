@@ -5,14 +5,14 @@ using Zenject;
 public class ThirdPersonPlayerInstaller : MonoInstaller
 {
     [Header("Prefabs")]
-    [SerializeField] private Player playerUnit;
+    [SerializeField] private PlayerMover playerUnit;
     [SerializeField] private PlayerCamera playerCameraPrefab;
     [SerializeField] private List<Transform> _playerUnitSpawnPoints = new List<Transform>();
     [SerializeField] private InputService inputServicePrefab;
 
     [Space]
     [Header("Instances")]
-    [SerializeField] private Player _playerInstance;
+    [SerializeField] private PlayerMover _playerInstance;
     [SerializeField] private PlayerCamera _playerCameraInstance;
 
     public static ThirdPersonPlayerInstaller get;
@@ -29,7 +29,7 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
         // BindPlayerCameraInstance();
     }
 
-    public void BindLocalPlayer(Player playerInstance)
+    public void BindLocalPlayer(PlayerMover playerInstance)
     {
         _playerInstance = playerInstance;
         BindInputService();
@@ -54,7 +54,7 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
         //     .InstantiatePrefabForComponent<Player>(playerUnit, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
 
         Container
-            .Bind<Player>()
+            .Bind<PlayerMover>()
             .FromInstance(_playerInstance)
             .AsSingle();
 

@@ -13,12 +13,6 @@ public class CustomNetworkManager : NetworkManager
 
     GameObject _player;
 
-    public override void Start()
-    {
-        base.Start();
-
-    }
-
     public void OnCreateCharacter(NetworkConnectionToClient connection, SpawnPositionMessage message)
     {
         _player = Instantiate(playerPrefab, message.spawnPosition, Quaternion.identity);

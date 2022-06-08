@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 2022318706151408003}
   - component: {fileID: 6351128355336456826}
   m_Layer: 0
-  m_Name: Rig (1)
+  m_Name: Rig_Hands
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -520,6 +520,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de9b90d402c7b1458074fc3db54c18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   characterAnimationData: {fileID: 11400000, guid: a43f90c65a799bd4bab85446a9160c85, type: 2}
   _primaryAbilityData: {fileID: 11400000, guid: 7be70a27577fc2947815afead247457d, type: 2}
   _secondaryAbilityData: {fileID: 11400000, guid: ce2bdb7a64077d147a7b0bc946b04a16, type: 2}
@@ -774,7 +776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 0
+  clientAuthority: 1
   sendInterval: 0.05
   syncPosition: 1
   syncRotation: 1

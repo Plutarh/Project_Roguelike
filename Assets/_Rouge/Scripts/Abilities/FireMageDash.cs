@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 public class FireMageDash : BaseAbility
@@ -46,6 +47,7 @@ public class FireMageDash : BaseAbility
             ghost.transform.rotation = skin.transform.rotation;
 
             Destroy(ghost, _ghostLifeTime);
+
         }
     }
 

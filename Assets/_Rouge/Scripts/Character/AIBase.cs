@@ -46,7 +46,7 @@ public class AIBase : BaseCharacter
 
 
     [Inject]
-    public void Construct(Player player)
+    public void Construct(PlayerMover player)
     {
         _currentTarget = player;
     }

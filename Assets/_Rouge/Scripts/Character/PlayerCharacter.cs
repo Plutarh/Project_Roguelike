@@ -10,7 +10,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     public List<BaseAbility> AllAbilities => _allAbilities;
 
-    protected Player _player;
+    protected PlayerMover _player;
 
     [Header("Other")]
     public CharacterAnimationData characterAnimationData;
@@ -44,12 +44,8 @@ public class PlayerCharacter : NetworkBehaviour
 
     public virtual void Awake()
     {
-        if (!isLocalPlayer) return;
-        InitializeAbilities();
 
 
-
-        ResetPrimaryAttack();
     }
 
     public virtual void Start()
@@ -58,10 +54,13 @@ public class PlayerCharacter : NetworkBehaviour
 
     }
 
-    public void Initialize(Player player)
+    public virtual void Initialize(PlayerMover player)
     {
         _player = player;
         _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
+
+        InitializeAbilities();
+        ResetPrimaryAttack();
     }
 
     public virtual void Update()
@@ -99,6 +98,7 @@ public class PlayerCharacter : NetworkBehaviour
     {
         var createdAbility = Instantiate(abilityScriptable.abilityComponent, _abilitiesParent);
         createdAbility.transform.localPosition = Vector3.zero;
+        if (_player == null) Debug.LogError("Player null");
         createdAbility.SetOwner(_player);
         return createdAbility;
     }
@@ -111,32 +111,37 @@ public class PlayerCharacter : NetworkBehaviour
         return damageData;
     }
 
+
     public virtual void AnimPreparePrimaryAttack_1()
     {
-        _primaryAbility.SetAbilityExecutePositionIndex(_currentPrimaryAttackIndex);
         _primaryAbility.PrepareExecuting(CreateDamageData(_primaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartPrimaryAttack_1()
     {
         _primaryAbility.Execute();
-
     }
+
+
+
 
     public virtual void AnimPrepareSecondaryAttack_1()
     {
         _secondaryAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
 
+
     public virtual void AnimStartSecondaryAttack_1()
     {
         _secondaryAbility.Execute();
     }
 
+
     public virtual void AnimPrepareUtilitySkill_1()
     {
         _utilityAbility.PrepareExecuting(CreateDamageData(_utilityAbility.DamageMultiplyer));
     }
+
 
     public virtual void AnimStartUtilitySkill_1()
     {
@@ -144,10 +149,12 @@ public class PlayerCharacter : NetworkBehaviour
 
     }
 
+
     public virtual void AnimPrepareUltimateAttack_1()
     {
         _ultimateAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
+
 
     public virtual void AnimStartUltimateAttack_1()
     {
@@ -309,6 +316,8 @@ public class PlayerCharacter : NetworkBehaviour
 
     private void OnDestroy()
     {
+        if (!isLocalPlayer) return;
+
         _player.InputService.OnAttackButtonClicked -= OnAttackButtonClicked;
     }
 }

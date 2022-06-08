@@ -25,10 +25,10 @@ public class CinemachineCameraShaker : MonoBehaviour
 
 
 
-    Player _player;
+    PlayerMover _player;
 
     [Inject]
-    public void Construct(Player player)
+    public void Construct(PlayerMover player)
     {
         _player = player;
     }
