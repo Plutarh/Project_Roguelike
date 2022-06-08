@@ -76,31 +76,33 @@ public class PlayerMover : BaseCharacter
 
         _animator.SetLayerWeight(1, 1);
         SetTeam(EPawnTeam.Player);
+
+        _playerCharacter = GetComponent<PlayerCharacter>();
+        _playerCharacter.SetPlayer(this);
     }
 
     public override void Start()
     {
-
         base.Start();
-
-
     }
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        Debug.Log($"On start local player {netId}");
+
         ThirdPersonPlayerInstaller.get.BindLocalPlayer(this);
 
-        _playerCharacter = GetComponent<PlayerCharacter>();
-        _playerCharacter.Initialize(this);
+
+        _playerCharacter.InitializeLocalCoreComponents();
     }
 
     public override void Update()
     {
+        if (!isLocalPlayer) return;
+
         base.Update();
 
-        if (!isLocalPlayer) return;
+
         if (_inputService == null)
         {
             Debug.LogError("Input service nulled");
@@ -361,7 +363,6 @@ public class PlayerMover : BaseCharacter
     public override void OnLanded()
     {
         base.OnLanded();
-        Debug.Log("Landed");
     }
 
     public void UpdateMotionAnimator()

@@ -19,9 +19,14 @@ public class MagePlayer : PlayerCharacter
         base.Start();
     }
 
-    public override void Initialize(PlayerMover player)
+    public override void InitializeLocalCoreComponents()
     {
-        base.Initialize(player);
+        base.InitializeLocalCoreComponents();
+    }
+
+    public override void OnAbilitiesInitialized()
+    {
+        base.OnAbilitiesInitialized();
 
         _primaryAbility.SetAbilityExecutePositions(_hands);
         _secondaryAbility.SetAbilityExecutePositions(_hands);
@@ -30,6 +35,7 @@ public class MagePlayer : PlayerCharacter
     public override void AnimPreparePrimaryAttack_1()
     {
         base.AnimPreparePrimaryAttack_1();
+
         _primaryAbility.SetAbilityExecutePositionIndex(_currentPrimaryAttackIndex);
     }
 

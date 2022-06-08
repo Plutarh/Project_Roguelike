@@ -40,31 +40,54 @@ public class PlayerCharacter : NetworkBehaviour
 
     [SerializeField] protected int _currentPrimaryAttackIndex = 0;
 
-    public Action OnAbilitiesInitialized;
+
 
     public virtual void Awake()
     {
-
 
     }
 
     public virtual void Start()
     {
 
+        if (_player == null) _player = GetComponent<PlayerMover>();
+        InitializeAbilities();
+    }
+
+    public void SetPlayer(PlayerMover player)
+    {
+        _player = player;
+    }
+
+    public virtual void InitializeLocalCoreComponents()
+    {
+
+        _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
+
+
+        ResetPrimaryAttack();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+
+        NetNaming();
+        Debug.Log("PlayerChar on start local player");
+
 
     }
 
-    public virtual void Initialize(PlayerMover player)
+    void NetNaming()
     {
-        _player = player;
-        _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
-
-        InitializeAbilities();
-        ResetPrimaryAttack();
+        string netName = isServer ? "_Host" : "_Client";
+        transform.name = $"Player_{netId}_{netName}";
     }
 
     public virtual void Update()
     {
+        NetNaming();
         if (!isLocalPlayer) return;
 
         PrimaryAttackResetTimer();
@@ -72,6 +95,8 @@ public class PlayerCharacter : NetworkBehaviour
 
     void InitializeAbilities()
     {
+        Debug.Log($"{transform.name} -Server-{isServer}- Initialize abilities");
+
         if (_abilitiesParent == null)
         {
             _abilitiesParent = new GameObject("Abilities").transform;
@@ -91,14 +116,24 @@ public class PlayerCharacter : NetworkBehaviour
         _ultimateAbility = CreateAbility(_ultimateAbilityData);
         _allAbilities.Add(_ultimateAbility);
 
-        OnAbilitiesInitialized?.Invoke();
+        OnAbilitiesInitialized();
+    }
+
+    public virtual void OnAbilitiesInitialized()
+    {
+
     }
 
     BaseAbility CreateAbility(AbilityScriptable abilityScriptable)
     {
         var createdAbility = Instantiate(abilityScriptable.abilityComponent, _abilitiesParent);
         createdAbility.transform.localPosition = Vector3.zero;
-        if (_player == null) Debug.LogError("Player null");
+
+        if (_player == null)
+        {
+            Debug.LogError($"Player null - {transform.name}", this);
+        }
+
         createdAbility.SetOwner(_player);
         return createdAbility;
     }
@@ -122,39 +157,30 @@ public class PlayerCharacter : NetworkBehaviour
         _primaryAbility.Execute();
     }
 
-
-
-
     public virtual void AnimPrepareSecondaryAttack_1()
     {
         _secondaryAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
-
 
     public virtual void AnimStartSecondaryAttack_1()
     {
         _secondaryAbility.Execute();
     }
 
-
     public virtual void AnimPrepareUtilitySkill_1()
     {
         _utilityAbility.PrepareExecuting(CreateDamageData(_utilityAbility.DamageMultiplyer));
     }
 
-
     public virtual void AnimStartUtilitySkill_1()
     {
         _utilityAbility.Execute();
-
     }
-
 
     public virtual void AnimPrepareUltimateAttack_1()
     {
         _ultimateAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
-
 
     public virtual void AnimStartUltimateAttack_1()
     {

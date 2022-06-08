@@ -22,21 +22,19 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
         get = this;
     }
 
+    // Уход из офлайн режима, на онлайн, где зависимости игрока прокидываются, после подключения
     public override void InstallBindings()
     {
-        //BindInputService();
-        //BindPlayerInstance();
-        // BindPlayerCameraInstance();
+
     }
 
+    // Биндим локального игрока
     public void BindLocalPlayer(PlayerMover playerInstance)
     {
         _playerInstance = playerInstance;
         BindInputService();
         BindPlayerInstance();
         BindPlayerCameraInstance();
-
-        Debug.Log($"Bind local player with ID {playerInstance.netId}");
     }
 
     public List<Vector3> GetPlayerSpawnPositions()
@@ -46,13 +44,8 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
         return spawnPositions;
     }
 
-
-
     void BindPlayerInstance()
     {
-        // var playerInstance = Container
-        //     .InstantiatePrefabForComponent<Player>(playerUnit, _playerUnitSpawnPoints[0].position, Quaternion.identity, null);
-
         Container
             .Bind<PlayerMover>()
             .FromInstance(_playerInstance)
@@ -81,8 +74,6 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
             // .To<InputService>()
             .FromComponentInNewPrefab(inputServicePrefab)
             .AsSingle();
-
-        Debug.Log("Bind input service");
     }
 
     void BindPlayerCameraInstance()

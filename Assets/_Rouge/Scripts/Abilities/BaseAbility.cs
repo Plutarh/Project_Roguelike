@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
-public abstract class BaseAbility : MonoBehaviour
+public abstract class BaseAbility : NetworkBehaviour
 {
     public bool IsReady => _cooldownTimer <= 0;
     public float CooldownTimer => _cooldownTimer;
@@ -61,7 +62,13 @@ public abstract class BaseAbility : MonoBehaviour
         RefreshCooldown();
     }
 
-    public void AddEffectToTarget(IDamageable pawn)
+    [Command]
+    void CmdExecute()
+    {
+
+    }
+
+    public void AddEffectToDamageable(IDamageable pawn)
     {
         foreach (var effect in _effects)
         {
