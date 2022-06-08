@@ -52,6 +52,7 @@ public class PlayerCharacter : NetworkBehaviour
 
         if (_player == null) _player = GetComponent<PlayerMover>();
         InitializeAbilities();
+
     }
 
     public void SetPlayer(PlayerMover player)
@@ -87,9 +88,9 @@ public class PlayerCharacter : NetworkBehaviour
 
     public virtual void Update()
     {
-        NetNaming();
-        if (!isLocalPlayer) return;
 
+        if (!isLocalPlayer) return;
+        NetNaming();
         PrimaryAttackResetTimer();
     }
 
@@ -203,7 +204,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     void OnAttackButtonClicked(EAttackType type)
     {
-        if (!_player.isLocalPlayer) return;
+        //if (!_player.isLocalPlayer) return;
 
         if (GetAttackLayerAnimationTime() < 0.8f) return;
         _player.SetBattleState();
@@ -273,6 +274,7 @@ public class PlayerCharacter : NetworkBehaviour
         _lastPrimaryAttackTime = Time.time;
 
         PlayCombatAnimation(EAttackType.Primary, ref _currentPrimaryAttackIndex);
+
     }
 
     void TryToSecondaryAttack()
@@ -334,10 +336,41 @@ public class PlayerCharacter : NetworkBehaviour
         if (nextCombatAnimationClip.IsStopMovement)
             StartCoroutine(IEWaitToUnblockMovement(nextCombatAnimationClip.StopMovementTime));
 
+        NetworkAnimationData animation = new NetworkAnimationData();
+
+        animation.animationName = nextCombatAnimationClip.AnimationName;
+        animation.crossFade = nextCombatAnimationClip.CrossFadeTime;
+        animation.fullbody = nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1;
+
+
+        if (!isServer)
+            CmdCombatAnimation(animation);
+        else
+            CombatAnimationRPC(animation);
+
         _player.Animator.CrossFade(nextCombatAnimationClip.AnimationName, nextCombatAnimationClip.CrossFadeTime, nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1);
         _currentCombatName = nextCombatAnimationClip.AnimationName;
 
         //Debug.Log("<color=green>Cross Fade to </color>" + nextCombatAnimationClip.AnimationName);
+    }
+
+    struct NetworkAnimationData
+    {
+        public string animationName;
+        public float crossFade;
+        public int fullbody;
+    }
+
+    [Command]
+    void CmdCombatAnimation(NetworkAnimationData networkAnimation)
+    {
+        _player.Animator.CrossFade(networkAnimation.animationName, networkAnimation.crossFade, networkAnimation.fullbody);
+    }
+
+    [ClientRpc]
+    void CombatAnimationRPC(NetworkAnimationData networkAnimation)
+    {
+        _player.Animator.CrossFade(networkAnimation.animationName, networkAnimation.crossFade, networkAnimation.fullbody);
     }
 
     private void OnDestroy()

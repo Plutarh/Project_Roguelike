@@ -12,6 +12,7 @@ public class FireBallAbility : BaseAbility
     public override void PrepareExecuting(DamageData damageData)
     {
         base.PrepareExecuting(damageData);
+        if (!owner.isLocalPlayer) return;
 
         _muzzleIndex = _abilityPositionIndex;
 
@@ -33,7 +34,7 @@ public class FireBallAbility : BaseAbility
     public override void Execute()
     {
         base.Execute();
-
+        if (!owner.isLocalPlayer) return;
 
         var projectileToMove = _primaryAttackProjectilesToMove.First();
 

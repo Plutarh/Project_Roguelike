@@ -52,12 +52,14 @@ public abstract class BaseAbility : NetworkBehaviour
 
     public virtual void PrepareExecuting(DamageData damageData = null)
     {
+        if (!owner.isLocalPlayer) return;
         _damageData = damageData;
     }
 
     public virtual void Execute()
     {
         if (!IsReady) return;
+        if (!owner.isLocalPlayer) return;
         _stackLeft--;
         RefreshCooldown();
     }
