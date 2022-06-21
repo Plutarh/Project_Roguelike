@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8575260701668952162}
   - component: {fileID: 2667964155692268895}
+  - component: {fileID: 6927564700867837438}
   m_Layer: 0
   m_Name: Fire Dash
   m_TagString: Untagged
@@ -43,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 357d2daf58d985c4a94a2b3eb96e01a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   owner: {fileID: 0}
   _cooldown: 2
   _cooldownTimer: 0
@@ -54,6 +57,7 @@ MonoBehaviour:
   _damageMultiplier: 1
   _effects: []
   abilityScriptable: {fileID: 11400000, guid: f4cc2c73b948c7d4d9654356ffd9d60b, type: 2}
+  _attackType: 2
   _trailFxPrefab: {fileID: 198523248014880124, guid: 673011a12ec748844a398a9504a957a4, type: 3}
   _createdTrailFx: {fileID: 0}
   _executeTime: 0.3
@@ -61,3 +65,20 @@ MonoBehaviour:
   _ghostTrailMaterial: {fileID: 2100000, guid: 1376c8cdc92bae643adf4c168aac2d7a, type: 2}
   _ghostCount: 6
   _ghostLifeTime: 0.6
+--- !u!114 &6927564700867837438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8575260701668952163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: a75dc13af5b73f34090124da86f63a6d
+  hasSpawned: 0

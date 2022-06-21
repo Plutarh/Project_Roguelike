@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Projectile : NetworkBehaviour
 {
+    public bool IsInited => _isInited;
 
     [SerializeField] private EProjectileDamageType damageType;
     [SerializeField] private float damageRadius;
@@ -25,21 +26,21 @@ public class Projectile : NetworkBehaviour
 
     private Rigidbody _body;
 
-    private Pawn _owner;
+    private NetworkIdentity _owner;
     private DamageData _damageData;
-
-
 
     [SerializeField] private Transform _unparent;
 
     [SerializeField] private List<IDamageable> _damagedTargets = new List<IDamageable>();
+
+    private bool _isInited;
 
     private void Awake()
     {
         _body = GetComponent<Rigidbody>();
 
         _body.isKinematic = true;
-
+        //Debug.Log("Bullet created");
     }
 
     private void Update()
@@ -48,10 +49,22 @@ public class Projectile : NetworkBehaviour
         LifeTimer();
     }
 
+    public void Initialize(ProjectileNetworkData networkData)
+    {
+        _isInited = true;
+
+        _damageData = networkData.damageData;
+        _owner = networkData.owner;
+        _moveDirection = networkData.moveDirection;
+        //networkData.effects.ForEach(ef => _effectsOnHit.Add(ef));
+
+        StartMove();
+    }
+
     void LifeTimer()
     {
         if (_lifetime <= 0)
-            Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
         else
             _lifetime -= Time.deltaTime;
     }
@@ -66,7 +79,7 @@ public class Projectile : NetworkBehaviour
         _damageData = damageData;
     }
 
-    public void SetOwner(Pawn newOwner)
+    public void SetOwner(NetworkIdentity newOwner)
     {
         _owner = newOwner;
     }
@@ -84,8 +97,6 @@ public class Projectile : NetworkBehaviour
         transform.rotation = Quaternion.LookRotation(_moveDirection.normalized, Vector3.up);
     }
 
-
-
     void GravityTimer()
     {
         if (_delayToGravity <= 0)
@@ -96,7 +107,6 @@ public class Projectile : NetworkBehaviour
 
     void Hit(IDamageable damageable)
     {
-        // Наносим урон пулькой
         damageable.TakeDamage(_damageData);
 
         // Вешаем эффекты которые были на пульке
@@ -105,7 +115,7 @@ public class Projectile : NetworkBehaviour
             damageable.AddEffect(effect.InitializeEffect(damageable.GetGameObject(), _damageData));
         }
 
-        // Если попали в игрока то говорим об этом. В будущем добавить проверку на локального игрока
+
         if (_damageData == null)
             Debug.LogError("DMG null");
         if (_damageData.whoOwner == null)
@@ -123,13 +133,14 @@ public class Projectile : NetworkBehaviour
 
         if (colliders.Count == 0) return;
 
+        var ownerPawn = _owner.GetComponent<Pawn>();
         foreach (var col in colliders)
         {
             var pawn = col.transform.root.GetComponent<IDamageable>();
 
             if (pawn == null) continue;
             if (_damagedTargets.Contains(pawn)) continue;
-            if (pawn.GetTeam() == _owner.GetTeam()) continue;
+            if (pawn.GetTeam() == ownerPawn.GetTeam()) continue;
 
             Hit(pawn);
             _damagedTargets.Add(pawn);
@@ -138,22 +149,32 @@ public class Projectile : NetworkBehaviour
 
     void CreateOnHitFX()
     {
-        if (onHitFX != null)
-            Instantiate(onHitFX, transform.position, Quaternion.identity);
+        if (onHitFX == null)
+        {
+            Debug.LogError("Projectile had no FX", this);
+            return;
+        }
+
+        var fx = Instantiate(onHitFX, transform.position, Quaternion.identity);
 
         _unparent.SetParent(null);
         var parcticles = _unparent.GetComponentsInChildren<ParticleSystem>().ToList();
         parcticles.ForEach(p => p.Stop());
 
+        //NetworkServer.Spawn(fx.gameObject);
 
         Destroy(_unparent.gameObject, 0.5f);
     }
 
 
+
+
     private void OnTriggerEnter(Collider other)
     {
+        if (!IsInited) return;
         if (other == null) return;
 
+        var ownerPawn = _owner.GetComponent<Pawn>();
         switch (damageType)
         {
             case EProjectileDamageType.SingleDamage:
@@ -161,7 +182,7 @@ public class Projectile : NetworkBehaviour
                 if (damageable != null)
                 {
                     if (_owner == null) Debug.LogError("Projectile owner null", this);
-                    if (damageable.GetTeam() == _owner.GetTeam()) return;
+                    if (damageable.GetTeam() == ownerPawn.GetTeam()) return;
                     Hit(damageable);
                 }
                 break;
@@ -175,7 +196,10 @@ public class Projectile : NetworkBehaviour
         CreateOnHitFX();
 
         if (!immortal)
-            Destroy(gameObject);
+        {
+            //Destroy(gameObject);
+            NetworkServer.Destroy(gameObject);
+        }
     }
 }
 
@@ -183,4 +207,14 @@ public enum EProjectileDamageType
 {
     SingleDamage,
     AOE
+}
+
+public struct ProjectileNetworkData
+{
+    public NetworkIdentity owner;
+    public NetworkIdentity projectileToSpawn;
+    public DamageData damageData;
+    public Vector3 moveDirection;
+    public Vector3 createPosition;
+    //public List<ScriptableEffect> effects;
 }

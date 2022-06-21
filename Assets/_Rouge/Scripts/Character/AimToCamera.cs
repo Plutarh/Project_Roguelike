@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -12,6 +13,8 @@ public class AimToCamera : MonoBehaviour
     [SerializeField] private float _aimSpeed = 6;
     [SerializeField] private float _forwardDistance = 5;
     [SerializeField] private bool _disableAim;
+
+    private PlayerCharacter _playerCharacter;
 
     private float _dotProd;
     Camera _mainCamera;
@@ -31,11 +34,15 @@ public class AimToCamera : MonoBehaviour
         else
             _defaultPosition = _aimTarget.localPosition;
 
+        _playerCharacter = transform.root.GetComponent<PlayerCharacter>();
+
         _mainCamera = Camera.main;
     }
 
     void Update()
     {
+        if (!_playerCharacter.isLocalPlayer) return;
+
         Aiming();
     }
 
@@ -43,8 +50,6 @@ public class AimToCamera : MonoBehaviour
     {
 
     }
-
-
 
     void Aiming()
     {

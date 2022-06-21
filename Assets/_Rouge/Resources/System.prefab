@@ -58,8 +58,21 @@ MonoBehaviour:
   playerPrefab: {fileID: 7230643067007699184, guid: 4b9d65c38ba887c42a30c2ec03f86405, type: 3}
   autoCreatePlayer: 0
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 4457434096515072510, guid: 9443b560cd311bb41b083a780fdbc455, type: 3}
+  - {fileID: 8007644184278885427, guid: 9b4eb0d4f46b008409957a3e6c00f0f6, type: 3}
+  - {fileID: 5116378823122699176, guid: 09014cffaad972946ab308f72a081e62, type: 3}
+  - {fileID: 2311330348669595641, guid: 987a225d3ba6aed40996ad7c94c1f7e3, type: 3}
+  - {fileID: 6029964983840980562, guid: baf13a469f31ae4428a4da7610c112f2, type: 3}
+  - {fileID: 2909527908523536801, guid: 8c6fb7fe3e75d424d9dd497f06235787, type: 3}
+  - {fileID: 8510486120028591691, guid: 3968a96e57cffed40b4ebf7e92538800, type: 3}
+  - {fileID: 8575260701668952163, guid: a75dc13af5b73f34090124da86f63a6d, type: 3}
+  - {fileID: 3197334122034485137, guid: 5717fff2a84952b439351bc28085bbb0, type: 3}
+  - {fileID: 8235411780979056679, guid: d518cd832687edd4f94a4f95812a2c87, type: 3}
+  - {fileID: 8235411780979056679, guid: db6e1ce4f4d1a624d889df27cd4763b4, type: 3}
   _playerInstaller: {fileID: 7912328550280188771}
+  _playerSpawned: 0
+  _playerConnected: 0
 --- !u!114 &7669768717172573086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,7 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Port: 7777
   DualMode: 1
-  NoDelay: 1
+  NoDelay: 0
   Interval: 10
   Timeout: 10000
   FastResend: 2
@@ -87,7 +100,7 @@ MonoBehaviour:
   ReliableMaxMessageSize: 298449
   UnreliableMaxMessageSize: 1199
   debugLog: 0
-  statisticsGUI: 0
+  statisticsGUI: 1
   statisticsLog: 0
 --- !u!114 &6888659847773474347
 MonoBehaviour:
@@ -180,7 +193,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerUnit: {fileID: 7230643067007699185, guid: 4b9d65c38ba887c42a30c2ec03f86405, type: 3}
   playerCameraPrefab: {fileID: -5634479210076180984, guid: 132bd2ce0d984b34a903b2b8926e19c9, type: 3}
-  _playerUnitSpawnPoints: []
+  _playerUnitSpawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   inputServicePrefab: {fileID: 3750918863248894060, guid: a3b96193bce9f5f479b3e5a1e903eccf, type: 3}
   _playerInstance: {fileID: 0}
   _playerCameraInstance: {fileID: 0}

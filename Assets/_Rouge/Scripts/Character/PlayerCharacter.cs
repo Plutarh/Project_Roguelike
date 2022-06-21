@@ -7,51 +7,58 @@ using UnityEngine;
 public class PlayerCharacter : NetworkBehaviour
 {
     public int PrimaryAttackIndex => _currentPrimaryAttackIndex;
-
     public List<BaseAbility> AllAbilities => _allAbilities;
+    public Transform rootBone;
 
     protected PlayerMover _player;
 
     [Header("Other")]
     public CharacterAnimationData characterAnimationData;
 
-
     [Header("Abilities Data")]
-    [SerializeField] protected AbilityScriptable _primaryAbilityData;
-    [SerializeField] protected AbilityScriptable _secondaryAbilityData;
-    [SerializeField] protected AbilityScriptable _utilityAbilityData;
-    [SerializeField] protected AbilityScriptable _ultimateAbilityData;
+    [SerializeField] private List<AbilityScriptable> _allAbilitiesData = new List<AbilityScriptable>();
 
     [Header("Runtime initialized abilities")]
+
     [SerializeField] protected BaseAbility _primaryAbility;
+
     [SerializeField] protected BaseAbility _secondaryAbility;
+
     [SerializeField] protected BaseAbility _utilityAbility;
+
     [SerializeField] protected BaseAbility _ultimateAbility;
 
-    private List<BaseAbility> _allAbilities = new List<BaseAbility>();
-
+    [SerializeField] private List<BaseAbility> _allAbilities = new List<BaseAbility>();
 
     [Header("Combat")]
     [SerializeField] private float _comboAttackTimeout = 0.8f;
     [SerializeField] private float _lastPrimaryAttackTime = 0;
     [SerializeField] private string _currentCombatName;
 
-    Transform _abilitiesParent;
+    [SerializeField] private Transform _abilitiesParent;
 
     [SerializeField] protected int _currentPrimaryAttackIndex = 0;
 
+    public static List<PlayerCharacter> allPlayerCharacters = new List<PlayerCharacter>();
 
+    public bool _abilitiesInitialized;
 
     public virtual void Awake()
     {
-
+        allPlayerCharacters.Add(this);
     }
 
     public virtual void Start()
     {
-
         if (_player == null) _player = GetComponent<PlayerMover>();
-        InitializeAbilities();
+
+        if (isLocalPlayer)
+        {
+            foreach (KeyValuePair<uint, NetworkIdentity> item in NetworkServer.spawned)
+            {
+                Debug.Log("Server spawned " + item.Key);
+            }
+        }
 
     }
 
@@ -62,9 +69,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     public virtual void InitializeLocalCoreComponents()
     {
-
         _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
-
 
         ResetPrimaryAttack();
     }
@@ -73,11 +78,9 @@ public class PlayerCharacter : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
 
+        CmdCreateAbilities();
 
         NetNaming();
-        Debug.Log("PlayerChar on start local player");
-
-
     }
 
     void NetNaming()
@@ -88,54 +91,83 @@ public class PlayerCharacter : NetworkBehaviour
 
     public virtual void Update()
     {
-
         if (!isLocalPlayer) return;
+
         NetNaming();
         PrimaryAttackResetTimer();
     }
 
-    void InitializeAbilities()
+    [Command]
+    void CmdCreateAbilities()
     {
-        Debug.Log($"{transform.name} -Server-{isServer}- Initialize abilities");
-
-        if (_abilitiesParent == null)
+        Debug.Log($"Cmd Created on {transform.name}");
+        foreach (var abilityData in _allAbilitiesData)
         {
-            _abilitiesParent = new GameObject("Abilities").transform;
-            _abilitiesParent.SetParent(transform);
-            _abilitiesParent.SetAsFirstSibling();
+            var createdAbility = CreateAbility(abilityData);
+            NetworkServer.Spawn(createdAbility.gameObject);
+            createdAbility.netIdentity.AssignClientAuthority(netIdentity.connectionToClient);
+            InitializeAbility(createdAbility.netIdentity);
+
+        }
+        OnAbilitiesInitialized();
+        //InitializeAbilities();
+    }
+
+    [ClientRpc]
+    public void InitializeAbility(NetworkIdentity abilityNet)
+    {
+        if (abilityNet == null)
+        {
+            Debug.LogError("Ability networkdId nulled");
+            return;
         }
 
-        _primaryAbility = CreateAbility(_primaryAbilityData);
-        _allAbilities.Add(_primaryAbility);
+        var ability = abilityNet.gameObject.GetComponent<BaseAbility>();
 
-        _secondaryAbility = CreateAbility(_secondaryAbilityData);
-        _allAbilities.Add(_secondaryAbility);
+        switch (ability.AttackType)
+        {
+            case EAttackType.Primary:
 
-        _utilityAbility = CreateAbility(_utilityAbilityData);
-        _allAbilities.Add(_utilityAbility);
+                _primaryAbility = ability;
+                break;
+            case EAttackType.Secondary:
 
-        _ultimateAbility = CreateAbility(_ultimateAbilityData);
-        _allAbilities.Add(_ultimateAbility);
+                _secondaryAbility = ability;
+                break;
+            case EAttackType.Utility:
 
-        OnAbilitiesInitialized();
+                _utilityAbility = ability;
+                break;
+            case EAttackType.Ultimate:
+
+                _ultimateAbility = ability;
+                break;
+        }
     }
 
+    [ClientRpc]
     public virtual void OnAbilitiesInitialized()
     {
-
+        _abilitiesInitialized = true;
     }
+
 
     BaseAbility CreateAbility(AbilityScriptable abilityScriptable)
     {
-        var createdAbility = Instantiate(abilityScriptable.abilityComponent, _abilitiesParent);
-        createdAbility.transform.localPosition = Vector3.zero;
+        var createdAbility = Instantiate(abilityScriptable.abilityComponent, null);
+        createdAbility.transform.position = Vector3.zero;
+
+        _allAbilities.Add(createdAbility);
+
+        if (isServer)
+            NetworkServer.Spawn(createdAbility.gameObject);
 
         if (_player == null)
         {
             Debug.LogError($"Player null - {transform.name}", this);
         }
 
-        createdAbility.SetOwner(_player);
+        createdAbility.SetOwner(netIdentity);
         return createdAbility;
     }
 
@@ -150,41 +182,89 @@ public class PlayerCharacter : NetworkBehaviour
 
     public virtual void AnimPreparePrimaryAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_primaryAbility == null)
+        {
+            Debug.LogError("Primary ability not initalized", this);
+            return;
+        }
         _primaryAbility.PrepareExecuting(CreateDamageData(_primaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartPrimaryAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_primaryAbility == null)
+        {
+            Debug.LogError("Primary ability not initalized", this);
+            return;
+        }
         _primaryAbility.Execute();
     }
 
     public virtual void AnimPrepareSecondaryAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_secondaryAbility == null)
+        {
+            Debug.LogError("Secondary ability not initalized", this);
+            return;
+        }
         _secondaryAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartSecondaryAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_secondaryAbility == null)
+        {
+            Debug.LogError("Secondary ability not initalized", this);
+            return;
+        }
         _secondaryAbility.Execute();
     }
 
     public virtual void AnimPrepareUtilitySkill_1()
     {
+        if (!isLocalPlayer) return;
+        if (_utilityAbility == null)
+        {
+            Debug.LogError("Utility ability not initalized", this);
+            return;
+        }
         _utilityAbility.PrepareExecuting(CreateDamageData(_utilityAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartUtilitySkill_1()
     {
+        if (!isLocalPlayer) return;
+        if (_utilityAbility == null)
+        {
+            Debug.LogError("Utility ability not initalized", this);
+            return;
+        }
         _utilityAbility.Execute();
     }
 
     public virtual void AnimPrepareUltimateAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_ultimateAbility == null)
+        {
+            Debug.LogError("Ultimate ability not initalized", this);
+            return;
+        }
         _ultimateAbility.PrepareExecuting(CreateDamageData(_secondaryAbility.DamageMultiplyer));
     }
 
     public virtual void AnimStartUltimateAttack_1()
     {
+        if (!isLocalPlayer) return;
+        if (_ultimateAbility == null)
+        {
+            Debug.LogError("Ultimate ability not initalized", this);
+            return;
+        }
         _ultimateAbility.Execute();
     }
 
@@ -196,7 +276,6 @@ public class PlayerCharacter : NetworkBehaviour
         _player.BlockMovement(false);
     }
 
-
     public void ResetPrimaryAttack()
     {
         _currentPrimaryAttackIndex = -1;
@@ -204,12 +283,10 @@ public class PlayerCharacter : NetworkBehaviour
 
     void OnAttackButtonClicked(EAttackType type)
     {
-        //if (!_player.isLocalPlayer) return;
+        if (!_player.isLocalPlayer) return;
 
         if (GetAttackLayerAnimationTime() < 0.8f) return;
         _player.SetBattleState();
-
-        // Debug.Log($"Current state - {_currentCombatName} Combat time " + GetAttackLayerAnimationTime());
 
         switch (type)
         {
@@ -343,15 +420,11 @@ public class PlayerCharacter : NetworkBehaviour
         animation.fullbody = nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1;
 
 
-        if (!isServer)
-            CmdCombatAnimation(animation);
-        else
-            CombatAnimationRPC(animation);
+        CmdCombatAnimation(animation);
 
         _player.Animator.CrossFade(nextCombatAnimationClip.AnimationName, nextCombatAnimationClip.CrossFadeTime, nextCombatAnimationClip.IsAnimationFullbody ? 0 : 1);
-        _currentCombatName = nextCombatAnimationClip.AnimationName;
 
-        //Debug.Log("<color=green>Cross Fade to </color>" + nextCombatAnimationClip.AnimationName);
+        _currentCombatName = nextCombatAnimationClip.AnimationName;
     }
 
     struct NetworkAnimationData
@@ -364,21 +437,47 @@ public class PlayerCharacter : NetworkBehaviour
     [Command]
     void CmdCombatAnimation(NetworkAnimationData networkAnimation)
     {
-        _player.Animator.CrossFade(networkAnimation.animationName, networkAnimation.crossFade, networkAnimation.fullbody);
+        RpcCombatAnimation(networkAnimation);
     }
 
-    [ClientRpc]
-    void CombatAnimationRPC(NetworkAnimationData networkAnimation)
+    [ClientRpc(includeOwner = false)]
+    void RpcCombatAnimation(NetworkAnimationData networkAnimation)
     {
         _player.Animator.CrossFade(networkAnimation.animationName, networkAnimation.crossFade, networkAnimation.fullbody);
     }
 
     private void OnDestroy()
     {
-        if (!isLocalPlayer) return;
+        allPlayerCharacters.Remove(this);
 
-        _player.InputService.OnAttackButtonClicked -= OnAttackButtonClicked;
+        if (isLocalPlayer)
+        {
+            _player.InputService.OnAttackButtonClicked -= OnAttackButtonClicked;
+        }
+
+
+
+
     }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+
+        DestroyPlayerObjects();
+    }
+
+    public void DestroyPlayerObjects()
+    {
+        for (int i = 0; i < AllAbilities.Count; i++)
+        {
+            var ability = AllAbilities[i];
+            if (ability == null || ability.gameObject == null) continue;
+            Destroy(ability.gameObject);
+        }
+    }
+
+
 }
 
 [System.Serializable]

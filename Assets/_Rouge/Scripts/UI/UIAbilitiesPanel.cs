@@ -38,15 +38,16 @@ public class UIAbilitiesPanel : MonoBehaviour
 
     void RefreshAbilityFrames()
     {
+        /*
         for (int i = 0; i < _playerCharacter.AllAbilities.Count; i++)
         {
-            var charAbility = _playerCharacter.AllAbilities[i];
+            var charAbility = _playerCharacter.AllAbilities[i] >;
 
             float cooldown = charAbility.CooldownTimer / charAbility.Cooldown;
             float cooldownLerp = Mathf.Lerp(0, 1, cooldown);
 
             _abilitiesFrames[i].SetCooldownProgress(cooldownLerp);
-        }
+        }*/
     }
 
     public void CreateAbilities()
@@ -61,12 +62,12 @@ public class UIAbilitiesPanel : MonoBehaviour
 
         foreach (var ability in _playerCharacter.AllAbilities)
         {
-            var createdAbility = Instantiate(_abilityFramePrefab, _abilityFramesParent);
+            // var createdAbility = Instantiate(_abilityFramePrefab, _abilityFramesParent);
 
-            createdAbility.SetAbilityIcon(ability.abilityScriptable.abilityData.icon);
+            // createdAbility.SetAbilityIcon(ability.abilityScriptable.abilityData.icon);
 
-            createdAbility.gameObject.SetActive(true);
-            _abilitiesFrames.Add(createdAbility);
+            // createdAbility.gameObject.SetActive(true);
+            // _abilitiesFrames.Add(createdAbility);
         }
 
         RefreshAbilityFrames();

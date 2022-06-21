@@ -6,6 +6,7 @@ public class BaseCharacter : Pawn
 {
     public CharacterController CharController => _characterController;
 
+
     public Animator Animator => _animator;
 
     public Vector3 MoveDirection => _moveDirection;

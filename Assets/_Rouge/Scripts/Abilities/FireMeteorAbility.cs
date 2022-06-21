@@ -22,7 +22,7 @@ public class FireMeteorAbility : BaseAbility
         base.Execute();
 
         _meteor.transform.SetParent(null);
-        _meteor.SetProjectileDirection(owner.GetAimPoint());
+        _meteor.SetProjectileDirection(owner.GetComponent<BaseCharacter>().GetAimPoint());
         _meteor.StartMove();
     }
 

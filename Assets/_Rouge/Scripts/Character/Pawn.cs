@@ -9,15 +9,12 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class Pawn : NetworkBehaviour, IDamageable
 {
-    public Characteristics Characteristics
-    {
-        get => _characteristics;
-    }
+    public Characteristics Characteristics => _characteristics;
 
-    public Health Health
-    {
-        get => _health;
-    }
+
+    public Health Health => _health;
+
+
 
     public Transform HeadBone
     {

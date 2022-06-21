@@ -2095,6 +2095,7 @@ GameObject:
   - component: {fileID: 2814780808224134078}
   - component: {fileID: 6792066189197821519}
   - component: {fileID: 6297060057933171951}
+  - component: {fileID: 2419737850151778612}
   m_Layer: 11
   m_Name: Skeleton_Enemy
   m_TagString: Untagged
@@ -2221,6 +2222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fb1c915d6ef49947861deedb83256a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   _characteristics: {fileID: 0}
   _health: {fileID: 0}
   _myTeam: 0
@@ -2346,6 +2349,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf963c9e706a314ea8f613504776691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2419737850151778612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8510486120028591691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!1 &8510525046124055169
 GameObject:
   m_ObjectHideFlags: 0

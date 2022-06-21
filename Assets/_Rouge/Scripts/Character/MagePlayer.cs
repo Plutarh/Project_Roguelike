@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 public class MagePlayer : PlayerCharacter
 {
+    public List<Transform> Hands => _hands;
     [SerializeField] private List<Transform> _hands = new List<Transform>();
 
     public override void Awake()
     {
         base.Awake();
-
-
     }
 
     public override void Start()
@@ -24,9 +24,12 @@ public class MagePlayer : PlayerCharacter
         base.InitializeLocalCoreComponents();
     }
 
+    [ClientRpc]
     public override void OnAbilitiesInitialized()
     {
         base.OnAbilitiesInitialized();
+        if (!isLocalPlayer) return;
+
 
         _primaryAbility.SetAbilityExecutePositions(_hands);
         _secondaryAbility.SetAbilityExecutePositions(_hands);
@@ -34,9 +37,9 @@ public class MagePlayer : PlayerCharacter
 
     public override void AnimPreparePrimaryAttack_1()
     {
-        base.AnimPreparePrimaryAttack_1();
-
+        if (!isLocalPlayer) return;
         _primaryAbility.SetAbilityExecutePositionIndex(_currentPrimaryAttackIndex);
+        base.AnimPreparePrimaryAttack_1();
     }
 
     public override void AnimStartPrimaryAttack_1()

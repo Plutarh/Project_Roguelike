@@ -61,7 +61,7 @@ namespace Mirror
         public static void WriteUIntNullable(this NetworkWriter writer, uint? value) => writer.WriteBlittableNullable(value);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteLong(this NetworkWriter writer, long value)  => writer.WriteBlittable(value);
+        public static void WriteLong(this NetworkWriter writer, long value) => writer.WriteBlittable(value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteLongNullable(this NetworkWriter writer, long? value) => writer.WriteBlittableNullable(value);
 
@@ -74,7 +74,7 @@ namespace Mirror
         public static void WriteFloat(this NetworkWriter writer, float value) => writer.WriteBlittable(value);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteFloatNullable(this NetworkWriter writer, float? value) => writer.WriteBlittableNullable(value);
-  
+
         [StructLayout(LayoutKind.Explicit)]
         internal struct UIntDouble
         {
@@ -249,7 +249,7 @@ namespace Mirror
             if (value.HasValue)
                 writer.WriteGuid(value.Value);
         }
-      
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteNetworkIdentity(this NetworkWriter writer, NetworkIdentity value)
         {
@@ -267,7 +267,7 @@ namespace Mirror
             // => warning (instead of exception) because we also use a warning
             //    if a GameObject doesn't have a NetworkIdentity component etc.
             if (value.netId == 0)
-                Debug.LogWarning($"Attempted to serialize unspawned GameObject: {value.name}. Prefabs and unspawned GameObjects would always be null on the other side. Please spawn it before using it in [SyncVar]s/Rpcs/Cmds/NetworkMessages etc.");
+                Debug.LogWarning($"Attempted to serialize unspawned GameObject: {value.name}. Prefabs and unspawned GameObjects would always be null on the other side. Please spawn it before using it in [SyncVar]s/Rpcs/Cmds/NetworkMessages etc.", value.gameObject);
 
             writer.WriteUInt(value.netId);
         }

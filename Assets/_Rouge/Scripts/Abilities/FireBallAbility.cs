@@ -1,42 +1,68 @@
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 public class FireBallAbility : BaseAbility
 {
     [SerializeField] private Projectile _fireBallPrefab;
-    [SerializeField] private int _muzzleIndex;
+    // [SerializeField] private int _muzzleIndex;
 
     [SerializeField] private List<Projectile> _primaryAttackProjectilesToMove = new List<Projectile>();
 
+    private Projectile _lastCreatedProjectile;
+
+    public override void Awake()
+    {
+        base.Awake();
+    }
+
     public override void PrepareExecuting(DamageData damageData)
     {
-        base.PrepareExecuting(damageData);
         if (!owner.isLocalPlayer) return;
-
-        _muzzleIndex = _abilityPositionIndex;
-
-        var projectile = CreateProjectile(_fireBallPrefab);
-
-        // Закинем в пульку эффекты
-        _effects.ForEach(ef => projectile.AddScriptableEffect(ef));
-
-        projectile.SetOwner(owner);
-        projectile.immortal = true;
-        projectile.SetDamageData(damageData);
-        _primaryAttackProjectilesToMove.Add(projectile);
+        base.PrepareExecuting(damageData);
 
 
-        projectile.transform.SetParent(_abilityExecutePositions[_muzzleIndex].transform);
+        _damageData = damageData;
+
+        //CreateProjectile();
+        ProjectileNetworkData projectileData = new ProjectileNetworkData();
+
+
+        projectileData.damageData = _damageData;
+        projectileData.createPosition = _abilityExecutePositions[_abilityPositionIndex].transform.position;
+        projectileData.moveDirection = owner.GetComponent<BaseCharacter>().GetAimPoint();
+        projectileData.owner = owner;
+
+        // _lastCreatedProjectile.Initialize(projectileData);
+
+        CmdCreateProjectile(projectileData);
+
+
+        return;
+
+
+        if (_primaryAttackProjectilesToMove.Count == 0)
+        {
+            Debug.LogError("No bullet to spawn");
+            return;
+        }
+
+        Projectile projectile = _primaryAttackProjectilesToMove.FirstOrDefault();
+
+        projectile.transform.SetParent(_abilityExecutePositions[_abilityPositionIndex].transform);
         projectile.transform.localPosition = Vector3.zero;
     }
 
     public override void Execute()
     {
-        base.Execute();
+        return;
         if (!owner.isLocalPlayer) return;
+        base.Execute();
 
-        var projectileToMove = _primaryAttackProjectilesToMove.First();
+
+
+        var projectileToMove = _primaryAttackProjectilesToMove.FirstOrDefault();
 
         if (projectileToMove == null)
         {
@@ -45,18 +71,34 @@ public class FireBallAbility : BaseAbility
             return;
         }
 
-        _primaryAttackProjectilesToMove.RemoveAt(0);
-
         projectileToMove.transform.SetParent(null);
-        projectileToMove.immortal = false;
-        projectileToMove.SetProjectileDirection(owner.GetAimPoint());
-        projectileToMove.StartMove();
+
+        ProjectileNetworkData projectileData = new ProjectileNetworkData();
+
+        //projectileData.effects = _effects;
+        //projectileData.damageData = _damageData;
+        projectileData.createPosition = projectileToMove.transform.position;
+        //projectileData.moveDirection = owner.GetComponent<BaseCharacter>().GetAimPoint();
+        //projectileData.owner = owner;
+
+        projectileToMove.Initialize(projectileData);
+
+        _primaryAttackProjectilesToMove.RemoveAt(0);
     }
 
-    Projectile CreateProjectile(Projectile prefab)
-    {
-        var createdProjectile = Instantiate(prefab, _abilityExecutePositions[_muzzleIndex].transform.position, Quaternion.identity);
 
-        return createdProjectile;
+
+    [Command]
+    void CmdCreateProjectile(ProjectileNetworkData projectileNetworkData)
+    {
+        RpcCreateProjectile(projectileNetworkData);
+    }
+
+    [ClientRpc]
+    void RpcCreateProjectile(ProjectileNetworkData projectileNetworkData)
+    {
+        var createdProjectile = Instantiate(_fireBallPrefab, projectileNetworkData.createPosition, Quaternion.identity);
+        createdProjectile.Initialize(projectileNetworkData);
     }
 }
+

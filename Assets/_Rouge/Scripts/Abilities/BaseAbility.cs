@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using UnityEngine;
 
@@ -7,8 +8,13 @@ public abstract class BaseAbility : NetworkBehaviour
     public bool IsReady => _cooldownTimer <= 0;
     public float CooldownTimer => _cooldownTimer;
     public float Cooldown => _cooldown;
+    public EAttackType AttackType => _attackType;
 
-    public BaseCharacter owner;
+    public AbilityScriptable abilityScriptable;
+
+    [SyncVar(hook = nameof(OnOwnerSetup))]
+    public NetworkIdentity owner;
+    public PlayerCharacter playerCharacter;
 
     public float DamageMultiplyer
     {
@@ -33,9 +39,15 @@ public abstract class BaseAbility : NetworkBehaviour
 
     protected DamageData _damageData;
 
-    public AbilityScriptable abilityScriptable;
+
+    [SerializeField] private EAttackType _attackType;
 
     public virtual void Awake()
+    {
+        transform.name += "_Ability";
+    }
+
+    public void Start()
     {
 
     }
@@ -45,9 +57,30 @@ public abstract class BaseAbility : NetworkBehaviour
         CooldownTick(Time.deltaTime);
     }
 
-    public void SetOwner(BaseCharacter newOwner)
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+    }
+
+    public void SetOwner(NetworkIdentity newOwner)
     {
         owner = newOwner;
+    }
+
+    void OnOwnerSetup(NetworkIdentity oldNet, NetworkIdentity newNet)
+    {
+        FindPlayerCharacter(newNet.netId);
+    }
+
+    void FindPlayerCharacter(uint netId)
+    {
+        playerCharacter = PlayerCharacter.allPlayerCharacters.FirstOrDefault(pc => pc.netId == netId);
+
+        if (playerCharacter == null)
+        {
+            Debug.LogError($"No player character with: {netId} id");
+        }
     }
 
     public virtual void PrepareExecuting(DamageData damageData = null)
@@ -62,12 +95,6 @@ public abstract class BaseAbility : NetworkBehaviour
         if (!owner.isLocalPlayer) return;
         _stackLeft--;
         RefreshCooldown();
-    }
-
-    [Command]
-    void CmdExecute()
-    {
-
     }
 
     public void AddEffectToDamageable(IDamageable pawn)
@@ -110,7 +137,6 @@ public abstract class BaseAbility : NetworkBehaviour
 
     public virtual void AddStack()
     {
-
         _stackLeft++;
 
         if (_stackLeft >= _maxStackCount)

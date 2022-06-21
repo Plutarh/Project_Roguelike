@@ -85,15 +85,18 @@ public class FireMageDash : BaseAbility
     {
 
         float time = _executeTime;
-        owner.BlockMovement(true);
+        var netOwner = owner.GetComponent<BaseCharacter>();
+
+        netOwner.BlockMovement(true);
+        owner.GetComponent<BaseCharacter>().BlockMovement(true);
 
         float timeForGhost = time / _ghostCount;
         float lastTimeCreatedGhost = 0;
 
 
         Vector3 dashDirection = Vector3.zero;
-        if (owner.MoveDirection != Vector3.zero)
-            dashDirection = owner.transform.TransformDirection(owner.MoveDirection.normalized);
+        if (netOwner.MoveDirection != Vector3.zero)
+            dashDirection = owner.transform.TransformDirection(netOwner.MoveDirection.normalized);
         else
             dashDirection = owner.transform.forward;
 
@@ -103,7 +106,7 @@ public class FireMageDash : BaseAbility
         {
 
             time -= Time.deltaTime;
-            owner.CharController.Move(dashDirection * _dashForce);
+            netOwner.CharController.Move(dashDirection * _dashForce);
 
             if (Time.time > lastTimeCreatedGhost)
             {
@@ -114,8 +117,8 @@ public class FireMageDash : BaseAbility
             yield return new WaitForEndOfFrame();
         }
 
-        owner.BlockMovement(false);
-        owner.Animator.CrossFade("Motion", 5f);
+        netOwner.BlockMovement(false);
+        netOwner.Animator.CrossFade("Motion", 5f);
 
         if (_createdTrailFx != null)
         {
