@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using Zenject;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemySpawner : NetworkBehaviour
 {
     [SerializeField] private int _spawnCount;
     [SerializeField] private AIBase _enemyPrefab;
@@ -25,6 +26,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
+        if (!isServer) return;
         StartCoroutine(IETestSpawn());
     }
 
@@ -43,6 +45,9 @@ public class EnemySpawner : MonoBehaviour
         randomedSpawnPosition.y = _spawnPoint.position.y;
 
         var createdEnemy = _enemyFactory.Create(_enemyPrefab, randomedSpawnPosition);
+
+        NetworkServer.Spawn(createdEnemy.gameObject);
+
 
         GlobalEvents.OnEnemySpawned?.Invoke(createdEnemy);
 

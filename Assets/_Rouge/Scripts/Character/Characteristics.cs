@@ -2,12 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 
 
-public class Characteristics : MonoBehaviour
+public class Characteristics : NetworkBehaviour
 {
+
+    public SyncList<Characteristic> SyncAllCharacteristics
+    {
+        get => _syncCharacteristics;
+    }
+
+    [SerializeField] private SyncList<Characteristic> _syncCharacteristics = new SyncList<Characteristic>();
+
     public List<Characteristic> AllCharacteristics
     {
         get => _characteristics;

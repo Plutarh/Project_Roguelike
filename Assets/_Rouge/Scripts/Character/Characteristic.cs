@@ -12,7 +12,9 @@ public class Characteristic
     }
 
     public ECharacteristicType characteristicType;
+
     [SerializeField] private float _currentValue;
+
     [SerializeField] private float _maxValue;
     [SerializeField] private float _levelIncreaseMultiplier;
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -35,6 +36,9 @@ public class AIBase : BaseCharacter
 
     private MeleeDamageCollider _meleeDamageCollider;
 
+    [SyncVar]
+    private int _skinIndex;
+
     public enum EAIState
     {
         Idle,
@@ -45,17 +49,17 @@ public class AIBase : BaseCharacter
     }
 
 
-    [Inject]
-    public void Construct(PlayerMover player)
-    {
-        _currentTarget = player;
-    }
+    // [Inject]
+    // public void Construct(PlayerMover player)
+    // {
+    //     _currentTarget = player;
+    // }
 
     public override void Awake()
     {
         base.Awake();
-
-        SelectSkin();
+        FindRandomSkinIndex();
+        TrySelectSkin();
         SetTeam(EPawnTeam.AI);
 
 
@@ -64,6 +68,7 @@ public class AIBase : BaseCharacter
     public override void Update()
     {
         if (Health.IsDead) return;
+        if (!isServer) return;
         base.Update();
 
         StateMachine();
@@ -73,13 +78,15 @@ public class AIBase : BaseCharacter
     public override void Start()
     {
         base.Start();
-
+        if (!isServer) return;
         _spawnPosition = transform.position;
 
         if (Random.value > 0.5f)
             ChangeState(EAIState.Patroll);
         else
             ChangeState(EAIState.Idle);
+
+        _currentTarget = PlayerCharacter.allPlayerCharacters[Random.Range(0, PlayerCharacter.allPlayerCharacters.Count)].PlayerMover;
     }
 
     public override void InitComponents()
@@ -95,7 +102,7 @@ public class AIBase : BaseCharacter
     }
 
 
-    void SelectSkin()
+    void TrySelectSkin()
     {
         if (_skinmeshData == null || _skinmeshData.RandomSkinMesh == null)
         {
@@ -108,7 +115,13 @@ public class AIBase : BaseCharacter
             return;
         }
 
-        _skinnedMeshRenderer.sharedMesh = _skinmeshData.RandomSkinMesh;
+        _skinnedMeshRenderer.sharedMesh = _skinmeshData.GetSkinMeshByIndex(_skinIndex);
+    }
+
+    void FindRandomSkinIndex()
+    {
+        if (isServer)
+            _skinIndex = Random.Range(0, _skinmeshData.Skins.Count);
     }
 
     void SetupNavmesh()
@@ -410,10 +423,24 @@ public class AIBase : BaseCharacter
         _meleeDamageCollider.DisableDamageCollider();
     }
 
+
     public override void Death()
     {
         base.Death();
-        _ragdollController.EnableRagdoll();
-
     }
+
+    // [Command(requiresAuthority = false)]
+    // public override void CmdDeath()
+    // {
+    //     base.CmdDeath();
+    // }
+
+    [ClientRpc]
+    public override void RpcDeath()
+    {
+        base.RpcDeath();
+        _ragdollController.EnableRagdoll();
+    }
+
+
 }

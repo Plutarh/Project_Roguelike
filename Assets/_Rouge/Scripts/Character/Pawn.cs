@@ -81,6 +81,8 @@ public class Pawn : NetworkBehaviour, IDamageable
 
     public virtual void TakeDamage(DamageData damageData)
     {
+        if (Health.IsDead) return;
+
         if (_characteristics == null)
         {
             Debug.LogError("Health component NULLED", this);
@@ -98,7 +100,20 @@ public class Pawn : NetworkBehaviour, IDamageable
         if (Health.IsDead) Death();
     }
 
+
     public virtual void Death()
+    {
+        CmdDeath();
+    }
+
+    [Command(requiresAuthority = false)]
+    public virtual void CmdDeath()
+    {
+        RpcDeath();
+    }
+
+    [ClientRpc]
+    public virtual void RpcDeath()
     {
         OnDeath?.Invoke();
     }

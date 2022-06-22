@@ -9,6 +9,7 @@ public class PlayerCharacter : NetworkBehaviour
     public int PrimaryAttackIndex => _currentPrimaryAttackIndex;
     public List<BaseAbility> AllAbilities => _allAbilities;
     public Transform rootBone;
+    public PlayerMover PlayerMover => _player;
 
     protected PlayerMover _player;
 
@@ -51,15 +52,6 @@ public class PlayerCharacter : NetworkBehaviour
     public virtual void Start()
     {
         if (_player == null) _player = GetComponent<PlayerMover>();
-
-        if (isLocalPlayer)
-        {
-            foreach (KeyValuePair<uint, NetworkIdentity> item in NetworkServer.spawned)
-            {
-                Debug.Log("Server spawned " + item.Key);
-            }
-        }
-
     }
 
     public void SetPlayer(PlayerMover player)
@@ -100,7 +92,7 @@ public class PlayerCharacter : NetworkBehaviour
     [Command]
     void CmdCreateAbilities()
     {
-        Debug.Log($"Cmd Created on {transform.name}");
+
         foreach (var abilityData in _allAbilitiesData)
         {
             var createdAbility = CreateAbility(abilityData);
@@ -110,8 +102,8 @@ public class PlayerCharacter : NetworkBehaviour
 
         }
         OnAbilitiesInitialized();
-        //InitializeAbilities();
     }
+
 
     [ClientRpc]
     public void InitializeAbility(NetworkIdentity abilityNet)

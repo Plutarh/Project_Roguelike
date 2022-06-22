@@ -1,8 +1,9 @@
 using System;
+using Mirror;
 using UnityEngine;
 
 
-public class Health : MonoBehaviour
+public class Health : NetworkBehaviour
 {
     public float CurrentHealth
     {
@@ -21,10 +22,12 @@ public class Health : MonoBehaviour
 
     public Action<DamageData> OnHealthDecreased;
     public Action OnHealthIncreased;
-    public Action OnDeath;
 
+    [SyncVar]
     [SerializeField] private float _currentHealth;
+    [SyncVar]
     [SerializeField] private float _maxHealth;
+    [SyncVar]
     [SerializeField] private bool _isDead;
 
     private void OnValidate()
@@ -55,9 +58,6 @@ public class Health : MonoBehaviour
         }
 
         OnHealthDecreased?.Invoke(damageData);
-
-        if (_isDead)
-            OnDeath?.Invoke();
     }
 
     public void IncreaseHealth(float _healthToIncrease)

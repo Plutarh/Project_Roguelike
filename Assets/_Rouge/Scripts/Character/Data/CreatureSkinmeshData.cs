@@ -17,6 +17,19 @@ public class CreatureSkinmeshData : ScriptableObject
         }
     }
 
+    public Mesh GetSkinMeshByIndex(int index)
+    {
+        if (_skins.Count == 0 || index >= _skins.Count)
+        {
+            Debug.LogError("Skins count equal 0 or out of range", this);
+            return null;
+        }
+        return _skins[index];
+    }
+
+    public List<Mesh> Skins => _skins;
+
+
     [SerializeField] private List<Mesh> _skins = new List<Mesh>();
 }
 

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Projectile : NetworkBehaviour
 {
     public bool IsInited => _isInited;
+    public bool IsNetworkVisual => _isNetworkVisual;
 
     [SerializeField] private EProjectileDamageType damageType;
     [SerializeField] private float damageRadius;
@@ -34,6 +35,7 @@ public class Projectile : NetworkBehaviour
     [SerializeField] private List<IDamageable> _damagedTargets = new List<IDamageable>();
 
     private bool _isInited;
+    private bool _isNetworkVisual;
 
     private void Awake()
     {
@@ -59,6 +61,11 @@ public class Projectile : NetworkBehaviour
         //networkData.effects.ForEach(ef => _effectsOnHit.Add(ef));
 
         StartMove();
+    }
+
+    public void SetupAsNetworkVisual()
+    {
+        _isNetworkVisual = true;
     }
 
     void LifeTimer()
@@ -172,7 +179,13 @@ public class Projectile : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!IsInited) return;
+
         if (other == null) return;
+        if (IsNetworkVisual)
+        {
+            CreateOnHitFX();
+            return;
+        }
 
         var ownerPawn = _owner.GetComponent<Pawn>();
         switch (damageType)

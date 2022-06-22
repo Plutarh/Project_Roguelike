@@ -66,7 +66,7 @@ public class FireCircleAbility : BaseAbility
         _trailRenderers.Add(trail);
     }
 
-    void StartDestroyHandsTrails()
+    void TryDestroyHandsTrails()
     {
         DestroyTrails();
         CmdDestroyHandsTrails();
@@ -110,7 +110,7 @@ public class FireCircleAbility : BaseAbility
         base.Execute();
         CreateFX();
         CastDamageShpere();
-        StartDestroyHandsTrails();
+        TryDestroyHandsTrails();
     }
 
     void CreateFX()

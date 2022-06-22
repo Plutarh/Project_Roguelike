@@ -81,6 +81,13 @@ public abstract class BaseAbility : NetworkBehaviour
         {
             Debug.LogError($"No player character with: {netId} id");
         }
+
+        OnInitialized();
+    }
+
+    public virtual void OnInitialized()
+    {
+
     }
 
     public virtual void PrepareExecuting(DamageData damageData = null)

@@ -99,6 +99,7 @@ public class FireBallAbility : BaseAbility
     {
         var createdProjectile = Instantiate(_fireBallPrefab, projectileNetworkData.createPosition, Quaternion.identity);
         createdProjectile.Initialize(projectileNetworkData);
+        //createdProjectile.SetupAsNetworkVisual();
     }
 }
 

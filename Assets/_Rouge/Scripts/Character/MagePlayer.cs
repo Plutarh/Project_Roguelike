@@ -44,6 +44,7 @@ public class MagePlayer : PlayerCharacter
 
     public override void AnimStartPrimaryAttack_1()
     {
+
         base.AnimStartPrimaryAttack_1();
     }
 

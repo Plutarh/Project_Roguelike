@@ -20,13 +20,55 @@ public class FireMageDash : BaseAbility
     public override void Awake()
     {
         base.Awake();
-        _skinnedMeshRenderers = transform.root.GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
 
+
+    }
+
+    public override void OnInitialized()
+    {
+        base.OnInitialized();
+        _skinnedMeshRenderers = playerCharacter.transform.root.GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
     }
 
     public override void Update()
     {
         base.Update();
+    }
+
+    public override void PrepareExecuting(DamageData damageData)
+    {
+        base.PrepareExecuting(damageData);
+    }
+
+    public override void AddStack()
+    {
+        base.AddStack();
+    }
+
+    public override void Execute()
+    {
+        base.Execute();
+
+        TryCreateTrailFX();
+        StartCoroutine(IEDashing());
+    }
+
+    void StartCreateGhostMesh()
+    {
+        CreateGhostMesh();
+        CmdCreateGhostMesh();
+    }
+
+    [Command]
+    void CmdCreateGhostMesh()
+    {
+        RpcCreateGhostMesh();
+    }
+
+    [ClientRpc(includeOwner = false)]
+    void RpcCreateGhostMesh()
+    {
+        CreateGhostMesh();
     }
 
     void CreateGhostMesh()
@@ -46,57 +88,81 @@ public class FireMageDash : BaseAbility
             ghost.transform.position = skin.transform.position;
             ghost.transform.rotation = skin.transform.rotation;
 
-            Destroy(ghost, _ghostLifeTime);
+            if (ghost != null)
+                Destroy(ghost, _ghostLifeTime);
 
         }
     }
 
-    public override void PrepareExecuting(DamageData damageData)
+    void TryCreateTrailFX()
     {
-        base.PrepareExecuting(damageData);
-
+        CreateTrailFX();
+        CmdCreateTrailFX();
     }
 
-    public override void AddStack()
-    {
-        base.AddStack();
-    }
-
-    public override void Execute()
-    {
-        // if (!IsReady) return;
-        base.Execute();
-
-
-        PlayTrailFx();
-        StartCoroutine(IEDash());
-    }
-
-    void PlayTrailFx()
+    void CreateTrailFX()
     {
         if (_trailFxPrefab == null) return;
 
-        _createdTrailFx = Instantiate(_trailFxPrefab, transform.root.transform);
+        _createdTrailFx = Instantiate(_trailFxPrefab, playerCharacter.transform.root);
         _createdTrailFx.transform.localPosition = Vector3.zero;
         _createdTrailFx.Play();
     }
 
-    IEnumerator IEDash()
+    [Command]
+    void CmdCreateTrailFX()
     {
+        RpcCreateTrailFX();
+    }
 
+    [ClientRpc(includeOwner = false)]
+    void RpcCreateTrailFX()
+    {
+        CreateTrailFX();
+    }
+
+    void TryDestroyTrailFX()
+    {
+        DestroyTrailFX();
+        CmdDestroyTrailFX();
+    }
+
+    void DestroyTrailFX()
+    {
+        if (_createdTrailFx == null)
+        {
+            Debug.LogError("Trail FX NULLED", playerCharacter);
+            return;
+        }
+
+        _createdTrailFx.Stop();
+        Destroy(_createdTrailFx, _createdTrailFx.main.duration + 0.3f);
+    }
+
+    [Command]
+    void CmdDestroyTrailFX()
+    {
+        RpcDestroyTrailFX();
+    }
+
+    [ClientRpc]
+    void RpcDestroyTrailFX()
+    {
+        DestroyTrailFX();
+    }
+
+    IEnumerator IEDashing()
+    {
         float time = _executeTime;
-        var netOwner = owner.GetComponent<BaseCharacter>();
 
-        netOwner.BlockMovement(true);
-        owner.GetComponent<BaseCharacter>().BlockMovement(true);
+        playerCharacter.PlayerMover.BlockMovement(true);
 
         float timeForGhost = time / _ghostCount;
         float lastTimeCreatedGhost = 0;
 
-
         Vector3 dashDirection = Vector3.zero;
-        if (netOwner.MoveDirection != Vector3.zero)
-            dashDirection = owner.transform.TransformDirection(netOwner.MoveDirection.normalized);
+        if (playerCharacter.PlayerMover.MoveDirection != Vector3.zero)
+            dashDirection = owner.transform.TransformDirection(playerCharacter.PlayerMover.MoveDirection.normalized);
         else
             dashDirection = owner.transform.forward;
 
@@ -106,25 +172,21 @@ public class FireMageDash : BaseAbility
         {
 
             time -= Time.deltaTime;
-            netOwner.CharController.Move(dashDirection * _dashForce);
+            playerCharacter.PlayerMover.CharController.Move(dashDirection * _dashForce);
 
             if (Time.time > lastTimeCreatedGhost)
             {
-                CreateGhostMesh();
+                StartCreateGhostMesh();
                 lastTimeCreatedGhost = Time.time + timeForGhost;
             }
 
             yield return new WaitForEndOfFrame();
         }
 
-        netOwner.BlockMovement(false);
-        netOwner.Animator.CrossFade("Motion", 5f);
+        playerCharacter.PlayerMover.BlockMovement(false);
+        playerCharacter.PlayerMover.Animator.CrossFade("Motion", 5f);
 
-        if (_createdTrailFx != null)
-        {
-            _createdTrailFx.Stop();
-            Destroy(_createdTrailFx, _createdTrailFx.main.duration + 0.3f);
-        }
+        TryDestroyTrailFX();
 
         yield break;
     }
