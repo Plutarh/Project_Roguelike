@@ -152,13 +152,11 @@ public class PlayerMover : BaseCharacter
         RaycastHit hit;
         Ray ray = _mainCamera.ScreenPointToRay(InputService.GetMousePosition());
 
-
-        float raycastDistance = 600;
+        float raycastDistance = 1600;
 
         if (Physics.Raycast(ray, out hit, raycastDistance, aimLayers))
             rayPoint = hit.point;
         else
-
             rayPoint = ray.GetPoint(raycastDistance);
 
         return rayPoint;

@@ -96,7 +96,7 @@ public class AIBase : BaseCharacter
 
 
         _meleeDamageCollider = GetComponentInChildren<MeleeDamageCollider>();
-        _meleeDamageCollider.SetOwner(this);
+        _meleeDamageCollider.SetOwner(netIdentity);
 
         SetupNavmesh();
     }

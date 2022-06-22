@@ -166,7 +166,7 @@ public class PlayerCharacter : NetworkBehaviour
     public DamageData CreateDamageData(float damageMultiplyer)
     {
         DamageData damageData = new DamageData();
-        damageData.whoOwner = _player;
+        damageData.whoOwner = netIdentity;
         damageData.combatValue = _player.Characteristics.GetTypedValue(ECharacteristicType.Damage) * damageMultiplyer;
         return damageData;
     }

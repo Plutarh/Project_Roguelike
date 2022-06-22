@@ -1,7 +1,9 @@
+using Mirror;
+
 [System.Serializable]
 public class CombatData
 {
-    public Pawn whoOwner;
+    public NetworkIdentity whoOwner;
     public bool isCritical;
     public float combatValue;
 }

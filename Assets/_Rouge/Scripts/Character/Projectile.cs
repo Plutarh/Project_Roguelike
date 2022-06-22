@@ -57,8 +57,8 @@ public class Projectile : NetworkBehaviour
 
         _damageData = networkData.damageData;
         _owner = networkData.owner;
-        _moveDirection = networkData.moveDirection;
-        //networkData.effects.ForEach(ef => _effectsOnHit.Add(ef));
+        SetProjectileDirection(networkData.moveDirection);
+
 
         StartMove();
     }
@@ -128,7 +128,7 @@ public class Projectile : NetworkBehaviour
         if (_damageData.whoOwner == null)
             Debug.LogError("dmg data owner null");
 
-        if (_damageData.whoOwner.GetTeam() == EPawnTeam.Player)
+        if (_damageData.whoOwner.GetComponent<Pawn>().GetTeam() == EPawnTeam.Player)
         {
             GlobalEvents.OnPlayerHittedDamageable?.Invoke();
         }

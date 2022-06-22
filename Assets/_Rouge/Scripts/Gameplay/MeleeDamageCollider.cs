@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Mirror;
 using UnityEngine;
 
 public class MeleeDamageCollider : MonoBehaviour
 {
     [SerializeField] private List<DamageCollider> damageColliders = new List<DamageCollider>();
 
-    Pawn _owner;
+    NetworkIdentity _owner;
 
     List<IDamageable> _damagedObjects = new List<IDamageable>();
 
@@ -24,7 +25,7 @@ public class MeleeDamageCollider : MonoBehaviour
         DisableDamageCollider();
     }
 
-    public void SetOwner(Pawn newOwner)
+    public void SetOwner(NetworkIdentity newOwner)
     {
         _owner = newOwner;
     }
@@ -34,7 +35,7 @@ public class MeleeDamageCollider : MonoBehaviour
         if (_owner == null)
         {
             Debug.LogError("Need setup owner, try to find it myself");
-            _owner = GetComponentInParent<Pawn>();
+            _owner = transform.root.GetComponent<NetworkIdentity>();
 
             if (_owner == null)
                 return;
@@ -66,8 +67,8 @@ public class MeleeDamageCollider : MonoBehaviour
 
         var damageable = other.GetComponent<IDamageable>();
 
-        if (damageable == null || damageable == (_owner as IDamageable)) return;
-        if (damageable.GetTeam() == _owner.GetTeam()) return;
+        if (damageable == null || damageable == (_owner.GetComponent<IDamageable>())) return;
+        if (damageable.GetTeam() == _owner.GetComponent<Pawn>().GetTeam()) return;
 
         if (_damagedObjects.Contains(damageable) == false)
         {

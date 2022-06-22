@@ -31,7 +31,7 @@ public class FireBallAbility : BaseAbility
 
         projectileData.damageData = _damageData;
         projectileData.createPosition = _abilityExecutePositions[_abilityPositionIndex].transform.position;
-        projectileData.moveDirection = owner.GetComponent<BaseCharacter>().GetAimPoint();
+        projectileData.moveDirection = playerCharacter.PlayerMover.GetAimPoint();
         projectileData.owner = owner;
 
         // _lastCreatedProjectile.Initialize(projectileData);
@@ -99,6 +99,8 @@ public class FireBallAbility : BaseAbility
     {
         var createdProjectile = Instantiate(_fireBallPrefab, projectileNetworkData.createPosition, Quaternion.identity);
         createdProjectile.Initialize(projectileNetworkData);
+
+        Debug.DrawRay(createdProjectile.transform.position, projectileNetworkData.moveDirection.normalized * 5, Color.green, 5);
         //createdProjectile.SetupAsNetworkVisual();
     }
 }

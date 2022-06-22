@@ -45,10 +45,16 @@ public class Health : NetworkBehaviour
         _currentHealth = _maxHealth;
     }
 
-    public void DecreaseHealth(DamageData damageData)
-    {
-        if (damageData.combatValue == 0) return;
 
+    [Command(requiresAuthority = false)]
+    void CmdDecreaseHealth(DamageData damageData)
+    {
+        ServerDecreaseHealth(damageData);
+    }
+
+    [Server]
+    void ServerDecreaseHealth(DamageData damageData)
+    {
         _currentHealth -= damageData.combatValue;
 
         if (_currentHealth <= 0)
@@ -58,6 +64,17 @@ public class Health : NetworkBehaviour
         }
 
         OnHealthDecreased?.Invoke(damageData);
+    }
+
+    public void DecreaseHealth(DamageData damageData)
+    {
+        if (damageData.combatValue == 0) return;
+
+
+
+        CmdDecreaseHealth(damageData);
+
+
     }
 
     public void IncreaseHealth(float _healthToIncrease)
