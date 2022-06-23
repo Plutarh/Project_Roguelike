@@ -374,6 +374,18 @@ public class AIBase : BaseCharacter
         }
 
         _animator.CrossFade(_currentCombatName, 0.15f);
+        RpcAttackAnimation(_currentCombatName);
+    }
+
+    void CmdAttackAnimation(string clipName)
+    {
+
+    }
+
+    [ClientRpc(includeOwner = false)]
+    void RpcAttackAnimation(string clipName)
+    {
+        _animator.CrossFade(clipName, 0.15f);
     }
 
     void RotationToTarget()
