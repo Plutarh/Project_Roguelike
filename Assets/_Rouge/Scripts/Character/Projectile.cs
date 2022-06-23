@@ -122,7 +122,7 @@ public class Projectile : NetworkBehaviour
         foreach (var effect in _effectsOnHit)
         {
             damageable.AddEffect(effect.InitializeEffect(damageable.GetNetworkIdentity(), _damageData));
-            NetworkEffectsSync.get.SyncEffect(effect.effectName, damageable.GetNetworkIdentity().netId);
+            NetworkEffectsSync.get.SyncEffect(_owner.netId, effect.effectName, damageable.GetNetworkIdentity().netId);
         }
 
 

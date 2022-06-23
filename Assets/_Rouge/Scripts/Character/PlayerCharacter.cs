@@ -42,6 +42,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     public static List<PlayerCharacter> allPlayerCharacters = new List<PlayerCharacter>();
 
+
     public bool _abilitiesInitialized;
 
     public virtual void Awake()

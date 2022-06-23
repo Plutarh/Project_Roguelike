@@ -11,6 +11,7 @@ public class NetworkEffectsSync : NetworkBehaviour
 
     public List<string> netIds = new List<string>();
 
+
     private void Awake()
     {
         get = this;
@@ -26,21 +27,22 @@ public class NetworkEffectsSync : NetworkBehaviour
 
     }
 
-    public void SyncEffect(string effectName, uint targetID)
+    public void SyncEffect(uint OwnerId, string effectName, uint targetID)
     {
-        CmdInitializeEffect(effectName, targetID);
+        CmdInitializeEffect(OwnerId, effectName, targetID);
     }
 
     [Command(requiresAuthority = false)]
-    void CmdInitializeEffect(string effectName, uint targetID)
+    void CmdInitializeEffect(uint OwnerId, string effectName, uint targetID)
     {
-        RpcInitializeEffect(effectName, targetID);
+        RpcInitializeEffect(OwnerId, effectName, targetID);
     }
 
-    [ClientRpc(includeOwner = false)]
-    void RpcInitializeEffect(string effectName, uint targetID)
+    [ClientRpc]
+    void RpcInitializeEffect(uint OwnerId, string effectName, uint targetID)
     {
-        Debug.Log("Rpc init effect");
+        if (OwnerId == NetworkClient.localPlayer.netId) return;
+
         StartCoroutine(IEInitializeEffect(effectName, targetID));
     }
 
@@ -49,13 +51,13 @@ public class NetworkEffectsSync : NetworkBehaviour
         Debug.Log("Start init effect");
         NetworkIdentity target = null;
 
-
         while (target == null)
         {
             NetworkIdentity.spawned.TryGetValue(targetID, out target);
             Debug.Log($"Try find network identity with ID : {targetID}");
             yield return null;
         }
+
         var targetPawn = target.GetComponent<Pawn>();
 
         var effect = _allEffects.FirstOrDefault(af => af.effectName == effectName);

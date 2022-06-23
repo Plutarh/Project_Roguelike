@@ -110,7 +110,7 @@ public abstract class BaseAbility : NetworkBehaviour
         foreach (var effect in _effects)
         {
             damageable.AddEffect(effect.InitializeEffect(damageable.GetNetworkIdentity(), _damageData));
-            NetworkEffectsSync.get.SyncEffect(effect.effectName, damageable.GetNetworkIdentity().netId);
+            NetworkEffectsSync.get.SyncEffect(owner.netId, effect.effectName, damageable.GetNetworkIdentity().netId);
         }
 
         // CmdInitializeEffects(pawn.GetNetworkIdentity(), _damageData);
