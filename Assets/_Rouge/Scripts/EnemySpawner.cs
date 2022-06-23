@@ -48,7 +48,6 @@ public class EnemySpawner : NetworkBehaviour
 
         NetworkServer.Spawn(createdEnemy.gameObject);
 
-
         GlobalEvents.OnEnemySpawned?.Invoke(createdEnemy);
 
         return createdEnemy;

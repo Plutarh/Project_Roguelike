@@ -85,7 +85,6 @@ public class Dissolver : NetworkBehaviour
         }
 
         Material dissolveMaterial = default;
-        Debug.LogError("netx state");
 
         if (_skinnedMeshRenderer != null)
             dissolveMaterial = ChangeMaterial(_skinnedMeshRenderer);
@@ -130,8 +129,8 @@ public class Dissolver : NetworkBehaviour
 
         var materials = skinMeshRenderer.materials;
         materials[0] = _dissolveMaterial;
+
         skinMeshRenderer.materials = materials;
-        Debug.LogError("Change mat to dissolve " + skinMeshRenderer.materials[0].name);
         skinMeshRenderer.materials[0].SetTexture("_MainTex", mainTex);
 
         return skinMeshRenderer.materials[0];

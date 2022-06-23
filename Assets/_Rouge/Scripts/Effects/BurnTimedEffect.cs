@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class BurnTimedEffect : TimedEffect
@@ -11,20 +12,23 @@ public class BurnTimedEffect : TimedEffect
 
     float _timeToHit;
 
-    public BurnTimedEffect(ScriptableEffect buff, GameObject targetObj, CombatData combatData) : base(buff, targetObj, combatData)
+    public BurnTimedEffect(ScriptableEffect buff, NetworkIdentity targetObj, CombatData combatData) : base(buff, targetObj, combatData)
     {
         _target = targetObj.GetComponent<IDamageable>();
         _whoUse = combatData.whoOwner.gameObject;
+
+        Debug.LogError("Burn effect initialized");
     }
 
     protected override void ApplyEffect()
     {
+        Debug.LogError("Burn effect start");
         if (_target == null) return;
         _burnScriptableEffect = (BurnScriptableEffect)Effect;
 
 
-
         CreateFX();
+
         currentDuration = totalDuration;
         _timeToHit = _burnScriptableEffect.timerToHit;
     }
@@ -63,6 +67,8 @@ public class BurnTimedEffect : TimedEffect
     {
         if (_burnScriptableEffect.burnFX == null) return;
 
+        Debug.Log("fire fx created");
+
         _burningFX = GameObject.Instantiate(_burnScriptableEffect.burnFX, _target.GetGameObject().transform.position, Quaternion.AngleAxis(90, Vector3.right));
         _burningFX.transform.SetParent(_target.GetGameObject().transform);
 
@@ -82,4 +88,6 @@ public class BurnTimedEffect : TimedEffect
 
         _burningFX.transform.localPosition = Vector3.zero;
     }
+
+
 }

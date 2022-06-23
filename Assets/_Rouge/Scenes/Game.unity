@@ -1326,7 +1326,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 738930831}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 64.14, y: 1.28, z: -19.5}
+  m_LocalPosition: {x: 59.2, y: 1.28, z: 13.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3665,14 +3665,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7143993767228471643, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
-      propertyPath: spawnPrefabs.Array.size
-      value: 11
+    - target: {fileID: 1370518053, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
+      propertyPath: sceneId
+      value: 1439902154
       objectReference: {fileID: 0}
-    - target: {fileID: 7143993767228471643, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
-      propertyPath: spawnPrefabs.Array.data[11]
-      value: 
-      objectReference: {fileID: 5296536591411198905, guid: dcd1c8cf5072dfe4ca88b92c8539b064, type: 3}
     - target: {fileID: 7912328549807501376, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
       propertyPath: m_Name
       value: System
@@ -3720,10 +3716,6 @@ PrefabInstance:
     - target: {fileID: 7912328549807501379, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7912328550280188771, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
-      propertyPath: playerUnitSpawnPoint
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7912328550280188771, guid: 6adb3b227f41b7140918e45e267f4543, type: 3}
       propertyPath: _playerUnitSpawnPoints.Array.data[0]

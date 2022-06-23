@@ -10,11 +10,7 @@ using UnityEngine;
 public class Pawn : NetworkBehaviour, IDamageable
 {
     public Characteristics Characteristics => _characteristics;
-
-
     public Health Health => _health;
-
-
 
     public Transform HeadBone
     {
@@ -33,7 +29,6 @@ public class Pawn : NetworkBehaviour, IDamageable
     [SerializeField] private Transform _headBone;
 
     Dictionary<ScriptableEffect, TimedEffect> _timedEffects = new Dictionary<ScriptableEffect, TimedEffect>();
-
 
     public Action OnDeath;
 
@@ -81,6 +76,18 @@ public class Pawn : NetworkBehaviour, IDamageable
 
     public virtual void TakeDamage(DamageData damageData)
     {
+        ClientTakeDamage(damageData);
+    }
+
+    [Client]
+    public void ClientTakeDamage(DamageData damageData)
+    {
+        CmdTakeDamage(damageData);
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdTakeDamage(DamageData damageData)
+    {
         if (Health.IsDead) return;
 
         if (_characteristics == null)
@@ -99,7 +106,6 @@ public class Pawn : NetworkBehaviour, IDamageable
 
         if (Health.IsDead) Death();
     }
-
 
     public virtual void Death()
     {
@@ -124,23 +130,13 @@ public class Pawn : NetworkBehaviour, IDamageable
         // Если уже содержит, то обновим таймер
         if (_timedEffects.ContainsKey(effect.Effect))
         {
-            // if (effect.Effect.BulletBuff)
-            // {
-            //     currentEffects[newEffect.Effect].End();
-            //     currentEffects.Remove(newEffect.Effect);
-            //     currentEffects.Add(newEffect.Effect, newEffect);
-            // }
-            // else
             _timedEffects[effect.Effect].Activate();
         }
         else
         {
             _timedEffects.Add(effect.Effect, effect);
             effect.Activate();
-            // if (!effect.Effect.BulletBuff)
-            // {
-            //     effect.Activate();
-            // }
+
             // TODO ad UI event to create in UI panel effect ICON;
         }
     }
@@ -187,5 +183,10 @@ public class Pawn : NetworkBehaviour, IDamageable
     public GameObject GetGameObject()
     {
         return this.gameObject;
+    }
+
+    public NetworkIdentity GetNetworkIdentity()
+    {
+        return netIdentity;
     }
 }

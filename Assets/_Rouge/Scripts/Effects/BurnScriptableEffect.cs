@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "HitEffects/BurnEffect")]
@@ -10,7 +11,7 @@ public class BurnScriptableEffect : ScriptableEffect
 
     public ParticleSystem burnFX;
 
-    public override TimedEffect InitializeEffect(GameObject obj, CombatData combatData)
+    public override TimedEffect InitializeEffect(NetworkIdentity obj, CombatData combatData)
     {
         return new BurnTimedEffect(this, obj, combatData);
     }

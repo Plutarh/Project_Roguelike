@@ -2171,6 +2171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeab5ddbbde9eef47a1cb3edc34732e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
   _currentHealth: 100
   _maxHealth: 100
   _isDead: 0
@@ -2259,6 +2261,7 @@ MonoBehaviour:
   _skinmeshData: {fileID: 11400000, guid: 299a53e8b7923cf45bef46f6623b8607, type: 2}
   _lastPatrollTime: 0
   _patrollDelay: 0
+  _skinIndex: 0
 --- !u!114 &2814780808224134078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2353,6 +2356,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edf963c9e706a314ea8f613504776691, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &2419737850151778612
 MonoBehaviour:
   m_ObjectHideFlags: 0

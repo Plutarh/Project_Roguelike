@@ -25,16 +25,21 @@ public class FireBallAbility : BaseAbility
 
         _damageData = damageData;
 
-        //CreateProjectile();
-        ProjectileNetworkData projectileData = new ProjectileNetworkData();
 
+        ProjectileNetworkData projectileData = new ProjectileNetworkData();
 
         projectileData.damageData = _damageData;
         projectileData.createPosition = _abilityExecutePositions[_abilityPositionIndex].transform.position;
         projectileData.moveDirection = playerCharacter.PlayerMover.GetAimPoint();
         projectileData.owner = owner;
 
-        // _lastCreatedProjectile.Initialize(projectileData);
+
+        var createdProjectile = CreateProjectile(projectileData);
+
+        foreach (var effect in _effects)
+        {
+            createdProjectile.AddScriptableEffect(effect);
+        }
 
         CmdCreateProjectile(projectileData);
 
@@ -86,7 +91,12 @@ public class FireBallAbility : BaseAbility
         _primaryAttackProjectilesToMove.RemoveAt(0);
     }
 
-
+    Projectile CreateProjectile(ProjectileNetworkData projectileNetworkData)
+    {
+        var createdProjectile = Instantiate(_fireBallPrefab, projectileNetworkData.createPosition, Quaternion.identity);
+        createdProjectile.Initialize(projectileNetworkData);
+        return createdProjectile;
+    }
 
     [Command]
     void CmdCreateProjectile(ProjectileNetworkData projectileNetworkData)
@@ -94,14 +104,12 @@ public class FireBallAbility : BaseAbility
         RpcCreateProjectile(projectileNetworkData);
     }
 
-    [ClientRpc]
+    [ClientRpc(includeOwner = false)]
     void RpcCreateProjectile(ProjectileNetworkData projectileNetworkData)
     {
-        var createdProjectile = Instantiate(_fireBallPrefab, projectileNetworkData.createPosition, Quaternion.identity);
-        createdProjectile.Initialize(projectileNetworkData);
 
-        Debug.DrawRay(createdProjectile.transform.position, projectileNetworkData.moveDirection.normalized * 5, Color.green, 5);
-        //createdProjectile.SetupAsNetworkVisual();
+        var localProjectile = CreateProjectile(projectileNetworkData);
+        localProjectile.SetupAsNetworkVisual();
     }
 }
 

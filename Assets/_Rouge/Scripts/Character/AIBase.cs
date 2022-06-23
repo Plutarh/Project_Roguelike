@@ -37,7 +37,7 @@ public class AIBase : BaseCharacter
     private MeleeDamageCollider _meleeDamageCollider;
 
     [SyncVar]
-    private int _skinIndex;
+    [SerializeField] private int _skinIndex;
 
     public enum EAIState
     {
@@ -58,8 +58,7 @@ public class AIBase : BaseCharacter
     public override void Awake()
     {
         base.Awake();
-        FindRandomSkinIndex();
-        TrySelectSkin();
+
         SetTeam(EPawnTeam.AI);
 
 
@@ -79,6 +78,10 @@ public class AIBase : BaseCharacter
     {
         base.Start();
         if (!isServer) return;
+
+        FindRandomSkinIndex();
+        SelectSkin();
+
         _spawnPosition = transform.position;
 
         if (Random.value > 0.5f)
@@ -102,7 +105,7 @@ public class AIBase : BaseCharacter
     }
 
 
-    void TrySelectSkin()
+    void SelectSkin()
     {
         if (_skinmeshData == null || _skinmeshData.RandomSkinMesh == null)
         {
@@ -120,8 +123,8 @@ public class AIBase : BaseCharacter
 
     void FindRandomSkinIndex()
     {
-        if (isServer)
-            _skinIndex = Random.Range(0, _skinmeshData.Skins.Count);
+        if (!isServer) return;
+        _skinIndex = Random.Range(0, _skinmeshData.Skins.Count);
     }
 
     void SetupNavmesh()

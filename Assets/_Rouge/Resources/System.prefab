@@ -70,6 +70,7 @@ MonoBehaviour:
   - {fileID: 3197334122034485137, guid: 5717fff2a84952b439351bc28085bbb0, type: 3}
   - {fileID: 8235411780979056679, guid: d518cd832687edd4f94a4f95812a2c87, type: 3}
   - {fileID: 8235411780979056679, guid: db6e1ce4f4d1a624d889df27cd4763b4, type: 3}
+  - {fileID: 5020467107122520828, guid: ed445d9b1a94a124d9060936c0e42ca5, type: 3}
   _playerInstaller: {fileID: 7912328550280188771}
   _playerSpawned: 0
   _playerConnected: 0

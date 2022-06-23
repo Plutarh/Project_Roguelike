@@ -37,6 +37,7 @@ public abstract class BaseAbility : NetworkBehaviour
 
     [SerializeField] protected List<ScriptableEffect> _effects = new List<ScriptableEffect>();
 
+
     protected DamageData _damageData;
 
 
@@ -108,7 +109,25 @@ public abstract class BaseAbility : NetworkBehaviour
     {
         foreach (var effect in _effects)
         {
-            pawn.AddEffect(effect.InitializeEffect(pawn.GetGameObject(), _damageData));
+            pawn.AddEffect(effect.InitializeEffect(pawn.GetNetworkIdentity(), _damageData));
+        }
+
+        CmdInitializeEffects(pawn.GetNetworkIdentity(), _damageData);
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdInitializeEffects(NetworkIdentity networkIdentity, DamageData damageData)
+    {
+        RpcInitialize(networkIdentity, damageData);
+    }
+
+    [ClientRpc(includeOwner = false)]
+    void RpcInitialize(NetworkIdentity networkIdentity, DamageData damageData)
+    {
+        foreach (var effect in _effects)
+        {
+            var ef = effect.InitializeEffect(networkIdentity, damageData);
+            ef.Activate();
         }
     }
 

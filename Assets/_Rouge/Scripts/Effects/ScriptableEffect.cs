@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public abstract class ScriptableEffect : ScriptableObject
@@ -16,6 +17,6 @@ public abstract class ScriptableEffect : ScriptableObject
 
     public Color uiBackgroundColor;
 
-    public abstract TimedEffect InitializeEffect(GameObject target, CombatData damageData);
+    public abstract TimedEffect InitializeEffect(NetworkIdentity target, CombatData damageData);
     // public abstract TimedEffect InitializeEffect(GameObject target, HealData healData);
 }

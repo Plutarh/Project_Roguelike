@@ -114,14 +114,17 @@ public class Projectile : NetworkBehaviour
 
     void Hit(IDamageable damageable)
     {
+        if (_isNetworkVisual) return;
+
         damageable.TakeDamage(_damageData);
 
         // Вешаем эффекты которые были на пульке
         foreach (var effect in _effectsOnHit)
         {
-            damageable.AddEffect(effect.InitializeEffect(damageable.GetGameObject(), _damageData));
+            damageable.AddEffect(effect.InitializeEffect(damageable.GetNetworkIdentity(), _damageData));
         }
 
+        // CmdInitializeEffects(damageable.GetNetworkIdentity(), _damageData);
 
         if (_damageData == null)
             Debug.LogError("DMG null");
@@ -131,6 +134,22 @@ public class Projectile : NetworkBehaviour
         if (_damageData.whoOwner.GetComponent<Pawn>().GetTeam() == EPawnTeam.Player)
         {
             GlobalEvents.OnPlayerHittedDamageable?.Invoke();
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdInitializeEffects(NetworkIdentity networkIdentity, DamageData damageData)
+    {
+        RpcInitialize(networkIdentity, damageData);
+    }
+
+    [ClientRpc(includeOwner = false)]
+    void RpcInitialize(NetworkIdentity networkIdentity, DamageData damageData)
+    {
+        foreach (var effect in _effectsOnHit)
+        {
+            var ef = effect.InitializeEffect(networkIdentity, damageData);
+            ef.Activate();
         }
     }
 
@@ -171,10 +190,8 @@ public class Projectile : NetworkBehaviour
         //NetworkServer.Spawn(fx.gameObject);
 
         Destroy(_unparent.gameObject, 0.5f);
+        Destroy(gameObject);
     }
-
-
-
 
     private void OnTriggerEnter(Collider other)
     {

@@ -49,6 +49,7 @@ public class Health : NetworkBehaviour
     [Command(requiresAuthority = false)]
     void CmdDecreaseHealth(DamageData damageData)
     {
+        Debug.LogError("call server decrease health " + damageData.combatValue);
         ServerDecreaseHealth(damageData);
     }
 
@@ -70,11 +71,16 @@ public class Health : NetworkBehaviour
     {
         if (damageData.combatValue == 0) return;
 
+        _currentHealth -= damageData.combatValue;
 
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0;
+            _isDead = true;
+        }
 
-        CmdDecreaseHealth(damageData);
-
-
+        OnHealthDecreased?.Invoke(damageData);
+        // CmdDecreaseHealth(damageData);
     }
 
     public void IncreaseHealth(float _healthToIncrease)

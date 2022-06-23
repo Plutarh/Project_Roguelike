@@ -1,9 +1,11 @@
+using Mirror;
 using UnityEngine;
 
 public interface IDamageable
 {
     EPawnTeam GetTeam();
     GameObject GetGameObject();
+    NetworkIdentity GetNetworkIdentity();
     void SetTeam(EPawnTeam newTeam);
     void TakeDamage(DamageData damageData);
     void Death();

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public abstract class TimedEffect
@@ -8,19 +9,19 @@ public abstract class TimedEffect
     public bool unlimitedDuration = false;
     internal float totalDuration;
     public ScriptableEffect Effect { get; }
-    protected readonly GameObject targetGO;
-    protected readonly GameObject whoUsed;
+    protected readonly NetworkIdentity targetGO;
+    protected readonly NetworkIdentity whoUsed;
 
     public bool IsFinished;
     public bool IsPaused;
 
     public CombatData combatData;
 
-    public TimedEffect(ScriptableEffect effect, GameObject targetObj, CombatData combat)
+    public TimedEffect(ScriptableEffect effect, NetworkIdentity targetObj, CombatData combat)
     {
         Effect = effect;
         targetGO = targetObj;
-        whoUsed = combat.whoOwner.gameObject;
+        whoUsed = combat.whoOwner;
         combatData = combat;
 
     }
