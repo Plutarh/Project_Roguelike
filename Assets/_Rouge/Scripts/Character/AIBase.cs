@@ -67,8 +67,8 @@ public class AIBase : BaseCharacter
     public override void Update()
     {
         if (Health.IsDead) return;
-        if (!isServer) return;
         base.Update();
+        if (!isServer) return;
 
         StateMachine();
         UpdateMotionAnimation();

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67696ad24dc0f546bf2836dd43a76e2, type: 3}
   m_Name: FireBallBurnEffect
   m_EditorClassIdentifier: 
-  duration: 10
+  duration: 5
   unlimitedDuration: 0
   isDurationRefreshed: 1
   isStackable: 0
@@ -21,6 +21,6 @@ MonoBehaviour:
   effectName: Burn
   effectDescription: Burn target
   uiBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  timerToHit: 1
+  timerToHit: 3
   damagePercent: 20
   burnFX: {fileID: 5147264526970508098, guid: ed445d9b1a94a124d9060936c0e42ca5, type: 3}

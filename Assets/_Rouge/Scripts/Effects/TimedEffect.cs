@@ -14,6 +14,7 @@ public abstract class TimedEffect
 
     public bool IsFinished;
     public bool IsPaused;
+    public bool IsVisual;
 
     public CombatData combatData;
 
@@ -24,6 +25,13 @@ public abstract class TimedEffect
         whoUsed = combat.whoOwner;
         combatData = combat;
 
+    }
+
+    public TimedEffect(ScriptableEffect effect, NetworkIdentity targetObj)
+    {
+        Effect = effect;
+        targetGO = targetObj;
+        IsVisual = true;
     }
 
     public virtual void Tick(float delta)

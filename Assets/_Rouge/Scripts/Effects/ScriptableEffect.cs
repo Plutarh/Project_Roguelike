@@ -18,5 +18,6 @@ public abstract class ScriptableEffect : ScriptableObject
     public Color uiBackgroundColor;
 
     public abstract TimedEffect InitializeEffect(NetworkIdentity target, CombatData damageData);
+    public abstract TimedEffect InitializeEffect(NetworkIdentity target);
     // public abstract TimedEffect InitializeEffect(GameObject target, HealData healData);
 }

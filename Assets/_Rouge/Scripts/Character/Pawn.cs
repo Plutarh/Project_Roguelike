@@ -30,6 +30,8 @@ public class Pawn : NetworkBehaviour, IDamageable
 
     Dictionary<ScriptableEffect, TimedEffect> _timedEffects = new Dictionary<ScriptableEffect, TimedEffect>();
 
+    public List<Effects> DebugAllEffects = new List<Effects>();
+
     public Action OnDeath;
 
     public virtual void Awake()
@@ -47,6 +49,15 @@ public class Pawn : NetworkBehaviour, IDamageable
     public virtual void Update()
     {
         EffectsTimeTick();
+
+        DebugAllEffects.Clear();
+        foreach (KeyValuePair<ScriptableEffect, TimedEffect> item in _timedEffects)
+        {
+            Effects newEffect = new Effects();
+            newEffect.effectName = item.Key.effectName;
+            newEffect.effectDuration = item.Value.currentDuration;
+            DebugAllEffects.Add(newEffect);
+        }
     }
 
     public virtual void FixedUpdate()
@@ -126,7 +137,6 @@ public class Pawn : NetworkBehaviour, IDamageable
 
     public void AddEffect(TimedEffect effect)
     {
-
         // Если уже содержит, то обновим таймер
         if (_timedEffects.ContainsKey(effect.Effect))
         {
@@ -189,4 +199,11 @@ public class Pawn : NetworkBehaviour, IDamageable
     {
         return netIdentity;
     }
+}
+
+[System.Serializable]
+public class Effects
+{
+    public string effectName;
+    public float effectDuration;
 }

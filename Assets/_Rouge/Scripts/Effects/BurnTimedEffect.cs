@@ -17,12 +17,20 @@ public class BurnTimedEffect : TimedEffect
         _target = targetObj.GetComponent<IDamageable>();
         _whoUse = combatData.whoOwner.gameObject;
 
-        Debug.LogError("Burn effect initialized");
+
+    }
+
+    public BurnTimedEffect(ScriptableEffect buff, NetworkIdentity targetObj) : base(buff, targetObj)
+    {
+        _target = targetObj.GetComponent<IDamageable>();
+        //_whoUse = combatData.whoOwner.gameObject;
+
+
     }
 
     protected override void ApplyEffect()
     {
-        Debug.LogError("Burn effect start");
+
         if (_target == null) return;
         _burnScriptableEffect = (BurnScriptableEffect)Effect;
 
@@ -48,6 +56,7 @@ public class BurnTimedEffect : TimedEffect
         base.Tick(delta);
 
         if (IsFinished) return;
+        if (IsVisual) return;
 
         _timeToHit -= delta;
         if (_timeToHit <= 0)
@@ -66,8 +75,6 @@ public class BurnTimedEffect : TimedEffect
     void CreateFX()
     {
         if (_burnScriptableEffect.burnFX == null) return;
-
-        Debug.Log("fire fx created");
 
         _burningFX = GameObject.Instantiate(_burnScriptableEffect.burnFX, _target.GetGameObject().transform.position, Quaternion.AngleAxis(90, Vector3.right));
         _burningFX.transform.SetParent(_target.GetGameObject().transform);

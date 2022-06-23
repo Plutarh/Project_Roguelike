@@ -15,4 +15,9 @@ public class BurnScriptableEffect : ScriptableEffect
     {
         return new BurnTimedEffect(this, obj, combatData);
     }
+
+    public override TimedEffect InitializeEffect(NetworkIdentity obj)
+    {
+        return new BurnTimedEffect(this, obj);
+    }
 }

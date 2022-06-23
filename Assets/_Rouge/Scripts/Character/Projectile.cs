@@ -122,9 +122,10 @@ public class Projectile : NetworkBehaviour
         foreach (var effect in _effectsOnHit)
         {
             damageable.AddEffect(effect.InitializeEffect(damageable.GetNetworkIdentity(), _damageData));
+            NetworkEffectsSync.get.SyncEffect(effect.effectName, damageable.GetNetworkIdentity().netId);
         }
 
-        // CmdInitializeEffects(damageable.GetNetworkIdentity(), _damageData);
+
 
         if (_damageData == null)
             Debug.LogError("DMG null");
@@ -137,21 +138,7 @@ public class Projectile : NetworkBehaviour
         }
     }
 
-    [Command(requiresAuthority = false)]
-    void CmdInitializeEffects(NetworkIdentity networkIdentity, DamageData damageData)
-    {
-        RpcInitialize(networkIdentity, damageData);
-    }
 
-    [ClientRpc(includeOwner = false)]
-    void RpcInitialize(NetworkIdentity networkIdentity, DamageData damageData)
-    {
-        foreach (var effect in _effectsOnHit)
-        {
-            var ef = effect.InitializeEffect(networkIdentity, damageData);
-            ef.Activate();
-        }
-    }
 
     void AOEDamage()
     {

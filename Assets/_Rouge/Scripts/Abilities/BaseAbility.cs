@@ -105,14 +105,15 @@ public abstract class BaseAbility : NetworkBehaviour
         RefreshCooldown();
     }
 
-    public void AddEffectToDamageable(IDamageable pawn)
+    public void AddEffectToDamageable(IDamageable damageable)
     {
         foreach (var effect in _effects)
         {
-            pawn.AddEffect(effect.InitializeEffect(pawn.GetNetworkIdentity(), _damageData));
+            damageable.AddEffect(effect.InitializeEffect(damageable.GetNetworkIdentity(), _damageData));
+            NetworkEffectsSync.get.SyncEffect(effect.effectName, damageable.GetNetworkIdentity().netId);
         }
 
-        CmdInitializeEffects(pawn.GetNetworkIdentity(), _damageData);
+        // CmdInitializeEffects(pawn.GetNetworkIdentity(), _damageData);
     }
 
     [Command(requiresAuthority = false)]
