@@ -377,11 +377,6 @@ public class AIBase : BaseCharacter
         RpcAttackAnimation(_currentCombatName);
     }
 
-    void CmdAttackAnimation(string clipName)
-    {
-
-    }
-
     [ClientRpc(includeOwner = false)]
     void RpcAttackAnimation(string clipName)
     {

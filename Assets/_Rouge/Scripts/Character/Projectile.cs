@@ -57,8 +57,11 @@ public class Projectile : NetworkBehaviour
 
         _damageData = networkData.damageData;
         _owner = networkData.owner;
-        SetProjectileDirection(networkData.moveDirection);
 
+        if (networkData.fromProjectilDirection)
+            _moveDirection = GetProjectileDirection(networkData.moveDirection);
+        else
+            _moveDirection = networkData.moveDirection;
 
         StartMove();
     }
@@ -91,9 +94,9 @@ public class Projectile : NetworkBehaviour
         _owner = newOwner;
     }
 
-    public void SetProjectileDirection(Vector3 to)
+    public Vector3 GetProjectileDirection(Vector3 to)
     {
-        _moveDirection = (to - transform.position).normalized;
+        return (to - transform.position).normalized;
     }
 
     public void StartMove()
@@ -142,6 +145,8 @@ public class Projectile : NetworkBehaviour
 
     void AOEDamage()
     {
+        if (_isNetworkVisual) return;
+
         var colliders = Physics.OverlapSphere(transform.position, damageRadius).ToList();
 
         if (colliders.Count == 0) return;
@@ -185,13 +190,10 @@ public class Projectile : NetworkBehaviour
         if (!IsInited) return;
 
         if (other == null) return;
-        if (IsNetworkVisual)
-        {
-            CreateOnHitFX();
-            return;
-        }
 
         var ownerPawn = _owner.GetComponent<Pawn>();
+
+
         switch (damageType)
         {
             case EProjectileDamageType.SingleDamage:
@@ -199,7 +201,9 @@ public class Projectile : NetworkBehaviour
                 if (damageable != null)
                 {
                     if (_owner == null) Debug.LogError("Projectile owner null", this);
-                    if (damageable.GetTeam() == ownerPawn.GetTeam()) return;
+                    if (damageable.GetTeam() == ownerPawn.GetTeam())
+                        return;
+
                     Hit(damageable);
                 }
                 break;
@@ -233,5 +237,5 @@ public struct ProjectileNetworkData
     public DamageData damageData;
     public Vector3 moveDirection;
     public Vector3 createPosition;
-    //public List<ScriptableEffect> effects;
+    public bool fromProjectilDirection;
 }
