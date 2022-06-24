@@ -45,6 +45,8 @@ public class PlayerCharacter : NetworkBehaviour
 
     public bool _abilitiesInitialized;
 
+    public Action OnAbilitiesInited;
+
     public virtual void Awake()
     {
         allPlayerCharacters.Add(this);
@@ -142,6 +144,7 @@ public class PlayerCharacter : NetworkBehaviour
     public virtual void OnAbilitiesInitialized()
     {
         _abilitiesInitialized = true;
+        OnAbilitiesInited?.Invoke();
     }
 
 

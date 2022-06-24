@@ -1,8 +1,9 @@
 using DG.Tweening;
+using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIHealthBar : MonoBehaviour
+public class UIHealthBar : NetworkBehaviour
 {
     public Pawn TargetPawn
     {
@@ -39,6 +40,7 @@ public class UIHealthBar : MonoBehaviour
 
     private void OnDestroy()
     {
-        _pawn.Health.OnHealthDecreased -= UpdateBar;
+        if (_pawn != null)
+            _pawn.Health.OnHealthDecreased -= UpdateBar;
     }
 }

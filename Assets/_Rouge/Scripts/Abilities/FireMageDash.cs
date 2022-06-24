@@ -20,8 +20,6 @@ public class FireMageDash : BaseAbility
     public override void Awake()
     {
         base.Awake();
-
-
     }
 
     public override void OnInitialized()
@@ -53,24 +51,6 @@ public class FireMageDash : BaseAbility
         StartCoroutine(IEDashing());
     }
 
-    void StartCreateGhostMesh()
-    {
-        CreateGhostMesh();
-        CmdCreateGhostMesh();
-    }
-
-    [Command]
-    void CmdCreateGhostMesh()
-    {
-        RpcCreateGhostMesh();
-    }
-
-    [ClientRpc(includeOwner = false)]
-    void RpcCreateGhostMesh()
-    {
-        CreateGhostMesh();
-    }
-
     void CreateGhostMesh()
     {
         foreach (var skin in _skinnedMeshRenderers)
@@ -90,7 +70,6 @@ public class FireMageDash : BaseAbility
 
             if (ghost != null)
                 Destroy(ghost, _ghostLifeTime);
-
         }
     }
 
@@ -119,6 +98,7 @@ public class FireMageDash : BaseAbility
     void RpcCreateTrailFX()
     {
         CreateTrailFX();
+        StartCoroutine(IELocalPlayingFX());
     }
 
     void TryDestroyTrailFX()
@@ -161,6 +141,7 @@ public class FireMageDash : BaseAbility
         float lastTimeCreatedGhost = 0;
 
         Vector3 dashDirection = Vector3.zero;
+
         if (playerCharacter.PlayerMover.MoveDirection != Vector3.zero)
             dashDirection = owner.transform.TransformDirection(playerCharacter.PlayerMover.MoveDirection.normalized);
         else
@@ -176,7 +157,7 @@ public class FireMageDash : BaseAbility
 
             if (Time.time > lastTimeCreatedGhost)
             {
-                StartCreateGhostMesh();
+                CreateGhostMesh();
                 lastTimeCreatedGhost = Time.time + timeForGhost;
             }
 
@@ -189,5 +170,25 @@ public class FireMageDash : BaseAbility
         TryDestroyTrailFX();
 
         yield break;
+    }
+
+    IEnumerator IELocalPlayingFX()
+    {
+        float time = _executeTime;
+        float timeForGhost = time / _ghostCount;
+        float lastTimeCreatedGhost = 0;
+
+        while (time > 0)
+        {
+            time -= Time.deltaTime;
+
+            if (Time.time > lastTimeCreatedGhost)
+            {
+                CreateGhostMesh();
+                lastTimeCreatedGhost = Time.time + timeForGhost;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

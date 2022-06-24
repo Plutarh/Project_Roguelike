@@ -15,6 +15,8 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
     [SerializeField] private PlayerMover _playerInstance;
     [SerializeField] private PlayerCamera _playerCameraInstance;
 
+
+
     public static ThirdPersonPlayerInstaller get;
 
     private void Awake()
@@ -28,13 +30,16 @@ public class ThirdPersonPlayerInstaller : MonoInstaller
 
     }
 
+
     // Биндим локального игрока
     public void BindLocalPlayer(PlayerMover playerInstance)
     {
+
         _playerInstance = playerInstance;
         BindInputService();
         BindPlayerInstance();
         BindPlayerCameraInstance();
+
     }
 
     public List<Vector3> GetPlayerSpawnPositions()

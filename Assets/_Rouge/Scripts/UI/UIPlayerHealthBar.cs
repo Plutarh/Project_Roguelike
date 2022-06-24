@@ -1,18 +1,25 @@
+using System.Collections;
 using Zenject;
 
 public class UIPlayerHealthBar : UIHealthBar
 {
     PlayerMover _player;
-    // [Inject]
-    // public void Construct(Player playerChar)
-    // {
-    //     _player = playerChar;
 
-    // }
 
     private void Awake()
     {
-        if (_player != null)
-            SetPawn(_player);
+        GlobalEvents.OnLocalPlayerInitialized += Initialize;
     }
+
+    void Initialize(PlayerMover player)
+    {
+        _player = player;
+        SetPawn(_player);
+    }
+
+    private void OnDestroy()
+    {
+        GlobalEvents.OnLocalPlayerInitialized -= Initialize;
+    }
+
 }

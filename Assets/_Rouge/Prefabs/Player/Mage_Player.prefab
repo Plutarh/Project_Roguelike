@@ -468,6 +468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeab5ddbbde9eef47a1cb3edc34732e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   _currentHealth: 200
   _maxHealth: 200
   _isDead: 0
@@ -483,6 +485,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef2f505a76790d4fa3c064a45cd3cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   _characteristics:
   - charecteristicName: AttackSpeed
     characteristicType: 0
@@ -562,6 +566,7 @@ MonoBehaviour:
   _health: {fileID: 7230643067007699186}
   _myTeam: 1
   _headBone: {fileID: 0}
+  DebugAllEffects: []
   _animator: {fileID: 7282051720630695434}
   _characterController: {fileID: 7230643067007699187}
   _moveSpeed: 4

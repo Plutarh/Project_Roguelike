@@ -91,9 +91,8 @@ public class PlayerMover : BaseCharacter
         base.OnStartLocalPlayer();
 
         ThirdPersonPlayerInstaller.get.BindLocalPlayer(this);
-
-
         _playerCharacter.InitializeLocalCoreComponents();
+        GlobalEvents.OnLocalPlayerInitialized?.Invoke(this);
     }
 
     public override void Update()

@@ -13,20 +13,18 @@ public class PlayerHUD : MonoBehaviour
 
     Tween _playerDamagedOverlayTween;
 
-    // [Inject]
-    // public void Construct(Player player)
-    // {
-    //     _player = player;
-    // }
 
     private void Awake()
     {
-        return;
         ResetDamagedOverlay();
-
-        _player.Health.OnHealthDecreased += ShowDamagedOverlay;
+        GlobalEvents.OnLocalPlayerInitialized += Initialize;
     }
 
+    void Initialize(PlayerMover player)
+    {
+        _player = player;
+        _player.Health.OnHealthDecreased += ShowDamagedOverlay;
+    }
 
     void ResetDamagedOverlay()
     {
@@ -58,7 +56,7 @@ public class PlayerHUD : MonoBehaviour
 
     private void OnDestroy()
     {
-        return;
+        GlobalEvents.OnLocalPlayerInitialized -= Initialize;
         _player.Health.OnHealthDecreased -= ShowDamagedOverlay;
     }
 }
