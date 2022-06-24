@@ -104,6 +104,13 @@ public class AIBase : BaseCharacter
         SetupNavmesh();
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        Debug.Log("On start client");
+        GlobalEvents.OnEnemySpawned?.Invoke(this);
+    }
+
 
     void SelectSkin()
     {
@@ -210,6 +217,7 @@ public class AIBase : BaseCharacter
     // TODO смотреть дистанцию до игроков или рандмоного, хз пока
     void FindTarget()
     {
+        _currentTarget = PlayerCharacter.allPlayerCharacters[Random.Range(0, PlayerCharacter.allPlayerCharacters.Count)].PlayerMover;
         if (GetDistanceToTarget() > _chasingDistance) return;
 
         ChangeState(EAIState.Chase);

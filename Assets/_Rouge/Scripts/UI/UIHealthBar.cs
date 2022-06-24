@@ -32,6 +32,7 @@ public class UIHealthBar : NetworkBehaviour
     public virtual void UpdateBar(CombatData damageData)
     {
         float targetValue = _pawn.Health.GetHealth01();
+        Debug.Log($"Update health bar new value ={targetValue}");
         _healthImage.DOFillAmount(targetValue, 0.1f).OnComplete(() =>
         {
             _damageImage.DOFillAmount(targetValue, 0.2f);

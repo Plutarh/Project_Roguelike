@@ -57,11 +57,9 @@ MonoBehaviour:
   _abilityExecutePositions: []
   _abilityPositionIndex: 0
   _damageMultiplier: 0.5
-  _effects:
-  - {fileID: 11400000, guid: 2d3570465126702438060709726e0df6, type: 2}
+  _effects: []
   _attackType: 0
   _fireBallPrefab: {fileID: 5887784242665147008, guid: 9443b560cd311bb41b083a780fdbc455, type: 3}
-  _primaryAttackProjectilesToMove: []
 --- !u!114 &3977430448648007348
 MonoBehaviour:
   m_ObjectHideFlags: 0

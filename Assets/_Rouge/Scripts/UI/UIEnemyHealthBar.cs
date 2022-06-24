@@ -41,8 +41,9 @@ public class UIEnemyHealthBar : UIHealthBar
 
         base.UpdateBar(combatData);
 
-        if (combatData is DamageData)
-            ShowDamageText(combatData as DamageData);
+        if (combatData.whoOwner.isLocalPlayer)
+            if (combatData is DamageData)
+                ShowDamageText(combatData as DamageData);
 
         HideWithDelay(3);
     }

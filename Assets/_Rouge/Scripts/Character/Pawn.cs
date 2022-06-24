@@ -87,7 +87,8 @@ public class Pawn : NetworkBehaviour, IDamageable
 
     public virtual void TakeDamage(DamageData damageData)
     {
-        ClientTakeDamage(damageData);
+        //ClientTakeDamage(damageData);
+        CmdTakeDamage(damageData);
     }
 
     [Client]

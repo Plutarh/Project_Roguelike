@@ -138,6 +138,8 @@ public class PlayerCharacter : NetworkBehaviour
                 _ultimateAbility = ability;
                 break;
         }
+
+        _allAbilities.Add(ability);
     }
 
     [ClientRpc]
@@ -153,7 +155,7 @@ public class PlayerCharacter : NetworkBehaviour
         var createdAbility = Instantiate(abilityScriptable.abilityComponent, null);
         createdAbility.transform.position = Vector3.zero;
 
-        _allAbilities.Add(createdAbility);
+
 
         if (isServer)
             NetworkServer.Spawn(createdAbility.gameObject);

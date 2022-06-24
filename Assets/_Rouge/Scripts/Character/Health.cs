@@ -46,27 +46,7 @@ public class Health : NetworkBehaviour
     }
 
 
-    [Command(requiresAuthority = false)]
-    void CmdDecreaseHealth(DamageData damageData)
-    {
-        Debug.LogError("call server decrease health " + damageData.combatValue);
-        ServerDecreaseHealth(damageData);
-    }
-
-    [Server]
-    void ServerDecreaseHealth(DamageData damageData)
-    {
-        _currentHealth -= damageData.combatValue;
-
-        if (_currentHealth <= 0)
-        {
-            _currentHealth = 0;
-            _isDead = true;
-        }
-
-        OnHealthDecreased?.Invoke(damageData);
-    }
-
+    // Вызывается сервераком
     public void DecreaseHealth(DamageData damageData)
     {
         if (damageData.combatValue == 0) return;
@@ -79,8 +59,17 @@ public class Health : NetworkBehaviour
             _isDead = true;
         }
 
+        // Такс, а это у нас тут костыль, чтобы клиенты могли правильно обновить хелсбар
+        // Несмотря на то что, сервер передаст новое значение хп, хп потом все равно будет синхронизироваться
+        RpcOnHealthDecreased(_currentHealth, damageData);
+    }
+
+    [ClientRpc]
+    void RpcOnHealthDecreased(float newHealth, DamageData damageData)
+    {
+
+        _currentHealth = newHealth;
         OnHealthDecreased?.Invoke(damageData);
-        // CmdDecreaseHealth(damageData);
     }
 
     public void IncreaseHealth(float _healthToIncrease)
