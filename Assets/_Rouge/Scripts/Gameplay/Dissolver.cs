@@ -77,7 +77,6 @@ public class Dissolver : NetworkBehaviour
 
         float delay = 4;
 
-
         while (delay > 0)
         {
             delay -= Time.deltaTime;
@@ -100,13 +99,10 @@ public class Dissolver : NetworkBehaviour
 
         }
 
-
         dissolveMaterial.SetFloat("_Dissolve", 0);
 
         float timeToDissolve = 1.3f;
         float dissolveTimer = timeToDissolve;
-
-
 
         while (dissolveTimer > 0)
         {
@@ -145,8 +141,6 @@ public class Dissolver : NetworkBehaviour
 
         return meshRenderer.materials[0];
     }
-
-
 
     private void OnDestroy()
     {

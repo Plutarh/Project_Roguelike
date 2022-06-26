@@ -72,6 +72,7 @@ public class AIBase : BaseCharacter
 
         StateMachine();
         UpdateMotionAnimation();
+        VisualiseWaypoints();
     }
 
     public override void Start()
@@ -152,6 +153,7 @@ public class AIBase : BaseCharacter
     public void ChangeState(EAIState newState)
     {
         if (_currentState == newState) return;
+        Debug.Log("Change state to " + newState);
         _currentState = newState;
 
         switch (_currentState)
@@ -191,11 +193,13 @@ public class AIBase : BaseCharacter
                 FindTarget();
                 _motion = 0;
 
-                if (Time.time > _lastIdlePatrollStateChangeTime) ChangeState(EAIState.Patroll);
+                if (Time.time > _lastIdlePatrollStateChangeTime)
+                    ChangeState(EAIState.Patroll);
+
                 break;
             case EAIState.Chase:
                 Chasing();
-                CalculateMotionAnimation();
+
                 break;
             case EAIState.Attack:
                 _motion = 0;
@@ -203,21 +207,26 @@ public class AIBase : BaseCharacter
                 break;
             case EAIState.Patroll:
                 Patrolling();
-                CalculateMotionAnimation();
-                if (Time.time > _lastIdlePatrollStateChangeTime) ChangeState(EAIState.Idle);
+
+                if (Time.time > _lastIdlePatrollStateChangeTime)
+                    ChangeState(EAIState.Idle);
                 break;
             case EAIState.Retreat:
                 Retreating();
-                CalculateMotionAnimation();
+
                 break;
         }
 
+
+        if (_currentState != EAIState.Idle)
+            CalculateMotionAnimation();
     }
 
     // TODO смотреть дистанцию до игроков или рандмоного, хз пока
     void FindTarget()
     {
-        _currentTarget = PlayerCharacter.allPlayerCharacters[Random.Range(0, PlayerCharacter.allPlayerCharacters.Count)].PlayerMover;
+        if (_currentTarget == null)
+            _currentTarget = PlayerCharacter.allPlayerCharacters[Random.Range(0, PlayerCharacter.allPlayerCharacters.Count)].PlayerMover;
         if (GetDistanceToTarget() > _chasingDistance) return;
 
         ChangeState(EAIState.Chase);
@@ -247,6 +256,22 @@ public class AIBase : BaseCharacter
     {
         _targetMovePosition = targetPosition;
         _navMeshAgent.SetDestination(_targetMovePosition);
+    }
+
+    public LineRenderer pathRenderer;
+    public List<Vector3> waypints = new List<Vector3>();
+    void VisualiseWaypoints()
+    {
+        waypints.Clear();
+        var waypoints = _navMeshAgent.path;
+        if (waypoints.corners.Length <= 0) return;
+        pathRenderer.positionCount = waypoints.corners.Length;
+        for (int i = 0; i < waypoints.corners.Length; i++)
+        {
+            var point = waypoints.corners[i];
+            pathRenderer.SetPosition(i, point + Vector3.up * .2f);
+            waypints.Add(point);
+        }
     }
 
 
@@ -340,7 +365,6 @@ public class AIBase : BaseCharacter
 
 
         MoveToPosition(_currentTarget.transform.position);
-        // _characterController.
     }
 
 
@@ -442,9 +466,43 @@ public class AIBase : BaseCharacter
     }
 
 
+    public override void TakeDamage(DamageData damageData)
+    {
+        base.TakeDamage(damageData);
+        PlayHitReaction(damageData);
+    }
+
+    [ClientRpc(includeOwner = false)]
+    void PlayHitReaction(DamageData damageData)
+    {
+        if (Health.CurrentHealth <= 0 || Health.IsDead) return;
+
+        string hitReactionAnimationName = string.Empty;
+
+        if (Health.GetDamagePercent(damageData.combatValue) >= 20)
+            hitReactionAnimationName = "Medium Hit";
+        else
+            hitReactionAnimationName = "Light Hit";
+
+        // Для зеркальной анимации
+        if (Random.value > 0.5)
+            hitReactionAnimationName += "_M";
+
+        _animator.CrossFade(hitReactionAnimationName, 0.1f, 1);
+    }
+
     public override void Death()
     {
         base.Death();
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (var item in waypints)
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(item, 0.2f);
+        }
     }
 
     // [Command(requiresAuthority = false)]

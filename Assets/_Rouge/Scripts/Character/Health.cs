@@ -92,5 +92,13 @@ public class Health : NetworkBehaviour
         return value;
     }
 
+    public float GetDamagePercent(float damage)
+    {
+        if (_maxHealth == 0 || _currentHealth == 0)
+            return 0;
+
+        float percent = damage * _maxHealth / 100;
+        return percent;
+    }
 
 }
