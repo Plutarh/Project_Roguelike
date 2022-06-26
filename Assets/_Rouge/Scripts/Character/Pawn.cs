@@ -116,22 +116,23 @@ public class Pawn : NetworkBehaviour, IDamageable
 
         Health.DecreaseHealth(damageData);
 
-        if (Health.IsDead) Death();
+        if (Health.IsDead)
+            Death(damageData);
     }
 
-    public virtual void Death()
+    public virtual void Death(DamageData damageData)
     {
-        CmdDeath();
+        CmdDeath(damageData);
     }
 
     [Command(requiresAuthority = false)]
-    public virtual void CmdDeath()
+    public virtual void CmdDeath(DamageData damageData)
     {
-        RpcDeath();
+        RpcDeath(damageData);
     }
 
     [ClientRpc]
-    public virtual void RpcDeath()
+    public virtual void RpcDeath(DamageData damageData)
     {
         OnDeath?.Invoke();
     }

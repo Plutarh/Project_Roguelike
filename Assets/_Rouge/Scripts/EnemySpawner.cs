@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public class EnemySpawner : NetworkBehaviour
@@ -27,7 +28,16 @@ public class EnemySpawner : NetworkBehaviour
     private void Start()
     {
         if (!isServer) return;
-        StartCoroutine(IETestSpawn());
+        // StartCoroutine(IETestSpawn());
+        // StartCoroutine(IESpawning());
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.tKey.wasPressedThisFrame)
+        {
+            SpawnEnemy();
+        }
     }
 
     IEnumerator IETestSpawn()
@@ -35,6 +45,16 @@ public class EnemySpawner : NetworkBehaviour
         for (int i = 0; i < _spawnCount; i++)
         {
             SpawnEnemy();
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator IESpawning()
+    {
+        while (true)
+        {
+            SpawnEnemy();
+            yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(0f, 1f));
             yield return new WaitForEndOfFrame();
         }
     }

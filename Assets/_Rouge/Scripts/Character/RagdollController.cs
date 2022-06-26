@@ -31,7 +31,7 @@ public class RagdollController : MonoBehaviour
         DisableRagdoll();
     }
 
-    public void EnableRagdoll()
+    public void EnableRagdoll(DamageData damageData)
     {
         if (_animator != null) _animator.enabled = false;
         if (_characterController != null) _characterController.enabled = false;
@@ -39,6 +39,35 @@ public class RagdollController : MonoBehaviour
 
         _rigidbodies.ForEach(rb => rb.isKinematic = false);
         _colliders.ForEach(c => c.enabled = true);
+
+        ImpactBody(FindClosestRagdollBody(damageData.hitPosition), damageData.velocity);
+    }
+
+    void ImpactBody(Rigidbody body, Vector3 velocity)
+    {
+        if (body == null)
+            return;
+
+        body.AddForce(velocity * 8, ForceMode.Impulse);
+        // Debug.LogError($"Body {body.name} addforce to {velocity}", body);
+    }
+
+    Rigidbody FindClosestRagdollBody(Vector3 position)
+    {
+        Rigidbody closestBody = null;
+        float closestDist = float.MaxValue;
+
+        foreach (var body in _rigidbodies)
+        {
+            float dist = (position - body.transform.position).sqrMagnitude;
+
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                closestBody = body;
+            }
+        }
+        return closestBody;
     }
 
     void DisableRagdoll()

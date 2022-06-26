@@ -146,6 +146,10 @@ public class FireCircleAbility : BaseAbility
 
             if (pawn == null) continue;
             if (pawn.GetTeam() == owner.GetComponent<BaseCharacter>().GetTeam()) continue;
+
+            _damageData.hitPosition = owner.transform.position;
+            _damageData.velocity = RougeUtility.GetExplosionVelocity(owner.transform.position, col.transform.position, _radius);
+
             pawn.TakeDamage(_damageData);
             AddEffectToDamageable(pawn);
         }
@@ -156,6 +160,7 @@ public class FireCircleAbility : BaseAbility
     {
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _radius);
+        if (owner != null)
+            Gizmos.DrawWireSphere(owner.transform.position, _radius);
     }
 }

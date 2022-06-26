@@ -28,6 +28,7 @@ public class Projectile : NetworkBehaviour
     private Rigidbody _body;
 
     private NetworkIdentity _owner;
+    private Pawn _pawnOwner;
     private DamageData _damageData;
 
     [SerializeField] private Transform _unparent;
@@ -57,6 +58,7 @@ public class Projectile : NetworkBehaviour
 
         _damageData = networkData.damageData;
         _owner = networkData.owner;
+        _pawnOwner = _owner.GetComponent<Pawn>();
 
         if (networkData.fromProjectilDirection)
             _moveDirection = GetProjectileDirection(networkData.moveDirection);
@@ -119,6 +121,12 @@ public class Projectile : NetworkBehaviour
     {
         if (_isNetworkVisual) return;
 
+        if (_body != null)
+            _damageData.velocity = _body.velocity;
+        else
+            _damageData.velocity = transform.position - damageable.GetGameObject().transform.position;
+
+        _damageData.hitPosition = transform.position;
         damageable.TakeDamage(_damageData);
 
         // Вешаем эффекты которые были на пульке
@@ -188,11 +196,7 @@ public class Projectile : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!IsInited) return;
-
         if (other == null) return;
-
-        var ownerPawn = _owner.GetComponent<Pawn>();
-
 
         switch (damageType)
         {
@@ -200,8 +204,9 @@ public class Projectile : NetworkBehaviour
                 var damageable = other.transform.gameObject.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
-                    if (_owner == null) Debug.LogError("Projectile owner null", this);
-                    if (damageable.GetTeam() == ownerPawn.GetTeam())
+                    if (_owner == null)
+                        Debug.LogError("Projectile owner null", this);
+                    if (damageable.GetTeam() == _pawnOwner.GetTeam())
                         return;
 
                     Hit(damageable);
@@ -212,15 +217,10 @@ public class Projectile : NetworkBehaviour
                 break;
         }
 
-
-
         CreateOnHitFX();
 
         if (!immortal)
-        {
-            //Destroy(gameObject);
             NetworkServer.Destroy(gameObject);
-        }
     }
 }
 

@@ -469,11 +469,17 @@ public class AIBase : BaseCharacter
     public override void TakeDamage(DamageData damageData)
     {
         base.TakeDamage(damageData);
-        PlayHitReaction(damageData);
+        CmdPlayHitReaction(damageData);
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdPlayHitReaction(DamageData damageData)
+    {
+        RpcPlayHitReaction(damageData);
     }
 
     [ClientRpc(includeOwner = false)]
-    void PlayHitReaction(DamageData damageData)
+    void RpcPlayHitReaction(DamageData damageData)
     {
         if (Health.CurrentHealth <= 0 || Health.IsDead) return;
 
@@ -491,9 +497,9 @@ public class AIBase : BaseCharacter
         _animator.CrossFade(hitReactionAnimationName, 0.1f, 1);
     }
 
-    public override void Death()
+    public override void Death(DamageData damageData)
     {
-        base.Death();
+        base.Death(damageData);
     }
 
     private void OnDrawGizmos()
@@ -505,17 +511,11 @@ public class AIBase : BaseCharacter
         }
     }
 
-    // [Command(requiresAuthority = false)]
-    // public override void CmdDeath()
-    // {
-    //     base.CmdDeath();
-    // }
-
     [ClientRpc]
-    public override void RpcDeath()
+    public override void RpcDeath(DamageData damageData)
     {
-        base.RpcDeath();
-        _ragdollController.EnableRagdoll();
+        base.RpcDeath(damageData);
+        _ragdollController.EnableRagdoll(damageData);
     }
 
 

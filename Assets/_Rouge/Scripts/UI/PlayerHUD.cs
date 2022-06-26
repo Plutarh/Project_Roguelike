@@ -12,7 +12,7 @@ public class PlayerHUD : MonoBehaviour
 
 
     Tween _playerDamagedOverlayTween;
-
+    bool _isInited;
 
     private void Awake()
     {
@@ -24,6 +24,7 @@ public class PlayerHUD : MonoBehaviour
     {
         _player = player;
         _player.Health.OnHealthDecreased += ShowDamagedOverlay;
+        _isInited = true;
     }
 
     void ResetDamagedOverlay()
@@ -56,6 +57,8 @@ public class PlayerHUD : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!_isInited) return;
+
         GlobalEvents.OnLocalPlayerInitialized -= Initialize;
         _player.Health.OnHealthDecreased -= ShowDamagedOverlay;
     }

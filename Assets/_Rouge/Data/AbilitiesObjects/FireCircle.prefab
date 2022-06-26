@@ -46,7 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  abilityScriptable: {fileID: 11400000, guid: ce2bdb7a64077d147a7b0bc946b04a16, type: 2}
   owner: {fileID: 0}
+  playerCharacter: {fileID: 0}
   _cooldown: 2
   _cooldownTimer: 0
   _noCooldown: 0
@@ -54,10 +56,9 @@ MonoBehaviour:
   _stackLeft: 0
   _abilityExecutePositions: []
   _abilityPositionIndex: 0
-  _damageMultiplier: 2
+  _damageMultiplier: 5
   _effects:
   - {fileID: 11400000, guid: 2d3570465126702438060709726e0df6, type: 2}
-  abilityScriptable: {fileID: 11400000, guid: ce2bdb7a64077d147a7b0bc946b04a16, type: 2}
   _attackType: 1
   _fx: {fileID: 5116378823122699176, guid: 09014cffaad972946ab308f72a081e62, type: 3}
   _radius: 6

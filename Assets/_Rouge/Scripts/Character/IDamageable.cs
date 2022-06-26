@@ -8,7 +8,7 @@ public interface IDamageable
     NetworkIdentity GetNetworkIdentity();
     void SetTeam(EPawnTeam newTeam);
     void TakeDamage(DamageData damageData);
-    void Death();
+    void Death(DamageData damageData);
     void AddEffect(TimedEffect effect);
     void RemoveEffect(TimedEffect effect);
     void EffectsTimeTick();
