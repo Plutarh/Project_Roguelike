@@ -155,8 +155,6 @@ public class PlayerCharacter : NetworkBehaviour
         var createdAbility = Instantiate(abilityScriptable.abilityComponent, null);
         createdAbility.transform.position = Vector3.zero;
 
-
-
         if (isServer)
             NetworkServer.Spawn(createdAbility.gameObject);
 

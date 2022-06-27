@@ -134,9 +134,6 @@ public class FireMageDash : BaseAbility
     IEnumerator IEDashing()
     {
         float time = _executeTime;
-
-        playerCharacter.PlayerMover.BlockMovement(true);
-
         float timeForGhost = time / _ghostCount;
         float lastTimeCreatedGhost = 0;
 
@@ -148,6 +145,7 @@ public class FireMageDash : BaseAbility
             dashDirection = owner.transform.forward;
 
         owner.transform.rotation = Quaternion.LookRotation(dashDirection, Vector3.up);
+        playerCharacter.PlayerMover.BlockMovement(true);
 
         while (time > 0)
         {
