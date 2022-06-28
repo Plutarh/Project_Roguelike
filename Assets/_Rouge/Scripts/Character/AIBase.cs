@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Mirror;
 using UnityEngine;
 using UnityEngine.AI;
@@ -39,13 +40,18 @@ public class AIBase : BaseCharacter
     [SyncVar]
     [SerializeField] private int _skinIndex;
 
+    private Coroutine _jumpCoroutine;
+    private float _jumpLastTime;
+    [SerializeField] private float _jumpCooldown = 2;
+
     public enum EAIState
     {
         Idle,
         Chase,
         Attack,
         Patroll,
-        Retreat
+        Retreat,
+        Jump
     }
 
 
@@ -138,10 +144,15 @@ public class AIBase : BaseCharacter
     void SetupNavmesh()
     {
         if (_navMeshAgent == null) _navMeshAgent = GetComponent<NavMeshAgent>();
-        if (_navMeshAgent == null) return;
+        if (_navMeshAgent == null)
+        {
+            Debug.LogError($"Cannot find navmesh component on {transform.name}", this);
+            return;
+        }
 
         _navMeshAgent.speed = _moveSpeed;
         _navMeshAgent.acceleration = _speedChangeRate;
+        _navMeshAgent.autoTraverseOffMeshLink = false;
     }
 
     void StopNavmesh(bool state)
@@ -180,6 +191,10 @@ public class AIBase : BaseCharacter
                     retreatPosition = _spawnPosition;
                 MoveToPosition(retreatPosition);
                 break;
+            case EAIState.Jump:
+
+                Jump();
+                break;
         }
     }
 
@@ -214,6 +229,8 @@ public class AIBase : BaseCharacter
             case EAIState.Retreat:
                 Retreating();
 
+                break;
+            case EAIState.Jump:
                 break;
         }
 
@@ -365,6 +382,68 @@ public class AIBase : BaseCharacter
 
 
         MoveToPosition(_currentTarget.transform.position);
+
+        if (_navMeshAgent.isOnOffMeshLink && Time.time - _jumpLastTime >= _jumpCooldown)
+        {
+            ChangeState(EAIState.Jump);
+            return;
+        }
+    }
+
+
+
+    public override void GroundCheck()
+    {
+        if (_navMeshAgent == null || _navMeshAgent.isStopped) return;
+        _animator.SetBool("Land", _navMeshAgent.isOnNavMesh);
+    }
+
+    void Jump()
+    {
+        if (_jumpCoroutine != null)
+        {
+            ChangeState(EAIState.Chase);
+            return;
+        }
+
+        _jumpCoroutine = StartCoroutine(IEJumping());
+    }
+
+    IEnumerator IEJumping()
+    {
+        _animator.CrossFade("Start Jump", 0.1f);
+        // Ждем подготовку анимации 
+        yield return new WaitForSecondsRealtime(0.5f);
+        yield return StartCoroutine(IEMovingOnNavmeshLink(1.5f, 0.6f));
+
+        _animator.CrossFade("Landing", 0.05f);
+        _jumpCoroutine = null;
+        _jumpLastTime = Time.time;
+
+        // Ждем анимацию для приземления
+        yield return new WaitForSecondsRealtime(0.3f);
+        _navMeshAgent.CompleteOffMeshLink();
+        ChangeState(EAIState.Chase);
+    }
+
+    IEnumerator IEMovingOnNavmeshLink(float height, float duration)
+    {
+        OffMeshLinkData data = _navMeshAgent.currentOffMeshLinkData;
+        Vector3 startPosition = _navMeshAgent.transform.position;
+        Vector3 endPosition = data.endPos + Vector3.up * _navMeshAgent.baseOffset;
+
+        float normalizedTime = 0;
+
+        while (normalizedTime < 1f)
+        {
+            float yOffset = height * 4 * (normalizedTime - normalizedTime * normalizedTime);
+            _navMeshAgent.transform.position = Vector3.Lerp(startPosition, endPosition, normalizedTime) + yOffset * Vector3.up;
+            _navMeshAgent.transform.rotation = Quaternion.Lerp(_navMeshAgent.transform.rotation, Quaternion.LookRotation((endPosition - data.startPos).normalized, Vector3.up), Time.deltaTime * 6);
+            normalizedTime += Time.deltaTime / duration;
+            yield return null;
+        }
+
+
     }
 
 
@@ -514,6 +593,7 @@ public class AIBase : BaseCharacter
     [ClientRpc]
     public override void RpcDeath(DamageData damageData)
     {
+        StopAllCoroutines();
         base.RpcDeath(damageData);
         _ragdollController.EnableRagdoll(damageData);
     }

@@ -23,7 +23,7 @@ public class Health : NetworkBehaviour
     public Action<DamageData> OnHealthDecreased;
     public Action OnHealthIncreased;
 
-    [SyncVar]
+    // [SyncVar]
     [SerializeField] private float _currentHealth;
     [SyncVar]
     [SerializeField] private float _maxHealth;

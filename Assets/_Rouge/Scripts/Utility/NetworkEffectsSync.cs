@@ -9,8 +9,6 @@ public class NetworkEffectsSync : NetworkBehaviour
     [SerializeField] private List<ScriptableEffect> _allEffects = new List<ScriptableEffect>();
     public static NetworkEffectsSync get;
 
-    public List<string> netIds = new List<string>();
-
 
     private void Awake()
     {
@@ -19,11 +17,6 @@ public class NetworkEffectsSync : NetworkBehaviour
 
     private void Update()
     {
-        netIds.Clear();
-        foreach (KeyValuePair<uint, NetworkIdentity> item in NetworkIdentity.spawned)
-        {
-            netIds.Add(item.Key.ToString());
-        }
 
     }
 

@@ -2394,6 +2394,7 @@ MonoBehaviour:
   _lastPatrollTime: 0
   _patrollDelay: 0
   _skinIndex: 0
+  _jumpCooldown: 5
   pathRenderer: {fileID: 6491581682971788095}
   waypints: []
 --- !u!114 &2814780808224134078
@@ -2477,7 +2478,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 3
 --- !u!114 &6297060057933171951
 MonoBehaviour:
   m_ObjectHideFlags: 0
