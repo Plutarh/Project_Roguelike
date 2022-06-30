@@ -44,6 +44,15 @@ public class AIBase : BaseCharacter
     private float _jumpLastTime;
     [SerializeField] private float _jumpCooldown = 2;
 
+    [Space]
+    [Header("Attack FX")]
+    [SerializeField] private ParticlePlayer _lightAttackFX;
+    [SerializeField] private Transform _lightAttackFxPosition;
+
+    [SerializeField] private ParticlePlayer _heavyAttackFX;
+    [SerializeField] private Transform _heavyAttackFxPosition;
+
+
     public enum EAIState
     {
         Idle,
@@ -279,6 +288,7 @@ public class AIBase : BaseCharacter
     public List<Vector3> waypints = new List<Vector3>();
     void VisualiseWaypoints()
     {
+        return;
         waypints.Clear();
         var waypoints = _navMeshAgent.path;
         if (waypoints.corners.Length <= 0) return;
@@ -474,15 +484,14 @@ public class AIBase : BaseCharacter
 
         _lastAttackTime = Time.time;
 
-        // Менять комбо херню тут
+        //Рандом для зеркальной
+        bool mirrorAnimation = Random.value > 0.5f;
+
+        // Рандом между легкой и тяжелой атакой
         if (Random.value > 0.5f)
-        {
-            _currentCombatName = "Attack";
-        }
+            _currentCombatName = "Light_Attack" + (mirrorAnimation ? "_M" : string.Empty);
         else
-        {
-            _currentCombatName = "Attack0";
-        }
+            _currentCombatName = "Heavy_Attack" + (mirrorAnimation ? "_M" : string.Empty);
 
         _animator.CrossFade(_currentCombatName, 0.15f);
         RpcAttackAnimation(_currentCombatName);
@@ -516,6 +525,10 @@ public class AIBase : BaseCharacter
         lightDamageData.combatValue = Random.Range(1, 3);
 
         _meleeDamageCollider.EnableDamageCollider(MeleeDamageCollider.EMeleeColliderType.LightAttack, lightDamageData);
+
+        var fx = Instantiate(_lightAttackFX, _lightAttackFxPosition.transform);
+        fx.transform.localPosition = Vector3.zero;
+        fx.transform.localRotation = Quaternion.identity * Quaternion.AngleAxis(90, Vector3.forward);
     }
 
     public void AnimHeavyAttack()
@@ -531,6 +544,11 @@ public class AIBase : BaseCharacter
         heavyDamageData.combatValue = Random.Range(5, 10);
 
         _meleeDamageCollider.EnableDamageCollider(MeleeDamageCollider.EMeleeColliderType.HeavyAttack, heavyDamageData);
+
+        var fx = Instantiate(_heavyAttackFX, _heavyAttackFxPosition.transform);
+        fx.transform.localPosition = Vector3.zero;
+        fx.transform.localRotation = Quaternion.identity;
+
     }
 
     public void AnimAttackEnd()
@@ -540,6 +558,7 @@ public class AIBase : BaseCharacter
             Debug.LogError($"{name} cannot use damage colliders, null ref", this);
             return;
         }
+
 
         _meleeDamageCollider.DisableDamageCollider();
     }
