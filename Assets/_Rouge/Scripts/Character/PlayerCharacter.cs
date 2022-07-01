@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Mirror;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ public class PlayerCharacter : NetworkBehaviour
 
     public static List<PlayerCharacter> allPlayerCharacters = new List<PlayerCharacter>();
 
+    [SerializeField] private List<Interactable> _activeInteractables = new List<Interactable>();
 
     public bool _abilitiesInitialized;
 
@@ -65,6 +67,7 @@ public class PlayerCharacter : NetworkBehaviour
     public virtual void InitializeLocalCoreComponents()
     {
         _player.InputService.OnAttackButtonClicked += OnAttackButtonClicked;
+        _player.InputService.OnActivateButtonClicked += ActivateInteractables;
 
         ResetPrimaryAttack();
     }
@@ -91,6 +94,8 @@ public class PlayerCharacter : NetworkBehaviour
         NetNaming();
         PrimaryAttackResetTimer();
     }
+
+
 
     [Command]
     void CmdCreateAbilities()
@@ -449,10 +454,8 @@ public class PlayerCharacter : NetworkBehaviour
         if (isLocalPlayer)
         {
             _player.InputService.OnAttackButtonClicked -= OnAttackButtonClicked;
+            _player.InputService.OnActivateButtonClicked -= ActivateInteractables;
         }
-
-
-
 
     }
 
@@ -473,6 +476,37 @@ public class PlayerCharacter : NetworkBehaviour
         }
     }
 
+
+    void ActivateInteractables()
+    {
+        Debug.Log("Try activate interactable");
+        if (_activeInteractables.Count == 0) return;
+
+        var lastInteractable = _activeInteractables.LastOrDefault();
+
+        if (lastInteractable == null)
+        {
+            Debug.LogError("Interactable NULL ref while search");
+            return;
+        }
+
+        lastInteractable.Action(netIdentity);
+        RemoveInteractable(lastInteractable);
+    }
+
+    public void AddInteractable(Interactable interactable)
+    {
+        if (_activeInteractables.Contains(interactable)) return;
+
+        _activeInteractables.Add(interactable);
+    }
+
+    public void RemoveInteractable(Interactable interactable)
+    {
+        if (!_activeInteractables.Contains(interactable)) return;
+
+        _activeInteractables.Remove(interactable);
+    }
 
 }
 

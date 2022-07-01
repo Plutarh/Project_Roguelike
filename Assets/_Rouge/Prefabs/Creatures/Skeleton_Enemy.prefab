@@ -2389,8 +2389,8 @@ MonoBehaviour:
   _attackDistance: 1.3
   _attackDelay: 0.65
   _lastAttackTime: 0
-  _chasingDistance: 60
-  _chaseBreakDistance: 150
+  _chasingDistance: 15
+  _chaseBreakDistance: 50
   _skinmeshData: {fileID: 11400000, guid: 299a53e8b7923cf45bef46f6623b8607, type: 2}
   _lastPatrollTime: 0
   _patrollDelay: 0

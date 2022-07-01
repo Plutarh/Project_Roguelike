@@ -32,7 +32,7 @@ public class InputService : MonoBehaviour//, IInputService
 
 
     public Action<EAttackType> OnAttackButtonClicked;
-
+    public Action OnActivateButtonClicked;
 
     public void OnMove(InputValue value)
     {
@@ -189,6 +189,12 @@ public class InputService : MonoBehaviour//, IInputService
     public void ResetUltimate()
     {
         _ultimate = false;
+    }
+
+    public void OnActivate(InputValue value)
+    {
+        Debug.Log("On activate button");
+        OnActivateButtonClicked?.Invoke();
     }
 
 }
