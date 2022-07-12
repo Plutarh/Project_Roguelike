@@ -1,12 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class HitVisualizer : MonoBehaviour
 {
     SkinnedMeshRenderer _skinnedMeshRenderer;
     MeshRenderer _meshRenderer;
     Pawn _pawn;
+    Animator _animator;
+    RuntimeAnimatorController _runtimeAnimatorController;
+
+    const string LIGHT_HIT_REACTION_CLIP_NAME = "Light Hit Reaction";
+    const string MEDIUM_HIT_REACTION_CLIP_NAME = "Medium Hit Reaction";
+
+    [SerializeField] private bool _canPlayAnimation;
 
     private void Awake()
     {
@@ -28,12 +36,55 @@ public class HitVisualizer : MonoBehaviour
             return;
         }
 
+        _animator = GetComponent<Animator>();
+        _runtimeAnimatorController = _animator.runtimeAnimatorController;
+
         _pawn.Health.OnHealthDecreased += VisualizeHit;
+
+        _canPlayAnimation = IsAnimationHitReactionContains();
     }
 
     void VisualizeHit(DamageData damageData)
     {
         StartCoroutine(IEVisualizating());
+        PlayAnimationHitReaction(damageData);
+    }
+
+
+    void PlayAnimationHitReaction(DamageData damageData)
+    {
+        if (!_canPlayAnimation) return;
+        if (_pawn.Health.CurrentHealth <= 0 || _pawn.Health.IsDead) return;
+
+        string hitReactionAnimationName = string.Empty;
+
+        // Если урон выше 20% от общего хп, то покажем среднию импакт анимацию 
+        if (_pawn.Health.GetDamagePercent(damageData.combatValue) >= 20)
+            hitReactionAnimationName = LIGHT_HIT_REACTION_CLIP_NAME;
+        else
+            hitReactionAnimationName = MEDIUM_HIT_REACTION_CLIP_NAME;
+
+        // Для зеркальной анимации
+        if (Random.value > 0.5)
+            hitReactionAnimationName += "_M";
+
+        _animator.CrossFade(hitReactionAnimationName, 0.1f, 1);
+    }
+
+    // Проверяем есть ли у нас хит реакшены, если есть оба, то челик сможет их проиграть, если нет, то будем игнорировать
+    bool IsAnimationHitReactionContains()
+    {
+        bool ligthHitAnimation = false;
+        bool mediumHitAnimation = false;
+
+        foreach (var clip in _runtimeAnimatorController.animationClips)
+        {
+            if (clip.name.ToLower().Contains(LIGHT_HIT_REACTION_CLIP_NAME.ToLower()))
+                ligthHitAnimation = true;
+            else if (clip.name.ToLower().Contains(MEDIUM_HIT_REACTION_CLIP_NAME.ToLower()))
+                mediumHitAnimation = true;
+        }
+        return ligthHitAnimation && mediumHitAnimation;
     }
 
     IEnumerator IEVisualizating()

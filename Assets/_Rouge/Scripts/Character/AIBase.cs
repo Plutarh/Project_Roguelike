@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
+[RequireComponent(typeof(Dissolver))]
+[RequireComponent(typeof(HitVisualizer))]
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(RagdollController))]
 public class AIBase : BaseCharacter
 {
 
@@ -87,7 +91,6 @@ public class AIBase : BaseCharacter
 
         StateMachine();
         UpdateMotionAnimation();
-        VisualiseWaypoints();
     }
 
     public override void Start()
@@ -106,6 +109,8 @@ public class AIBase : BaseCharacter
             ChangeState(EAIState.Idle);
 
         _currentTarget = PlayerCharacter.allPlayerCharacters[Random.Range(0, PlayerCharacter.allPlayerCharacters.Count)].PlayerMover;
+
+
     }
 
     public override void InitComponents()
@@ -284,23 +289,6 @@ public class AIBase : BaseCharacter
         _navMeshAgent.SetDestination(_targetMovePosition);
     }
 
-    public LineRenderer pathRenderer;
-    public List<Vector3> waypints = new List<Vector3>();
-    void VisualiseWaypoints()
-    {
-        return;
-        waypints.Clear();
-        var waypoints = _navMeshAgent.path;
-        if (waypoints.corners.Length <= 0) return;
-        pathRenderer.positionCount = waypoints.corners.Length;
-        for (int i = 0; i < waypoints.corners.Length; i++)
-        {
-            var point = waypoints.corners[i];
-            pathRenderer.SetPosition(i, point + Vector3.up * .2f);
-            waypints.Add(point);
-        }
-    }
-
 
     void UpdateMotionAnimation()
     {
@@ -452,10 +440,7 @@ public class AIBase : BaseCharacter
             normalizedTime += Time.deltaTime / duration;
             yield return null;
         }
-
-
     }
-
 
     bool CanAttack()
     {
@@ -567,33 +552,8 @@ public class AIBase : BaseCharacter
     public override void TakeDamage(DamageData damageData)
     {
         base.TakeDamage(damageData);
-        CmdPlayHitReaction(damageData);
     }
 
-    [Command(requiresAuthority = false)]
-    void CmdPlayHitReaction(DamageData damageData)
-    {
-        RpcPlayHitReaction(damageData);
-    }
-
-    [ClientRpc(includeOwner = false)]
-    void RpcPlayHitReaction(DamageData damageData)
-    {
-        if (Health.CurrentHealth <= 0 || Health.IsDead) return;
-
-        string hitReactionAnimationName = string.Empty;
-
-        if (Health.GetDamagePercent(damageData.combatValue) >= 20)
-            hitReactionAnimationName = "Medium Hit";
-        else
-            hitReactionAnimationName = "Light Hit";
-
-        // Для зеркальной анимации
-        if (Random.value > 0.5)
-            hitReactionAnimationName += "_M";
-
-        _animator.CrossFade(hitReactionAnimationName, 0.1f, 1);
-    }
 
     public override void Death(DamageData damageData)
     {
@@ -602,11 +562,7 @@ public class AIBase : BaseCharacter
 
     private void OnDrawGizmos()
     {
-        foreach (var item in waypints)
-        {
-            Gizmos.color = Color.black;
-            Gizmos.DrawSphere(item, 0.2f);
-        }
+
     }
 
     [ClientRpc]
@@ -614,7 +570,9 @@ public class AIBase : BaseCharacter
     {
         StopAllCoroutines();
         base.RpcDeath(damageData);
-        _ragdollController.EnableRagdoll(damageData);
+
+        if (_ragdollController != null)
+            _ragdollController.EnableRagdoll(damageData);
     }
 
 

@@ -131,7 +131,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Medium Hit
+  m_Name: Medium Hit Reaction
   m_Speed: 1.4
   m_CycleOffset: 0
   m_Transitions:
@@ -483,7 +483,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Light Hit_M
+  m_Name: Light Hit Reaction_M
   m_Speed: 1.4
   m_CycleOffset: 0
   m_Transitions:
@@ -561,7 +561,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Light Hit
+  m_Name: Light Hit Reaction
   m_Speed: 1.4
   m_CycleOffset: 0
   m_Transitions:
@@ -886,7 +886,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Medium Hit_M
+  m_Name: Medium Hit Reaction_M
   m_Speed: 1.4
   m_CycleOffset: 0
   m_Transitions:
